@@ -24,10 +24,10 @@ By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal 
 </a><br>
 
 #### WVD Deployment: DevOps Pipeline
-Once the deployment completes, please navigate to https://dev.azure.com, where you will find the WVD Quickstart project. Navigate to the "pipelines" section - Here you'll find a running pipeline that deploys a WVD environment (VMs, host pool, desktop app group, FSLogix configuration) for you. Upon completion of this pipeline, which will take about 20 minutes, your WVD environment is ready for use!
+Once the deployment completes, please navigate to <a href="https://dev.azure.com">Azure DevOps</a>, where you will find the WVD Quickstart project. Navigate to the "pipelines" section - Here you'll find a running pipeline that deploys a WVD environment (VMs, host pool, desktop app group, FSLogix configuration) for you. Upon completion of this pipeline, which will take about 20 minutes, your WVD environment is ready for use!
 
 #### Using Your New WVD Environment
-The Quickstart creates a test user for you to try out the environment. Navigate to https://rdweb.wvd.microsoft.com/arm/webclient/index.html and login with the following test user credentials:
+The Quickstart creates a test user for you to try out the environment. Navigate to the <a href="https://rdweb.wvd.microsoft.com/arm/webclient/index.html">WVD web client</a> and login with the following test user credentials:
 
 Username: WVDTestUser001@{your-domain}.com <br>
 Password: wvdTest123!
