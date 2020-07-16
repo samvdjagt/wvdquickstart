@@ -28,7 +28,7 @@ Once you've satisfied all the prerequisites, you are ready to deploy using the Q
 </a><br>
 
 ### WVD Deployment: DevOps Pipeline
-Once the deployment completes, please navigate to <a href="https://dev.azure.com">Azure DevOps</a>, where you will find the WVD Quickstart project. Navigate to the "pipelines" section - Here you'll find a running pipeline that deploys a WVD environment (VMs, host pool, desktop app group, FSLogix configuration) for you. Upon completion of this pipeline, which will take about 20 minutes, your WVD environment is ready for use!
+Once the ARM deployment completes, your WVD environment will automatically be deployed by an Azure DevOps pipeline. To follow along with this deployment, navigate to <a href="https://dev.azure.com">Azure DevOps</a>, where you will find the WVD Quickstart project. Navigate to the "pipelines" section - Here you'll find a running pipeline that deploys a WVD environment (VMs, host pool, desktop app group, FSLogix configuration) for you. Upon completion of this pipeline, which will take about 20 minutes, your WVD environment is ready for use! You can also follow along with the deployment in the Azure Portal.
 
 ### Using Your New WVD Environment
 The Quickstart creates a test user for you to try out the environment. Navigate to the <a href="https://rdweb.wvd.microsoft.com/arm/webclient/index.html">WVD web client</a> and login with the following test user credentials:
