@@ -4,6 +4,6 @@ layout: template
 filename: troubleshoot
 ---
 
-### WVD Quickstart Troubleshooting
+## WVD Quickstart Troubleshooting
 
 - MORE TO COME - 
