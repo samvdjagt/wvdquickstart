@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: How-to
 layout: template
 filename: how-to
 ---
