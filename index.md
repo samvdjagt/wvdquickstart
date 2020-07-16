@@ -4,9 +4,13 @@ layout: template
 filename: index
 ---
 
-### Welcome to the WVD Quickstart
+### Welcome to the WVD Quickstart!
 
-Welcome to the Windows Virtual Desktop Quickstart! The WVD Quickstart is a solution intended to simplify and automate WVD deployments, empowering IT professionals to get started with WVD in a matter of clicks. New to WVD? Check out https://aka.ms/wvddocs for more information. 
+Windows Virtual Desktop on Microsoft Azure is a desktop and app virtualization service that runs on the cloud. Windows Virtual Desktop works across devices, like Windows, Mac, iOS, Android, and Linux, with apps that you can use to access remote desktops and apps. You can also use most modern browsers to access Windows Virtual Desktop-hosted experiences. New to WVD? Check out the <a href="https://docs.microsoft.com/en-us/learn/paths/m365-wvd/">Microsoft Learn module on WVD</a> or the overall <a href="https://aka.ms/wvddocs">WVD documentation</a> for more information. 
+
+Windows Virtual Desktop (WVD) is a solution which is partly managed by Microsoft and partly by customers. Customers are expected to bring their own Azure Subscription and deploy Session Hosts. This comes with many manual steps and adds complexity, resulting in high deployment failure rates and a very high barrier of entry. Through this WVD quickstart solution, we have taken much of the complexity away, simplifying and automating the deployment process, making the platform more accessible to non-expert users. As a WVD-centric end-to-end solution, the quickstart addressess reported pain points, challenges and feature gaps, empowering IT professionals to get started with WVD in a matter of clicks.
+
+The Quickstart can be used to deploy a WVD Workspace, Desktop app group, Virtual Machines, and more with just a couple of clicks. To understand how the quickstart works, and what exactly it can deploy for you, please visit the <a href="concepts">Concepts</a> page.
 
 On this website, you will find all the information you need to get started with this solution. 
 * <a href="howto">How to deploy using the WVD Quickstart</a>
