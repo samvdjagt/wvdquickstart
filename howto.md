@@ -14,9 +14,9 @@ In order to successfully deploy a WVD environment with the Quickstart, a couple 
 * WVD resource provider is installed
 * Domain join service account (Must be without MFA)
 * Existing virtual network (VNET)
-** With an available subnet
-** With the DNS setting to *custom*
-** Domain join service account needs to have administrator privileges on the domain controller in this VNET
+    * With an available subnet
+    * With the DNS setting to *custom*
+    * Domain join service account needs to have administrator privileges on the domain controller in this VNET
 * Firewall configuration: ensure all the required ports are accessible to the WVD resource provider
 
 #### ARM Deployment: Azure DevOps Setup
