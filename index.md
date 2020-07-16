@@ -12,7 +12,7 @@ WVD is a solution which is partly managed by Microsoft and partly by customers. 
 
 The Quickstart can be used to deploy a WVD Workspace, Desktop app group, Virtual Machines, and more with just a couple of clicks. To understand how the quickstart works, and what exactly it can deploy for you, please visit the <a href="concepts">Concepts</a> page.
 
-## Resources on this website
+### Resources on this website
 On this website, you will find all the information you need to get started with this solution. 
 * <a href="howto">How to deploy using the WVD Quickstart</a>
 * <a href="concepts">Understanding the underlying concepts of the Quickstart</a>
