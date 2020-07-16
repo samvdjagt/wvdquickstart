@@ -20,7 +20,7 @@ In order to successfully deploy a WVD environment with the Quickstart, a couple 
 * Firewall configuration: ensure all the required ports are accessible to the WVD resource provider
 
 #### ARM Deployment: Azure DevOps Setup
-By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal for a custom deployment. There, you can fill out the required user input and click "deploy". This will set up some resources needed for the Quickstart, including an Azure DevOps organization and project.
+Once you've satisfied all the prerequisites, you are ready to deploy using the Quickstart! As explained in the <a href="concepts">Concepts</a> section, the deployment consists of two main components: an Azure Resource Manager (ARM) deployment and an Azure DevOps (ADO) pipeline. The first of the two will deploy a number of resources supporting the deployment automation, including the creation of a DevOps project and automation pipeline. By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal for a custom deployment. There, you can fill out the required user input and click *purchase*. 
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fsamvdjagt%2Fdev%2Fmaster%2Fdeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
