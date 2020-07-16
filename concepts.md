@@ -11,4 +11,7 @@ To understand how the WVD Quickstart works, this page contains in-depth explanat
 * <a href="armdeployment">Azure Resource Manager deployment: DevOps setup</a>
 * <a href="devops">DevOps Automation</a>
 
+![Deployment overview](images/diagram.png?raw=true)
+
+
 MORE TO COME, ABOVE LINKS NOT WORKING YET
