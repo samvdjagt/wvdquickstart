@@ -1,7 +1,7 @@
 ---
 title: How-to
 layout: template
-filename: how-to
+filename: howto
 ---
 
 ### Welcome to the WVD Quickstart
