@@ -4,7 +4,7 @@ layout: template
 filename: index
 ---
 
-# WVD Quickstart
+### Welcome to the WVD Quickstart
 
 Welcome to the WVD Quickstart GitHub repository! The WVD Quickstart is a solution intended to simplify and automate WVD deployments, empowering IT professionals to get started with WVD in a matter of clicks. New to WVD? Check out https://aka.ms/wvddocs for more information. 
 
