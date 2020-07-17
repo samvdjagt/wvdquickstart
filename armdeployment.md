@@ -109,3 +109,378 @@ The *targetGroup* variable holds the name of the user group that will be assigne
 The *automationVariables* section, which is not shown in full here, contains a list of variables and parameters that will be saved as variables in the Automation account that is created in this deployment. These variables will be accessed by the runbook scripts to generate the appropriate parameter files for the WVD deployment.
 
 ### Resources
+In this section, the Resources section of the ARM template will be explained piece by piece, showcasing exactly which resources will be deployed and with what objective.
+```
+"resources": [
+    {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "name": "[variables('identityName')]",
+        "apiVersion": "2018-11-30",
+        "location": "[variables('location')]",
+        "properties": {}
+    },
+```
+The first resource deployed in this template is a Managed Identity that will be used to run deployment scripts later in this template. This resource will, by default, appear as "WVDServicePrincipal" in your deployment's resource group.
+```
+    {
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-01-01-preview",
+        "name": "[variables('autoAccountName')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+        ],
+        "tags": {},
+        "properties": {
+            "sku": {
+                "name": "Free"
+            }
+        },
+```
+This section deploys an Automation Account. This automation account is used for a total of three runbooks, all executing custom scripts. These three runbooks are explained below, one by one, and they are part of the automation account deployment.
+```
+        "resources": [
+            {
+                "type": "credentials",
+                "apiVersion": "2015-01-01-preview",
+                "name": "AzureCredentials",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]"
+                ],
+                "tags": {},
+                "properties": {
+                    "userName": "[parameters('azureAdminUpn')]",
+                    "password": "[parameters('azureAdminPassword')]"
+                }
+            },
+            {
+                "type": "credentials",
+                "apiVersion": "2015-01-01-preview",
+                "name": "domainJoinCredentials",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]"
+                ],
+                "tags": {},
+                "properties": {
+                    "userName": "[parameters('tenantAdminDomainJoinUPN')]",
+                    "password": "[parameters('tenantAdminDomainJoinPassword')]"
+                }
+            },
+```
+The above part of the Automation Account deployment creates two Automation credentials, saving both the Azure Admin credentials and the domain join service account credentials entered by the user for later access by the runbook scripts to authenticate.
+```
+            {
+                "type": "runbooks",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[concat(variables('runbookName'), '0')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/AzureCredentials')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/domainJoinCredentials')]"
+                ],
+                "tags": {},
+                "properties": {
+                    "runbookType": "PowerShell",
+                    "logProgress": false,
+                    "logVerbose": false,
+                    "publishContentLink": {
+                        "uri": "[variables('scriptUri0')]",
+                        "version": "1.0.0.0"
+                    }
+                } 
+            },
+            {
+                "type": "jobs",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[variables('newGuid0')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]"
+                ],
+                "tags": {
+                    "key": "value"
+                },
+                "properties": {
+                    "runbook": {
+                        "name": "[concat(variables('runbookName'), '0')]"
+                    }
+                }
+            },
+```
+The first runbook above runs the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/configureMSI.ps1" target="_blank">configureMSI.ps1</a> script. This is a script that configures the 'WVDServicePrincipal' managed identity in the deployment resource group to give it the *contributor* role on the subscription. This is needed to run deployment scripts in the ARM template successfully.
+```
+            {
+                "type": "runbooks",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[variables('runbookName')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/AzureCredentials')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/domainJoinCredentials')]"
+                ],
+                "tags": {},
+                "properties": {
+                    "runbookType": "PowerShell",
+                    "logProgress": false,
+                    "logVerbose": false,
+                    "publishContentLink": {
+                        "uri": "[variables('scriptUri1')]",
+                        "version": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "type": "jobs",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[variables('newGuid')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+                ],
+                "tags": {
+                    "key": "value"
+                },
+                "properties": {
+                    "runbook": {
+                        "name": "[variables('runbookName')]"
+                    }
+                }
+            },
+```
+The second runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/createServicePrincipal.ps1" target="_blank">createServicePrincipal.ps1</a> script. This script creates the AAD application service principal used to create a service connection between the Azure subscription and the DevOps project. If the application already exists, this script will update the existing one with the right permissions.
+```
+            {
+                "type": "runbooks",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[concat(variables('runbookName'), '2')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('microsoft.visualstudio/account/', variables('devOpsName'))]"
+                ],
+                "tags": {},
+                "properties": {
+                    "runbookType": "PowerShell",
+                    "logProgress": false,
+                    "logVerbose": false,
+                    "publishContentLink": {
+                        "uri": "[variables('scriptUri2')]",
+                        "version": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "type": "jobs",
+                "apiVersion": "2015-01-01-preview",
+                "name": "[variables('newGuid2')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('newGuid'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/',variables('runbookName'), '2')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]",
+                    "[concat('microsoft.visualstudio/account/', variables('devOpsName'))]",
+                    "[concat('Microsoft.Resources/Deployments/userCreation')]"
+                ],
+                "tags": {
+                    "key": "value"
+                },
+                "properties": {
+                    "runbook": {
+                        "name": "[concat(variables('runbookName'), '2')]"
+                    }
+                }
+            }
+        ]
+    },
+```
+The third and last runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/devopssetup.ps1" target="_blank">devopssetup.ps1</a> script. This script makes a number of REST API calls to create a DevOps project, a service connection between the Azure Subscription and the DevOps project, to initialize the DevOps repository with all the required files, to set some permissions in DevOps, and to generate the main automation parameter files: appliedParmeters.psd1 and variables.yml. These two parameter files will be used by the DevOps pipeline to deploy the WVD resources.
+```
+    {
+        "type": "Microsoft.Automation/automationAccounts/variables",
+        "apiVersion": "2015-10-31",
+        "name": "[concat(variables('autoAccountName'), '/', variables('automationVariables')[copyIndex()].name)]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Automation/automationAccounts', variables('autoAccountName'))]"
+        ],
+        "tags": {},
+        "properties": {
+            "value": "[variables('automationVariables')[copyIndex()].value]"
+        },
+        "copy": {
+            "name": "variableLoop",
+            "count": "[length(variables('automationVariables'))]"
+        }
+    },
+```
+The above section deploys the Automation variables previously mentioned in the *variables* section of this web page. These variables are accessed by the runbook scripts.
+```
+    {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2019-09-01",
+        "name": "[variables('keyvaultName')]",
+        "location": "[variables('location')]",
+        "properties": {
+            "enabledForDeployment": true,
+            "enabledForTemplateDeployment": true,
+            "enabledForDiskEncryption": true,
+            "enableSoftDelete": true,
+            "lockForDeletion": false,
+            "tenantId": "[variables('tenantId')]",
+            "accessPolicies": [
+            ],
+            "sku": {
+                "name": "Standard",
+                "family": "A"
+            },
+            "secretsObject": {
+                "value": {
+                    "secrets": []
+                }
+            }
+        },
+        "dependsOn": [
+           "[concat('Microsoft.Resources/deploymentScripts', '/checkAzureCredentials')]"
+        ],
+        "resources": [
+        ]
+    },
+    {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "apiVersion": "2015-06-01",
+        "name": "[concat(variables('keyvaultName'), '/', variables('AdminPasswordSecret'))]",
+        "properties": {
+            "name": "[variables('AdminPasswordSecret')]",
+            "value": "[parameters('tenantAdminDomainJoinPassword')]"
+        },
+        "dependsOn": [
+            "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
+        ]
+    },
+```
+This section deploys a Keyvault, as well as a secret that holds the password to the Azure Admin account. This secret will later be accessed by the DevOps pipeline when deploying the WVD virtual machines.
+```
+    {
+        "name": "[variables('devOpsName')]",
+        "type": "microsoft.visualstudio/account",
+        "location": "centralus",
+        "apiVersion": "2014-04-01-preview",
+        "properties": {
+          "operationType": "Create",
+          "accountName": "[variables('devOpsName')]"
+        },
+        "dependsOn": [
+            "[concat('Microsoft.Resources/deploymentScripts', '/checkAzureCredentials')]"
+        ],
+        "resources": []
+    },
+```
+The above section creates the DevOps organization that will host the WVD deployment pipeline.
+```
+    {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2019-10-01-preview",
+        "name": "createDevopsPipeline",
+        "location": "[variables('location')]",
+        "dependsOn": [
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid2'))]"
+        ],
+        "kind": "AzureCLI",
+        "identity": {
+            "type": "userAssigned",
+            "userAssignedIdentities": {
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]": {}
+            }
+        },
+        "properties": {
+            "forceUpdateTag": 1,
+            "azCliVersion": "2.0.80",
+            "arguments": "[concat(variables('devOpsName'), ' ', variables('devOpsProjectName'), ' ', parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'), ' ', 'true')]",
+            "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createDevopsPipeline.sh')]",
+            "timeout": "PT30M",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D"
+        }
+    },
+```
+The above deployment script *createDevopspipeline* executes the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/createDevopsPipeline.sh" target="_blank">createDevopsPipeline.sh</a> script. This Azure CLI script creates and starts a DevOps pipeline in the newly created DevOps project.
+```
+    {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2019-10-01-preview",
+        "name": "checkAzureCredentials",
+        "location": "[variables('location')]",
+        "dependsOn": [
+            "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+        ],
+        "kind": "AzurePowerShell",
+        "identity": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]": {}
+            }
+        },
+        "properties": {
+            "forceUpdateTag": 1,
+            "azPowerShellVersion": "3.0",
+            "timeout": "PT30M",
+            "arguments": "[concat('-username ', parameters('azureAdminUpn'), ' -password ', parameters('azureAdminPassword'))]",
+            "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/checkAzureCredentials.ps1')]",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D"
+        }
+    },
+```
+The above deployment script *checkAzureCredentials* executes the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/checkAzureCredentials.ps1" target="_blank">checkAzureCredentials.ps1</a> script. This script makes sure that the entered Azure Admin credentials are correct. 
+```
+    {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "userCreation",
+        "dependsOn": [
+            "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+        ],
+        "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
+        "subscriptionId": "[subscription().subscriptionId]",
+        "condition": "[equals(parameters('identitySolution'), 'AD')]",
+        "properties": {
+        "mode": "Incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {},
+            "variables": {},
+            "resources": [
+            {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "apiVersion": "2019-12-01",
+                "name": "[concat(parameters('computerName'),'/', 'userCreation')]",
+                "location": "[resourcegroup().location]",
+                "dependsOn": [
+                ],
+                "properties": {
+                    "publisher": "Microsoft.Compute",
+                    "type": "CustomScriptExtension",
+                    "typeHandlerVersion": "1.7",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                        "fileUris": [
+                            "[concat(variables('_artifactsLocation'), '/Modules/ARM/UserCreation/scripts/createUsers.ps1')]"
+                        ],
+                        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'), ' ', variables('_artifactsLocation'))]"
+                    }
+                }
+            }
+            ]
+        }
+```
+The above deployment script is ran only in the case of a Native AD deployment (versus AADDS), and it runs a custom script extension on the domain controller VM to create a new user to be assigned to the WVD environment. This custom script extension will execute the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation/scripts/createUsers.ps1" target="_blank">createUsers.ps1</a> script to, by default, create an AD user group, an AD user, assign that user to the group, and start a sync cycle to synchronize these changes with Azure.
