@@ -12,9 +12,9 @@ On this page, you'll find an in-depth breakdown of all the files associated with
 
 The folder structure in the master branch is as follows:
 
-* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts">ARMRunbookScripts</a>: In this folder, a number of custom scripts are located that are run by the ARM deployment, either through an automation runbook or a deployment script.
-  * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/static">/static</a>: In this folder, some PowerShell modules required by the above scripts are located
-* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM">Modules/ARM</a>: This folder contains modular ARM templates that are called by the DevOps automation to deploy Azure resources. For every resource, there's a dedicated deploy.json file, as well as a parameters file, pipeline file, and a testing script. These files are generic and should typically not be modified.
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts" target="_blank">ARMRunbookScripts</a>: In this folder, a number of custom scripts are located that are run by the ARM deployment, either through an automation runbook or a deployment script.
+  * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/static" target="_blank">/static</a>: In this folder, some PowerShell modules required by the above scripts are located
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM" target="_blank">Modules/ARM</a>: This folder contains modular ARM templates that are called by the DevOps automation to deploy Azure resources. For every resource, there's a dedicated deploy.json file, as well as a parameters file, pipeline file, and a testing script. These files are generic and should typically not be modified.
 * QS-WVD: This folder contains many of the files associated with the DevOps pipeline. This folder is also where you'll do most of your customization. The pipeline.yml file is the main DevOps automation pipeline, and the variables.yml file is where the pipeline gets all its parameters. 
   * /parameters: This folder is populated in the automation to store ARM deployment parameter files. 
   * /scripts: This folder contains scripts that are called by the DevOps pipeline.
