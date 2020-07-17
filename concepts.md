@@ -22,7 +22,7 @@ After clicking the "Deploy to Azure" button, the first of the two can be kicked 
 ### Resources
 The diagram below gives a good overview of all components of the Quickstart, as well as all the resources that are deployed in the process.
 
-![Deployment overview](images/diagram.png?raw=true)
+![Deployment overview](images/newDiagram.png?raw=true)
 
 
-MORE TO COME, ABOVE LINKS NOT WORKING YET
+# MORE TO COME
