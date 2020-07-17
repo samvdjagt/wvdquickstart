@@ -24,5 +24,6 @@ The diagram below gives a good overview of all components of the Quickstart, as 
 
 ![Deployment overview](images/newDiagram.PNG?raw=true)
 
+As can be seen in the image, the DevOps automation will deploy a host pool, a desktop application group, a workspace and virtual machines, that upon completion of the pipeline will be ready for use. By default, the virtual machines will utilize a gallery OS image of Windows 10 Enterprise Multi-Session, build 2004, with Office 365 installed. Additionally, the virtual machines will be configured with <a href="https://docs.microsoft.com/en-us/fslogix/overview">FSLogix</a> for user profile management.
 
 # MORE TO COME
