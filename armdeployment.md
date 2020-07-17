@@ -8,10 +8,14 @@ filename: armdeployment
 To understand the first of the two major deployments in the WVD Quickstart, the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the ARM template itself.
 
 ### Parameters
+In the parameters section of the ARM template, you'll find all the parameters that are exposed to the user input. ALl of these parameters come with a description to indicate what they're used for. These are typically pretty straightforward and will not be explained further in this documentation.
 ```
 "parameters": {
     "utcValue": {
         "type": "string",
+        "metadata": {
+            "description": "Please leave this value as '[utcNow()]', as this is used to generate unique names in the deployment. This is a requirement for resources like a keyvault or storage account."
+        },
         "defaultValue": "[utcNow()]"
     },
     "existingVnetName": {
@@ -20,86 +24,53 @@ To understand the first of the two major deployments in the WVD Quickstart, the 
             "description": "The name of the virtual network the VMs will be connected to."
         }
     },
-    "existingSubnetName": {
-        "type": "string",
-        "metadata": {
-            "description": "The subnet the VMs will be placed in."
-        }
-    },
-    "virtualNetworkResourceGroupName": {
-        "type": "string",
-        "metadata": {
-            "description": "The resource group containing the existing virtual network."
-        }
-    },
-    "computerName": {
-        "type": "string",
-        "metadata": {
-            "description": "The name of the VM with the domain controller."
-        }
-    },
-    "azureAdminUpn": {
-        "type": "string",
-        "metadata": {
-            "description": "The UPN of the account that you're currently logged in with on the Azure Portal. This account should at least have the 'contributor' or 'owner' role on the subscription level for the deployment to succeed. The template will fail if you enter a user account that requires MFA."
-        }
-    },
-    "azureAdminPassword": {
-        "type": "securestring",
-        "metadata": {
-            "description": "The password that corresponds to the Azure admin UPN above."
-        }
-    },
-    "tenantAdminDomainJoinUPN": {
-        "type": "string",
-        "metadata": {
-            "description": "The template will fail if you enter a user account that requires MFA or an application that is secured by a certificate. The UPN or ApplicationId must be an RDS Owner in the Windows Virtual Desktop Tenant to create the hostpool or an RDS Owner of the host pool to provision the host pool with additional VMs."
-        }
-    },
-    "tenantAdminDomainJoinPassword": {
-        "type": "securestring",
-        "metadata": {
-            "description": "The password that corresponds to the tenant admin UPN."
-        }
-    },
-    "identitySolution": {
-        "type": "string",
-        "metadata": {
-            "description": "Specify which identity solution you would like to use for your WVD deployment. Pick either AD (Active Directory Domain Services) or AADDS (Azure Active Directory Domain Services)"
-        },
-        "allowedValues": [
-            "AD",
-            "AADDS"
-        ]
-    },
-    "optionalNotificationEmail": {
-        "type": "string",
-        "metadata": {
-            "description": "If desired, you can provide an email address to which we'll send a notification once your WVD deployment completes. DevOps will, by default, attempt to send an email to your Azure account, regardless of whether you provide a value here."
-        },
-        "defaultValue": "[parameters('azureAdminUpn')]"
-    }
+    ....
+    ....
 }
 ```
 
 ### Variables
+The variables section holds certain values that are used throughout the deployment, that are not exposed to the user. As these are less obvious, their meaning and use will be explained in this section.
 ```
 "variables": {
     "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/dev/master",
+```
+The *artifactslocation* variable holds the URL to the GitHub repository that is used throughout the deployment to fetch required files. If you are to customize the solution in your own GitHub repository, you should provide the link to it here to make sure the deployment fetches the files from your repo. This repo has to be public for the deployment to work.
+```
     "AdminPasswordSecret": "adminPassword",
+```
+The *AdminPasswordSecret* variable holds the name of the Keyvault secret in which the password of the domain join service account will be stored.
+```
     "existingDomainUsername": "[first(split(parameters('tenantAdminDomainJoinUPN'), '@'))]",
     "existingDomainName": "[split(parameters('tenantAdminDomainJoinUPN'), '@')[1]]",
+```
+The *existingDomainUsername* and *existingDomainName* variables are both taken from the domain join service account UPN, where the domain name is used to perform the domain join of the virtual machines.
+```
     "identityName": "WVDServicePrincipal",
+```
+The *identityName* variable holds the name of the managed identity that will be deployed in this template. This managed identity is then used to run certain deployment scripts.
+```
     "location": "[resourcegroup().location]",
     "rgName": "[resourcegroup().name]",
+```
+The *location* variable will hold the location in which all WVD resources will be deployed. The *rgName* or resource group name holds the name of the resource group in which you're deploying.
+```
     "keyvaultName": "[concat('keyvault', parameters('utcValue'))]",
     "assetsName": "[concat('aset', toLower(parameters('utcValue')))]",
     "profilesName": "[concat('prof', toLower(parameters('utcValue')))]",
     "autoAccountName": "[concat('auto', toLower(parameters('utcValue')))]",
+```
+The above variables hold the names of resources deployed in this template that require a unique identifier, in this case being a Keyvault, two Storage Accounts (the assets storage, which will hold the Modules/ARM folder, and the profiles storage for FSLogix), and an Automation Account.
+```
     "uniquestr": "[uniqueString(resourceGroup().id, deployment().name)]",
     "runbookName": "[concat('wvdrunbook','-',variables('uniquestr'))]",
-    "subnet-id": "[resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubnetName'))]",
+```
+The *uniquestr* variable is used to generate a unique name for the runbooks used in this ARM template
+```
     "tenantId": "[subscription().tenantId]",
+```
+The *tenantId* variable holds the ID of your AAD tenant.
+```
     "uniqueBase0": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'MSISetup'))]",
     "uniqueBase": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName')))]",
     "uniqueBase2": "[toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup'))]",
@@ -109,9 +80,18 @@ To understand the first of the two major deployments in the WVD Quickstart, the 
     "scriptUri0": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/configureMSI.ps1')]",
     "scriptUri1": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
     "scriptUri2": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
+```
+The above variables are used to create unique names for the runbook jobs that will be executed in this ARM deployment. The *scriptUri* variables hold the location of the three runbook scripts that will be run.
+```
     "devOpsName": "WVDQuickstart0715",   
     "devOpsProjectName": "WVDQuickstart0715",
+```
+The above variables contain the name of the DevOps organization (*devOpsName*) and the DevOps project that will be created in this deployment.
+```
     "targetGroup": "WVDTestUsers",
+```
+The *targetGroup* variable holds the name of the user group that will be assigned to the WVD environment.
+```
     "automationVariables": [
         {
             "name": "subscriptionid",
@@ -121,82 +101,11 @@ To understand the first of the two major deployments in the WVD Quickstart, the 
             "name": "accountName",
             "value": "[concat('\"',variables('autoAccountName'),'\"')]"
         },
-        {
-            "name": "AppName",
-            "value": "[concat('\"',variables('identityName'),'\"')]"
-        },
-        {
-            "name": "ResourceGroupName",
-            "value": "[concat('\"',variables('rgName'),'\"')]"
-        },
-        {
-            "name": "fileURI",
-            "value": "[concat('\"',variables('_artifactsLocation'),'\"')]"
-        },
-        {
-            "name": "orgName",
-            "value": "[concat('\"',variables('devOpsName'),'\"')]"
-        },
-        {
-            "name": "projectName",
-            "value": "[concat('\"',variables('devOpsProjectName'),'\"')]"
-        },
-        {
-            "name": "location",
-            "value": "[concat('\"',variables('location'),'\"')]"
-        },
-        {
-            "name": "adminUsername",
-            "value": "[concat('\"',variables('existingDomainUsername'),'\"')]"
-        },
-                    {
-            "name": "domainName",
-            "value": "[concat('\"',variables('existingDomainName'),'\"')]"
-        },
-        {
-            "name": "keyvaultName",
-            "value": "[concat('\"',variables('keyvaultName'),'\"')]"
-        },
-        {
-            "name": "assetsName",
-            "value": "[concat('\"',variables('assetsName'),'\"')]"
-        },
-        {
-            "name": "profilesName",
-            "value": "[concat('\"',variables('profilesName'),'\"')]"
-        },
-        {
-            "name": "tenantAdminDomainJoinUPN",
-            "value": "[concat('\"',parameters('tenantAdminDomainJoinUPN'),'\"')]"
-        },
-        {
-            "name": "computerName",
-            "value": "[concat('\"',parameters('computerName'),'\"')]"
-        },
-        {
-            "name": "existingVnetName",
-            "value": "[concat('\"',parameters('existingVnetName'),'\"')]"
-        },
-        {
-            "name": "existingSubnetName",
-            "value": "[concat('\"',parameters('existingSubnetName'),'\"')]"
-        },
-        {
-            "name": "virtualNetworkResourceGroupName",
-            "value": "[concat('\"',parameters('virtualNetworkResourceGroupName'),'\"')]"
-        },
-        {
-            "name": "targetGroup",
-            "value": "[concat('\"', variables('targetGroup'),'\"')]"
-        },
-        {
-            "name": "identitySolution",
-            "value": "[concat('\"',parameters('identitySolution'),'\"')]"
-        },
-        {
-            "name": "notificationEmail",
-            "value": "[concat('\"',parameters('optionalNotificationEmail'),'\"')]"
-        }
+        ....
+        ....
     ]   
 },
 ```
+The *automationVariables* section, which is not shown in full here, contains a list of variables and parameters that will be saved as variables in the Automation account that is created in this deployment. These variables will be accessed by the runbook scripts to generate the appropriate parameter files for the WVD deployment.
+
+### Resources
