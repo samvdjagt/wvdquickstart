@@ -24,4 +24,35 @@ The folder structure in the master branch is as follows:
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads" target="_blank">Uploads</a>: This folder contains the Custom Script Extensions that are installed on the newly deployed WVD VMs.
   * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/Scripts" target="_blank">/Scripts</a>: This folder contains the three different custom script extensions that are installed: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">Deploy.json</a>: This is the ARM template used for the initial DevOps setup deployment.
+
+### ARMRunbookScripts
+* checkAzureCredentials.ps1: This script makes sure that the entered Azure Admin credentials are correct. 
+* configureMSI.ps1: Script that configures the 'WVDServicePrincipal' managed identity in the deployment resource group to give it the *contributor* role on the subscription. This is needed to run deployment scripts in the main ARM template successfully.
+* createDevopsPipeline.sh: This Azure CLI script creates and starts a DevOps pipeline in the newly created DevOps project.
+* createServicePrincipal.ps1: This script creates the AAD application service principal used to create a service connection between the Azure subscription and the DevOps project. If the application already exists, this script will update the existing one with the right permissions.
+* devopssetup.ps1: This script makes a number of REST API calls to create a DevOps project, a service connection between the Azure Subscription and the DevOps project, to initialize the DevOps repository with all the required files, to set some permissions in DevOps, and to generate the main automation parameter files: appliedParmeters.psd1 and variables.yml.
+
+#### ARMRunbookScripts/static
+The azuremodules.zip in this folder contains the following PowerShell modules:
+* Az.Accounts
+* Az.Automation
+* Az.Keyvault
+* Az.ManagedServiceIdentity
+* Az.Resources
+* Az.Websites
+* AzureAD
+If you want to use additional Powershell modules in your runbook scripts, you can add them to this zip folder and adapt the runbookscripts accordingly to install them.
+The other two zip folder contain static files related to WVD SAAS.
+
+### Modules/ARM
+
+### QS-WVD
+#### QS-WVD/parameters
+#### QS-WVD/scripts
+#### QS-WVD/static
+#### QS-WVD/static/templates/pipelineinput
+### SharedDeploymentFunctions
+### Uploads
+#### Uploads/scripts
+### deploy.json
  
