@@ -10,7 +10,7 @@ In case you run into any issues while using the WVD Quickstart, this page might 
 - MORE TO COME - 
 
 ### Invalid Configuration
-A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>
+A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>.
 
 ### CheckAzureCredentials failed
 If you get this error, it means that the deployment was unable to authenticate to your Azure account. Please make sure that the Azure Admin credentials you entered are correct and try to redeploy.
