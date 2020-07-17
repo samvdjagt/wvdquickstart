@@ -10,6 +10,7 @@ To understand how the WVD Quickstart works, this page contains in-depth explanat
 * <a href="deployconcept">Conceptual Deployment Overview</a>
 * <a href="armdeployment">Azure Resource Manager deployment: DevOps setup</a>
 * <a href="devops">DevOps Automation</a>
+* <a href="repo">Respository breakdown by file</a>
 
 Before diving in, the diagram below gives a good overview of all components of the Quickstart, as well as all the resources that are deployed in the process.
 
