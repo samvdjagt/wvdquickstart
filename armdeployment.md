@@ -5,7 +5,7 @@ filename: armdeployment
 ---
 
 ## Breakdown of ARM Deployment to Setup Azure DevOps
-To understand the first of the two major deployments in the WVD Quickstart, the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the ARM template itself.
+To understand the first of the two major deployments in the WVD Quickstart (for an overview, please see <a href="concepts">Concepts</a> section), the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">ARM template</a> itself.
 
 ### Parameters
 In the parameters section of the ARM template, you'll find all the parameters that are exposed to the user input. ALl of these parameters come with a description to indicate what they're used for. These are typically pretty straightforward and will not be explained further in this documentation.
