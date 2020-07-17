@@ -5,7 +5,7 @@
             "createGroup": true,
             "assignUsers": true,
             "syncAD": true,
-            "userName": "WVDTestUser001",
+            "userName": "WVDTestUser005",
             "password": "wvdTest123!"
         }
     ]

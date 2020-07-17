@@ -19,6 +19,7 @@ $existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
 $computerName = Get-AutomationVariable -Name 'computerName'
 $targetGroup = Get-AutomationVariable -Name 'targetGroup'
 $AutomationAccountName = Get-AutomationVariable -Name 'AccountName'
+$identitySolution = Get-AutomationVariable -Name 'identitySolution'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -189,7 +190,32 @@ start-sleep -Seconds 20
 $split = $tenantAdminDomainJoinUPN.Split("@")
 $domainUsername = $split[0]
 $domainName = $split[1]
+
+# In case AADDS is used, create a new user here, and assign it to the targetGroup. The principalID of this group will then be used.
+if ($identitySolution -eq 'AADDS') {
+  $url = $($fileURI + "/Modules/ARM/UserCreation/Parameters/users.parameters.json")
+  Invoke-WebRequest -Uri $url -OutFile "C:\users.parameters.json"
+  $ConfigurationJson = Get-Content -Path "C:\users.parameters.json" -Raw -ErrorAction 'Stop'
+
+  try { $UserConfig = $ConfigurationJson | ConvertFrom-Json -ErrorAction 'Stop' }
+  catch {
+    Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
+  }
+
+  foreach ($config in $UserConfig.userconfig) {
+    $userName = $config.userName
+    $upn = $($userName + "@" + $domainName)
+      if ($config.createGroup) { New-AzADGroup -DisplayName "$targetGroup" -MailNickname "$targetGroup" }
+      if ($config.createUser) { New-AzADUser -UserPrincipalName $upn -DisplayName "$userName" -MailNickname $userName -Password (convertto-securestring $config.password -AsPlainText -Force) }
+      if ($config.assignUsers) { Add-AzADGroupMember -MemberUserPrincipalName  $upn -TargetGroupDisplayName $targetGroup }
+      Start-Sleep -Seconds 1
+  }
+}
+
 $principalIds = (Get-AzureADGroup -SearchString $targetGroup).objectId
+# In case the above search finds multiple groups, pick the first PrincipalId. Template only works when one principalId is supplied, not for multiple.
+$split = $principalIds.Split(' ')
+$principalIds = $split[0]
 Write-Output "Found user group $targetGroup with principal Id $principalIds"
 
 # Get ID of the commit we just pushed, needed for the next commit below
@@ -214,6 +240,7 @@ $content = $content.Replace("[wvdAssetsStorage]", $wvdAssetsStorage)
 $content = $content.Replace("[resourceGroupName]", $ResourceGroupName)
 $content = $content.Replace("[profilesStorageAccountName]", $profilesStorageAccountName)
 $content = $content.Replace("[autoAccountName]", $AutomationAccountName)
+$content = $content.Replace("[identitySolution]", $identitySolution)
 $content = $content.Replace('"', '')
 write-output $content
 
@@ -240,6 +267,7 @@ $parameters = $parameters.Replace("[profilesName]", $profilesStorageAccountName)
 $parameters = $parameters.Replace("[resourceGroupName]", $ResourceGroupName)
 $parameters = $parameters.Replace("[principalIds]", $principalIds)
 $parameters = $parameters.Replace("[targetGroup]", $targetGroup)
+$parameters = $parameters.Replace("[identitySolution]", $identitySolution)
 $parameters = $parameters.Replace('"', "'")
 write-output $parameters
 

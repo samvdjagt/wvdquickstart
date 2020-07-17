@@ -2,6 +2,7 @@
 $ConfigurationFileName = "users.parameters.json"
 $domainName = $args[0]
 $targetGroup = $args[1]
+$artifactsLocation = $args[2]
 
 $domainName
 
@@ -113,7 +114,8 @@ LogInfo("###################")
 LogInfo("## 0 - LOAD DATA ##")
 LogInfo("###################")
 
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/samvdjagt/dev/master/Uploads/users.parameters.json" -OutFile "C:\users.parameters.json"
+$url = $($artifactsLocation + "/Modules/ARM/UserCreation/Parameters/users.parameters.json")
+Invoke-WebRequest -Uri $url -OutFile "C:\users.parameters.json"
 $ConfigurationJson = Get-Content -Path "C:\users.parameters.json" -Raw -ErrorAction 'Stop'
 
 try { $UserConfig = $ConfigurationJson | ConvertFrom-Json -ErrorAction 'Stop' }
