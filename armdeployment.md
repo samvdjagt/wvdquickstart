@@ -120,6 +120,7 @@ In this section, the Resources section of the ARM template will be explained pie
         "properties": {}
     },
 ```
+#### Automation Account
 The first resource deployed in this template is a Managed Identity that will be used to run deployment scripts later in this template. This resource will, by default, appear as "WVDServicePrincipal" in your deployment's resource group.
 ```
     {
@@ -321,6 +322,8 @@ The third and last runbook runs the <a href="https://github.com/samvdjagt/wvdqui
     },
 ```
 The above section deploys the Automation variables previously mentioned in the *variables* section of this web page. These variables are accessed by the runbook scripts.
+
+#### Keyvault
 ```
     {
         "type": "Microsoft.KeyVault/vaults",
@@ -366,6 +369,8 @@ The above section deploys the Automation variables previously mentioned in the *
     },
 ```
 This section deploys a Keyvault, as well as a secret that holds the password to the Azure Admin account. This secret will later be accessed by the DevOps pipeline when deploying the WVD virtual machines.
+
+#### DevOps Organization
 ```
     {
         "name": "[variables('devOpsName')]",
@@ -383,6 +388,8 @@ This section deploys a Keyvault, as well as a secret that holds the password to 
     },
 ```
 The above section creates the DevOps organization that will host the WVD deployment pipeline.
+
+#### Custom Deployment Scripts
 ```
     {
         "type": "Microsoft.Resources/deploymentScripts",
