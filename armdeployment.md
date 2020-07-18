@@ -33,7 +33,7 @@ In the parameters section of the ARM template, you'll find all the parameters th
 The variables section holds certain values that are used throughout the deployment, that are not exposed to the user. As these are less obvious, their meaning and use will be explained in this section.
 ```
 "variables": {
-    "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/dev/master",
+    "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/wvdquickstart/master",
 ```
 The *artifactslocation* variable holds the URL to the GitHub repository that is used throughout the deployment to fetch required files. If you are to customize the solution in your own GitHub repository, you should provide the link to it here to make sure the deployment fetches the files from your repo. This repo has to be public for the deployment to work.
 ```
