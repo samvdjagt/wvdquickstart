@@ -56,12 +56,27 @@ Every module in this folder follows the same folder structure:
 One important module is <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation" target="_blank">UserCreation</a>, as this folder contains the script <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation/scripts/createUsers.ps1" target="_blank">createUsers.ps1</a> that is used in Native AD deployments to create a new user in on the domain controller through a custom script extension.
 
 ### QS-WVD
+This is a crucial folder, as it contains the deployment parameters as well as the DevOps automation files. Directly in the folder you will find the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/pipeline.yml" target="_blank">pipeline.yml</a> and <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/variables.template.yml" target="_blank">variables.template.yml</a> files, which are both further explained <a href="devops" target="_blank">here</a>. The remaining subfolders are explained below.
+
 #### QS-WVD/parameters
+While this folder only holds a Readme.MD file, it is used in the automation to store the WVD ARM deployment parameter files, and it should therefore not be deleted.
+
 #### QS-WVD/scripts
+This folder contains certain Powershell scripts that are invoked by the DevOps pipeline:
+
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Invoke-StorageAccountPostDeployment.ps1" target="_blank">Invoke-StorageAccountPostDeployment.ps1</a>: This script is used in the deployment of the Assets storage account (see <a href="devops" target="_blank">DevOps</a> to upload the required files for the WVD Virtual Machine Custom Script Extensions.
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/New-PipelineParameterSetup.ps1" target="_blank">New-PipelineParameterSetup.ps1</a>: This script is called at the beginning of the DevOps pipeline (explained <a href="devops" target="_blank">here</a>) to generate the parameter files for the deployment of WVD resources.
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Update-WVDHostPool.ps1" target="_blank">Update-WVDHostPool.ps1</a> and <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Update-WVDHostPoolV2.ps1" target="_blank">Update-WVDHostPoolV2.ps1</a> are currently not used in the automation, but they can be used to update existing host pools with a new image.
+
 #### QS-WVD/static
+
 #### QS-WVD/static/templates/pipelineinput
+
 ### SharedDeploymentFunctions
+
 ### Uploads
+
 #### Uploads/scripts
+
 ### deploy.json
  
