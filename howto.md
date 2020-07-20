@@ -27,7 +27,8 @@ Once you've satisfied all the prerequisites, you are ready to deploy using the Q
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a><br>
 
-The above button will take you to the Azure Portal, where your screen should look like the following:
+The above button will take you to the Azure Portal, where your screen should look like the image below. To understand what input is expected for all the listed parameters, the 'i' balloons to the left of every parameter will give you guidance.
+
 ![ARM Template](images/ARMInput.PNG?raw=true)
 
 ### WVD Deployment: DevOps Pipeline
