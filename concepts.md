@@ -7,7 +7,7 @@ filename: concepts
 ## Conceptual breakdown of the WVD Quickstart
 To understand how the WVD Quickstart works, this page will walk you through a conceptual overview. In addition to the overview on this page, the links below provide a more in-depth walkthrough of certain components of the solution, which can be very helpful in case you want to understand the code behind the solution or when you want to more advanced customizations.
 
-* For an in-depth breakdown of the ARM template used to configure DevOps, which is the template used when you click the blue "Deploy to Azure" button, please see <a href="armdeployment">Azure Resource Manager deployment: DevOps setup</a>
+* For an in-depth breakdown of the ARM template used to configure DevOps, which is the template used when you click the blue "Deploy to Azure" button, please see <b><a href="armdeployment">Azure Resource Manager deployment: DevOps setup</a></b>
 * For an in-depth analysis of the DevOps automation used to deploy the WVD environment, please visit <a href="devops">DevOps Automation</a>
 * To understand this GitHub repository, its structure and all its individual files, the <a href="repo">Respository breakdown by file</a> gives an in-depth walkthrough of the entire repository with explanations on individual files' purpose and role.
 
