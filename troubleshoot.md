@@ -7,10 +7,10 @@ filename: troubleshoot
 ## WVD Quickstart Troubleshooting
 In case you run into any issues while using the WVD Quickstart, this page might prove helpful to you. This page will cover certain common errors, as well as ways to solve them. Additionally, this page lists some known limitations of the solution.
 
-- MORE TO COME -
-
 ### Known Limitations
-
+* In the *userCreation* custom script extension, there's a small chance it will fail when trying to sync the newly created user to Azure AD, if a cync cycle is already running
+* In the *userCreation* custom script extension, the profiles storage account will be joined to the domain using a new *computerAccount*. By default, this computerAccount will be created in the *Domain Controllers* Organizational Unit (OU). In case this OU doesn't exist in your environment, the script will fail. In that case, you would have to change this default in the createUsers.ps1 script in the Modules/ARM/UserCreation/scripts folder. For this customization, you'll have to clone this GitHub repository as explained in the <a href="customize">Customize</a> section.
+* The WVD Quickstart cannot configure your native AD environment for you. You will have to have a virtual network and domain controller setup and synced to Azure AD (with AD Connect) as a prerequisite before deploying with the Quickstart.
 
 ### Invalid Configuration
 A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>.
