@@ -42,9 +42,10 @@ function Invoke-GeneralDeployment {
     Write-Verbose ($optionalParameters | Format-Table | Out-String) -Verbose
 
     Write-Verbose "Deploy to resource group '$resourcegroupName'"
+    $deploymentId = WVD-Quickstart-Deployment
 
     $DeploymentInputs = @{
-      Name                  = $moduleName
+      Name                  = ("{0}-{1}" -f $moduleName, $deploymentId)
       TemplateUri           = $templateUri
       TemplateParameterFile = $parameterFilePath
       Verbose               = $true
