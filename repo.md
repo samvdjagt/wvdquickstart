@@ -78,5 +78,6 @@ This folder contains certain Powershell scripts that are invoked by the DevOps p
 
 #### Uploads/scripts
 
-### deploy.json
+### <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a>
+This is the ARM template used for the initial deployment, which is explained in a high-level <a href="concepts" target="_blank">here</a> and in a detailed breakdown <a href="armdeployment" target="_blank">here</a>.
  
