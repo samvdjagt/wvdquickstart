@@ -144,7 +144,7 @@ LogInfo("## 1 - EVALUATE ##")
 LogInfo("##################")
 foreach ($config in $azfilesconfig.azfilesconfig) {
     if ($config.enableAzureFiles) {
-        if ($config.identitySolution -eq "AD") {
+        if ($config.identityApproach -eq "AD") {
             LogInfo("############################")
             LogInfo("## 2 - Enable Azure Files ##")
             LogInfo("############################")
@@ -179,7 +179,7 @@ foreach ($config in $azfilesconfig.azfilesconfig) {
 
             LogInfo("Azure Files Enabled!")
         }
-        elseif ($config.identitySolution -eq "AADDS") {
+        elseif ($config.identityApproach -eq "AADDS") {
             LogInfo("AADDS is used, for which the storage account has been enabled in the DevOps pipeline. No further action is needed in this Custom Script Extension")
         }
     }

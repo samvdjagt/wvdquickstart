@@ -19,7 +19,7 @@ $existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
 $computerName = Get-AutomationVariable -Name 'computerName'
 $targetGroup = Get-AutomationVariable -Name 'targetGroup'
 $AutomationAccountName = Get-AutomationVariable -Name 'AccountName'
-$identitySolution = Get-AutomationVariable -Name 'identitySolution'
+$identityApproach = Get-AutomationVariable -Name 'identityApproach'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -192,7 +192,7 @@ $domainUsername = $split[0]
 $domainName = $split[1]
 
 # In case AADDS is used, create a new user here, and assign it to the targetGroup. The principalID of this group will then be used.
-if ($identitySolution -eq 'AADDS') {
+if ($identityApproach -eq 'AADDS') {
   $url = $($fileURI + "/Modules/ARM/UserCreation/Parameters/users.parameters.json")
   Invoke-WebRequest -Uri $url -OutFile "C:\users.parameters.json"
   $ConfigurationJson = Get-Content -Path "C:\users.parameters.json" -Raw -ErrorAction 'Stop'
@@ -240,7 +240,7 @@ $content = $content.Replace("[wvdAssetsStorage]", $wvdAssetsStorage)
 $content = $content.Replace("[resourceGroupName]", $ResourceGroupName)
 $content = $content.Replace("[profilesStorageAccountName]", $profilesStorageAccountName)
 $content = $content.Replace("[autoAccountName]", $AutomationAccountName)
-$content = $content.Replace("[identitySolution]", $identitySolution)
+$content = $content.Replace("[identityApproach]", $identityApproach)
 $content = $content.Replace('"', '')
 write-output $content
 
@@ -267,7 +267,7 @@ $parameters = $parameters.Replace("[profilesName]", $profilesStorageAccountName)
 $parameters = $parameters.Replace("[resourceGroupName]", $ResourceGroupName)
 $parameters = $parameters.Replace("[principalIds]", $principalIds)
 $parameters = $parameters.Replace("[targetGroup]", $targetGroup)
-$parameters = $parameters.Replace("[identitySolution]", $identitySolution)
+$parameters = $parameters.Replace("[identityApproach]", $identityApproach)
 $parameters = $parameters.Replace('"', "'")
 write-output $parameters
 

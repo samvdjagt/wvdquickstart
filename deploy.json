@@ -27,10 +27,10 @@
                 "description": "The resource group containing the existing virtual network."
             }
         },
-        "computerName": {
+        "domainControllerVMName": {
             "type": "string",
             "metadata": {
-                "description": "The name of the VM with the domain controller."
+                "description": "The name of the VM with the domain controller on it. Required only when using AD Identity Approach."
             },
             "defaultValue": ""
         },
@@ -58,10 +58,10 @@
                 "description": "The password that corresponds to the tenant admin UPN."
             }
         },
-        "identitySolution": {
+        "identityApproach": {
             "type": "string",
             "metadata": {
-                "description": "Specify which identity solution you would like to use for your WVD deployment. Pick either AD (Active Directory Domain Services) or AADDS (Azure Active Directory Domain Services)"
+                "description": "Specify which identity approach you would like to use for your WVD deployment. Pick either AD (Active Directory Domain Services) or AADDS (Azure Active Directory Domain Services)"
             },
             "allowedValues": [
                 "AD",
@@ -162,7 +162,7 @@
             },
             {
                 "name": "computerName",
-                "value": "[concat('\"',parameters('computerName'),'\"')]"
+                "value": "[concat('\"',parameters('domainControllerVMName'),'\"')]"
             },
             {
                 "name": "existingVnetName",
@@ -181,8 +181,8 @@
                 "value": "[concat('\"', variables('targetGroup'),'\"')]"
             },
             {
-                "name": "identitySolution",
-                "value": "[concat('\"',parameters('identitySolution'),'\"')]"
+                "name": "identityApproach",
+                "value": "[concat('\"',parameters('identityApproach'),'\"')]"
             },
             {
                 "name": "notificationEmail",
@@ -499,7 +499,7 @@
             ],
             "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
             "subscriptionId": "[subscription().subscriptionId]",
-            "condition": "[equals(parameters('identitySolution'), 'AD')]",
+            "condition": "[equals(parameters('identityApproach'), 'AD')]",
             "properties": {
             "mode": "Incremental",
             "template": {
@@ -511,7 +511,7 @@
                 {
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(parameters('computerName'),'/', 'userCreation')]",
+                    "name": "[concat(parameters('domainControllerVMName'),'/', 'userCreation')]",
                     "location": "[resourcegroup().location]",
                     "dependsOn": [
                     ],

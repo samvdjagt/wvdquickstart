@@ -69,7 +69,7 @@ stages:
                   artifact: 'parameters'
                   publishLocation: 'pipeline'
 
-  - deployment: Deploy_WVDAssetsStorageAccount
+  - deployment: Deploy_wvdAssetsStorage
     dependsOn:
     - Process_input_parameters
     environment: SBX
@@ -91,7 +91,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvd-mgmt-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -102,7 +102,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/storageaccount.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-mgmt-rg)"
+                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"
@@ -129,7 +129,7 @@ stages:
                     $functionInput = @{
                       orchestrationFunctionsPath = Join-Path '$(Build.Repository.LocalPath)' '$(orchestrationFunctionsPath)'
                       wvdUploadsPath = Join-Path '$(Pipeline.Workspace)/parameters/s' '$(wvdUploadsPath)'          
-                      storageAccountName         = "$(wvdAssetsStorageAccount)"
+                      storageAccountName         = "$(wvdAssetsStorage)"
                     }
 
                     Write-Verbose "Invoke task with" -Verbose
@@ -142,7 +142,7 @@ stages:
 
   - deployment: Deploy_WVDProfilesStorageAccount01
     dependsOn:
-    - Deploy_WVDAssetsStorageAccount
+    - Deploy_wvdAssetsStorage
     environment: SBX
     condition: and(succeeded(), true)
     timeoutInMinutes: 120
@@ -154,7 +154,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvd-mgmt-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task_01
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -165,15 +165,15 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdprofiles-storageaccount-01.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-mgmt-rg)"
+                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"
                       parameterFilePath             = $parameterFilePath
                     }
                     
-                    Write-Verbose "Checking identity approach: $(identitySolution)" -Verbose
-                    If("$(identitySolution)" -eq "AADDS") {
+                    Write-Verbose "Checking identity approach: $(identityApproach)" -Verbose
+                    If("$(identityApproach)" -eq "AADDS") {
                       Write-Verbose "Creating azureFilesIdentityBasedAuthentication object and set to AADDS" -Verbose
                       $parameterObjects=@{
                         azureFilesIdentityBasedAuthentication=@{
@@ -206,7 +206,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdHostPools] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [WvdHostPools] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_WVDHostPool_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -217,7 +217,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdhostpool.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "WvdHostPools"
                       moduleVersion                 = "0.0.1"
@@ -247,7 +247,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdApplicationGroups] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [WvdApplicationGroups] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_WvdApplicationGroups_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -258,7 +258,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvddesktoppapplicationgroup.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "WvdApplicationGroups"
                       moduleVersion                 = "2020-06-02"
@@ -288,7 +288,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdApplicationGroups] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [WvdApplicationGroups] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_WvdApplicationGroups_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -299,7 +299,7 @@ stages:
                 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdapplicationgroup01.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "WvdApplicationGroups"
                       moduleVersion                 = "2020-06-02"
@@ -336,7 +336,7 @@ stages:
                   }
                 displayName: 'Install required module'
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [VirtualMachines] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [VirtualMachines] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_SessionHosts_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -348,7 +348,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdsessionhost.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "VirtualMachines"
                       moduleVersion                 = "2020-06-02"
@@ -359,7 +359,7 @@ stages:
                     $functionInput.Keys | ForEach-Object { Write-Verbose ("PARAMETER: `t'{0}' with value '{1}'" -f $_, $functionInput[$_]) -Verbose }
 
                     Write-Verbose "Fetch and populated pipeline outputs" -Verbose
-                    $regInfo = Get-AzWvdRegistrationInfo -HostPoolName '$(hostpoolname)' -ResourceGroupName '$(wvd-hostpool01-rg)'
+                    $regInfo = Get-AzWvdRegistrationInfo -HostPoolName '$(hostpoolname)' -ResourceGroupName '$(resourceGroupName)'
 
                     $overwriteInputObject = @{
                       parameterFilePath = $parameterFilePath
@@ -424,7 +424,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdApplications] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [WvdApplications] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_WvdApplications_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -435,7 +435,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdapplication.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "WvdApplications"
                       moduleVersion                 = "2020-06-02"
@@ -464,7 +464,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdWorkspaces] in [$(wvd-hostpool01-rg)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [WvdWorkspaces] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_WvdWorkspaces_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -475,7 +475,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdworkspace.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvd-hostpool01-rg)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "WvdWorkspaces"
                       moduleVersion                 = "0.0.1"
@@ -537,11 +537,11 @@ stages:
                   ScriptType: InlineScript
                   inline: |
                     Write-Verbose "Load function" -Verbose
-                    . '$(Build.Repository.LocalPath)/$(rgFolderPath)/Scripts/Invoke-UpdateHostPool.ps1'
+                    . '$(Build.Repository.LocalPath)/$(parameterFolderPath)/Scripts/Invoke-UpdateHostPool.ps1'
 
                     $functionInput = @{
                       HostPoolName       = '$(HostPoolName)'
-                      HostPoolRGName     = '$(wvd-hostpool01-rg)'
+                      HostPoolRGName     = '$(resourceGroupName)'
                       LogoffDeadline     = '$(LogoffDeadline)'
                       LogOffMessageTitle = '$(LogOffMessageTitle)'
                       LogOffMessageBody  = '$(LogOffMessageBody)'

@@ -5,22 +5,16 @@ variables:
 #############
 #region general
 
-- name: orchestrationFunctionsPath
+- name: orchestrationFunctionsPath # Name of folder where some functions are located
   value: SharedDeploymentFunctions
 
-- name: modulePath
-  value: Modules/$(moduleName)/$(moduleVersion)
-
-- name: vmImage
+- name: vmImage # Image of agent used in DevOps pipeline
   value: "ubuntu-latest"
 
-- name: serviceConnection
+- name: serviceConnection # Name of the service connection between the Azure subscription and DevOps
   value: "WVDServiceConnection"
 
-- name: automationAccountName
-  value: "[autoAccountName]"
-
-- name: location
+- name: location 
   value: "[location]"
 
 #endregion
@@ -30,66 +24,25 @@ variables:
 #######################
 #region specific
 
-# Deployed Module Specs
-- name: resourceGroupModuleName
-  value: ResourceGroup
-- name: resourceGroupModuleVersion
-  value:  0.0.1
-
-- name: keyVaultModuleName
-  value: KeyVault
-- name: keyVaultModuleVersion
-  value:  0.0.1
-
-- name: storageAccountModuleName
-  value: StorageAccounts
-- name: storageAccountModuleVersion
-  value:  1.0.0  
-
-- name: automationAccountModuleName
-  value: AutomationAccounts
-- name: automationAccountModuleVersion
-  value:  0.0.3
-
-- name: rsvModuleName
-  value: RecoveryServicesVaults
-- name: rsvModuleVersion
-  value:  0.0.1  
-
 # Jobs
-- name: enableJobDeployResourceGroup # To enable/disable job
-  value: true
-
-- name: enableJobDeployWVDKeyVault # To enable/disable job
-  value: false
-
 - name: enableJobDeployAssetsStorageAccount # To enable/disable job
   value: true
 
 - name: parameterFolderPath
   value: 'QS-WVD'
 
-## ResourceGroup
-- name: wvd-mgmt-rg
+## Management ResourceGroup for assets / profiles storage account
+- name: wvdMgmtResourceGroupName
   value: "QS-WVD-MGMT-RG"
 
-- name: rgFolderPath
-  value: 'QS-WVD' # Change this to RG name at the end
-
 ### Key Vault ###
-- group: "WVDSecrets"
+- group: "WVDSecrets" # Name of DevOps variable group name
 
 - name: domainJoinUserName
   value: "[adminUsername]"
 
-- name: domain
-  value: "[domainName]"
-
-- name: keyVaultName
-  value: "[keyVaultName]"
-
 ### Storage Account ###
-- name: wvdAssetsStorageAccount
+- name: wvdAssetsStorage
   value: "[wvdAssetsStorage]"
 
 - name: wvdUploadsPath
@@ -102,19 +55,13 @@ variables:
 ################################
 #region specific
 
-## Resource group
-- name: wvd-hostpool01-rg
+## Resource group where WVD resources will be deployed
+- name: resourceGroupName
   value: "[resourceGroupName]"
-
-- name: hprgFolderPath
-  value: '$(orchestrationPath)/[resourceGroupName]' # Change this to RG name at the end
 
 ## Jobs
 - name: enableApplicationJob
   value: false  # To enable/disable remote apps job
-  
-- name: enableScaling
-  value: false        # To enable/disable Scaling Job
 
 - name: enableImageUpdate
   value: false    # To enable/disable Image Lifecycle job
@@ -142,7 +89,7 @@ variables:
 - name: profilesStorageAccountName
   value: "[profilesStorageAccountName]"
 
-## Image Lifecycle
+## Image Lifecycle. These parameters are not used yet but can be used for custom imaging.
 - name: DeleteVM
   value: false
   
@@ -166,7 +113,7 @@ variables:
 #region specific
 
 ## IdentityApproach (AD or AADDS)
-- name: identitySolution
-  value: "[identitySolution]"
+- name: identityApproach
+  value: "[identityApproach]"
 
 #endregion
