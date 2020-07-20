@@ -458,7 +458,7 @@ The above deployment script *checkAzureCredentials* executes the <a href="https:
         ],
         "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
         "subscriptionId": "[subscription().subscriptionId]",
-        "condition": "[equals(parameters('identitySolution'), 'AD')]",
+        "condition": "[equals(parameters('identityApproach'), 'AD')]",
         "properties": {
         "mode": "Incremental",
         "template": {
