@@ -183,6 +183,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
+The job above deploys the *Assets* storage account in the QS-WVD-MGMT-RG resource group (by default). This storage account will be used to store the contents of the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a>: This folder contains the three different custom script extensions that will be installed on the WVD Virtual Machines: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation. It fetches these files from the WVD Quickstart GitHub repository by default. 
 
 #### Profiles Storage Account Deployment
 ```
@@ -239,6 +240,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
+This pipeline job takes care of the profiles storage account deployment. This storage account, by default deployed in the QS-WVD-MGMT-RG resource group, will be used to store the FSLogix user profiles in a file share called *wvdprofiles* by default. This deployment does not carry out the Azure Files enablement for a native AD environment (domain joining the storage account), as this is done through a custom script extensions. In case of using the AADDS identity approach, this flag will in fact be set on the storage account within this pipeline job.
 
 #### WVD Host Pool Deployment
 ```
@@ -282,6 +284,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true  
 ```
+The pipeline jop above deploys the first WVD-specific resource: the host pool to which we will register the virtual machines later on. This deployment is pretty straightforward and uses a standard host pool configuration: the type is "Pooled" and it uses the "BreadthFirst" load-balancing algorithm.
 
 #### Desktop App Group Deployment
 ```
@@ -326,50 +329,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-
-#### Remote App Group Deployment
-```
-  - deployment: Deploy_RemoteAppGroup01
-    dependsOn: 
-    - Deploy_WVDHostPool
-    - Deploy_WVDSessionHosts
-    environment: SBX
-    condition: and(succeeded(), eq(variables['enableApplicationJob'], true))
-    timeoutInMinutes: 120
-    pool:
-      vmImage: $(vmImage)
-    strategy:
-        runOnce:
-          deploy:
-            steps:
-              - checkout: self
-              - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdApplicationGroups] in [$(resourceGroupName)] via [$(serviceConnection)]'
-                name: Deploy_WvdApplicationGroups_Task
-                inputs:
-                  azureSubscription: $(serviceConnection)
-                  ScriptType: InlineScript
-                  inline: |
-                    Write-Verbose "Load function" -Verbose
-                    . '$(Build.Repository.LocalPath)/$(orchestrationFunctionsPath)/Invoke-GeneralDeployment.ps1'
-                
-                    $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdapplicationgroup01.parameters.json'
-                    $functionInput = @{
-                      resourcegroupName             = "$(resourceGroupName)"
-                      location                      = "$(location)"
-                      moduleName                    = "WvdApplicationGroups"
-                      moduleVersion                 = "2020-06-02"
-                      parameterFilePath             = $parameterFilePath
-                    }
-
-                    Write-Verbose "Invoke task with" -Verbose
-                    $functionInput.Keys | ForEach-Object { Write-Verbose ("PARAMETER: `t'{0}' with value '{1}'" -f $_, $functionInput[$_]) -Verbose }
-
-                    Invoke-GeneralDeployment @functionInput -Verbose
-                  errorActionPreference: stop
-                  azurePowerShellVersion: LatestVersion
-                enabled: true
-```
+This pipeline job will deploy a Desktop App Group, after deployment of the host pool and the virtual machines. This deployment registers the user group that will be given access to the WVD environment to this desktop app group, so that the test user will have access to it upon completion of the pipeline.
 
 #### WVD Virtual Machine (Session Host) Deployment
 ```
@@ -468,6 +428,100 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true 
 ```
+The section above describes the pipeline job that will deploy the WVD Virtual Machines, as well as execute the custom script extensions (CSE) on those VMs. Additionally, this section contains logic that will use a custom image for the VMs if this is specified in the *variables.yml* file. If this is not specified, the pipeline will deploy using the gallery image specified in that same file. The line in which the CSE command is formed is the following:
+```
+$windowsScriptExtensionCommandToExecute = 'powershell -ExecutionPolicy Unrestricted -Command "& .\scriptExtensionMasterInstaller.ps1 -AzureAdminUpn $(azureAdminUpn) -AzureAdminPassword $(azureAdminPassword) -domainJoinPassword $(domainJoinPassword) -Dynparameters @{storageaccountkey=\"'+ $($SASKey.Value) +'\"}"'
+```
+As you can see, this command requires certain credentials that cannot be stored as plain text in the *variables.yml* file. Therefore, the pipeline will fetch them from the *WVDSecrets* variable group explained at the top of this page. The CSEs' execution will be handled by the *scriptExtensionMasterInstaller.ps1* file, which will execute the three different CSEs in order.
+
+#### WVD Workspace Deployment
+```
+  - deployment: Deploy_Workspace
+    dependsOn:
+    - Deploy_DesktopAppGroup
+    environment: SBX
+    condition: and(succeeded(), true)
+    timeoutInMinutes: 120
+    pool:
+      vmImage: $(vmImage)
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: self
+              - task: AzurePowerShell@4
+                displayName: 'Deploy module [WvdWorkspaces] in [$(resourceGroupName)] via [$(serviceConnection)]'
+                name: Deploy_WvdWorkspaces_Task
+                inputs:
+                  azureSubscription: $(serviceConnection)
+                  ScriptType: InlineScript
+                  inline: |
+                    Write-Verbose "Load function" -Verbose
+                    . '$(Build.Repository.LocalPath)/$(orchestrationFunctionsPath)/Invoke-GeneralDeployment.ps1'
+
+                    $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdworkspace.parameters.json'
+                    $functionInput = @{
+                      resourcegroupName             = "$(resourceGroupName)"
+                      location                      = "$(location)"
+                      moduleName                    = "WvdWorkspaces"
+                      moduleVersion                 = "0.0.1"
+                      parameterFilePath             = $parameterFilePath
+                    }
+
+                    Write-Verbose "Invoke task with" -Verbose
+                    $functionInput.Keys | ForEach-Object { Write-Verbose ("PARAMETER: `t'{0}' with value '{1}'" -f $_, $functionInput[$_]) -Verbose }
+
+                    Invoke-GeneralDeployment @functionInput -Verbose
+                  errorActionPreference: stop
+                  azurePowerShellVersion: LatestVersion
+                enabled: true
+```
+This pipeline job will deploy a WVD Workspace and register the test user group to it, so that upon completion of the pipeline, the test user can login to their WVD environment and access this workspace.
+
+#### Remote App Group Deployment
+```
+  - deployment: Deploy_RemoteAppGroup01
+    dependsOn: 
+    - Deploy_WVDHostPool
+    - Deploy_WVDSessionHosts
+    environment: SBX
+    condition: and(succeeded(), eq(variables['enableApplicationJob'], true))
+    timeoutInMinutes: 120
+    pool:
+      vmImage: $(vmImage)
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: self
+              - task: AzurePowerShell@4
+                displayName: 'Deploy module [WvdApplicationGroups] in [$(resourceGroupName)] via [$(serviceConnection)]'
+                name: Deploy_WvdApplicationGroups_Task
+                inputs:
+                  azureSubscription: $(serviceConnection)
+                  ScriptType: InlineScript
+                  inline: |
+                    Write-Verbose "Load function" -Verbose
+                    . '$(Build.Repository.LocalPath)/$(orchestrationFunctionsPath)/Invoke-GeneralDeployment.ps1'
+                
+                    $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdapplicationgroup01.parameters.json'
+                    $functionInput = @{
+                      resourcegroupName             = "$(resourceGroupName)"
+                      location                      = "$(location)"
+                      moduleName                    = "WvdApplicationGroups"
+                      moduleVersion                 = "2020-06-02"
+                      parameterFilePath             = $parameterFilePath
+                    }
+
+                    Write-Verbose "Invoke task with" -Verbose
+                    $functionInput.Keys | ForEach-Object { Write-Verbose ("PARAMETER: `t'{0}' with value '{1}'" -f $_, $functionInput[$_]) -Verbose }
+
+                    Invoke-GeneralDeployment @functionInput -Verbose
+                  errorActionPreference: stop
+                  azurePowerShellVersion: LatestVersion
+                enabled: true
+```
+This pipeline job is currently turned off, but it can be used to deploy a Remote App Group.
 
 #### Remote Application Deployment
 ```
@@ -512,49 +566,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-
-#### WVD Workspace Deployment
-```
-  - deployment: Deploy_Workspace
-    dependsOn:
-    - Deploy_DesktopAppGroup
-    environment: SBX
-    condition: and(succeeded(), true)
-    timeoutInMinutes: 120
-    pool:
-      vmImage: $(vmImage)
-    strategy:
-        runOnce:
-          deploy:
-            steps:
-              - checkout: self
-              - task: AzurePowerShell@4
-                displayName: 'Deploy module [WvdWorkspaces] in [$(resourceGroupName)] via [$(serviceConnection)]'
-                name: Deploy_WvdWorkspaces_Task
-                inputs:
-                  azureSubscription: $(serviceConnection)
-                  ScriptType: InlineScript
-                  inline: |
-                    Write-Verbose "Load function" -Verbose
-                    . '$(Build.Repository.LocalPath)/$(orchestrationFunctionsPath)/Invoke-GeneralDeployment.ps1'
-
-                    $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdworkspace.parameters.json'
-                    $functionInput = @{
-                      resourcegroupName             = "$(resourceGroupName)"
-                      location                      = "$(location)"
-                      moduleName                    = "WvdWorkspaces"
-                      moduleVersion                 = "0.0.1"
-                      parameterFilePath             = $parameterFilePath
-                    }
-
-                    Write-Verbose "Invoke task with" -Verbose
-                    $functionInput.Keys | ForEach-Object { Write-Verbose ("PARAMETER: `t'{0}' with value '{1}'" -f $_, $functionInput[$_]) -Verbose }
-
-                    Invoke-GeneralDeployment @functionInput -Verbose
-                  errorActionPreference: stop
-                  azurePowerShellVersion: LatestVersion
-                enabled: true
-```
+This pipeline job is currently turned off, but it can be used to deploy a Remote Application.
 
 #### Updating Existing Host Pool With New Image Definition (NOT IMPLEMENTED)
 ```
@@ -631,5 +643,5 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   errorActionPreference: stop
                   azurePowerShellVersion: LatestVersion
                 enabled: true
-
 ```
+This pipeline job is currently turned off, but it can be used to update an existing host pool with a new image.
