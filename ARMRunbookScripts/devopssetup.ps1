@@ -38,6 +38,7 @@ Import-Module Az.Websites -Global
 Import-Module Az.Automation -Global
 Import-Module Az.Managedserviceidentity -Global
 Import-Module Az.Keyvault -Global
+Import-Module Az.Compute -Global
 Import-Module AzureAD -Global
 
 Set-ExecutionPolicy -ExecutionPolicy Undefined -Scope Process -Force -Confirm:$false
@@ -219,9 +220,9 @@ $principalIds = $split[0]
 Write-Output "Found user group $targetGroup with principal Id $principalIds"
 
 # Removing the Custom Script Extension from domain controller VM. When re-running deployment, this means it will re-run the CSE, which can be used to create additional users for example
-$VMCustomScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
+$VMCustomScriptExtension = Get-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
 if ($VMCustomScriptExtension -ne $null) {
-  Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
+  Remove-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
 }
 
 # Get ID of the commit we just pushed, needed for the next commit below
