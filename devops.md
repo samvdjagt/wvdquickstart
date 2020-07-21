@@ -432,7 +432,7 @@ The section above describes the pipeline job that will deploy the WVD Virtual Ma
 ```
 $windowsScriptExtensionCommandToExecute = 'powershell -ExecutionPolicy Unrestricted -Command "& .\scriptExtensionMasterInstaller.ps1 -AzureAdminUpn $(azureAdminUpn) -AzureAdminPassword $(azureAdminPassword) -domainJoinPassword $(domainJoinPassword) -Dynparameters @{storageaccountkey=\"'+ $($SASKey.Value) +'\"}"'
 ```
-As you can see, this command requires certain credentials that cannot be stored as plain text in the *variables.yml* file. Therefore, the pipeline will fetch them from the *WVDSecrets* variable group explained at the top of this page. The CSEs' execution will be handled by the *scriptExtensionMasterInstaller.ps1* file, which will execute the three different CSEs in order.
+As you can see, this command requires certain credentials that cannot be stored as plain text in the *variables.yml* file. Therefore, the pipeline will fetch them from the *WVDSecrets* variable group explained at the top of this page. The CSEs' execution will be handled by the *scriptExtensionMasterInstaller.ps1* file, which will execute the four different CSEs in order.
 
 #### WVD Workspace Deployment
 ```
