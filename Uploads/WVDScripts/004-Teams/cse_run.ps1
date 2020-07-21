@@ -123,8 +123,16 @@ Set-Logger "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension
 $MSIPath = "$($PSScriptRoot)\$ExecutableName"
 LogInfo("Installing teams from path $MSIPath")
 
-$scriptBlock = { msiexec /i $MSIPath /l*v "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\Teams" ALLUSER=1 ALLUSERS=1 }
+LogInfo("Setting registry key Teams")
+if ((Test-Path "HKLM:\Software\Microsoft\Teams") -eq $false) {
+    New-Item -Path "HKLM:\Software\Microsoft\Teams" -Force
+}
+New-ItemProperty "HKLM:\Software\Microsoft\Teams" -Name "IsWVDEnvironment" -Value 1 -PropertyType DWord -Force
+LogInfo("Set IsWVDEnvironment DWord to value 1 successfully.")
+
+$scriptBlock = { msiexec /i $MSIPath /l*v "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\Teams\InstallLog.txt" ALLUSER=1 ALLUSERS=1 }
 LogInfo("Invoking command with the following scriptblock: $scriptBlock")
+LogInfo("Install logs can be found in the InstallLog.txt file in this folder.")
 Invoke-Command $scriptBlock -Verbose
 
-LogInfo("Teams was successfully installed.")
+LogInfo("Teams was successfully installed")

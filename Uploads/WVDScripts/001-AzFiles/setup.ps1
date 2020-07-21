@@ -35,24 +35,26 @@ param(
 
 )
 
-
-
+# Set execution policy for admin user
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force
 
+# Navigate to directory with powershell modules
 Set-Location $PSScriptroot
 
 .\CopyToPSPath.ps1
+
+# Install required modules / packages
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name PowershellGet -MinimumVersion 2.2.4.1 -Force
 
 Install-Module -Name Az -Force -Verbose
-
 Import-Module -Name AzFilesHybrid -Force -Verbose
 
-
+# Authenticate with Azure
 $Credential = New-Object System.Management.Automation.PsCredential($U, (ConvertTo-SecureString $P -AsPlainText -Force))
 Connect-AzAccount -Credential $Credential
 $context = Get-AzContext
 Select-AzSubscription -SubscriptionId $context.Subscription.Id
 
+# Do the storage account domain join
 Join-AzStorageAccountForAuth -ResourceGroupName $RG -StorageAccountName $S -DomainAccountType 'ComputerAccount' -OrganizationalUnitName 'Domain Controllers' -OverwriteExistingADObject
