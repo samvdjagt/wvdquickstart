@@ -14,17 +14,6 @@
                     "showInPortal": true,
                     "iconPath": "C:\\Program Files (x86)\\Notepad++\\Notepad++.exe",
                     "iconIndex": 0
-                },
-                {
-                    "name": "wordpad",
-                    "description": "WordPad by ARM template 2",
-                    "friendlyName": "WordPad",
-                    "filePath": "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe",
-                    "commandLineSetting": "DoNotAllow",
-                    "commandLineArguments": "",
-                    "showInPortal": true,
-                    "iconPath": "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe",
-                    "iconIndex": 0
                 }
             ]
         },

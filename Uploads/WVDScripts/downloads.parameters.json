@@ -7,6 +7,10 @@
         {
             "Url": "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v7.8.7/npp.7.8.7.Installer.exe",
             "DestinationFilePath": "003-NotepadPP/npp.7.8.7.Installer.exe"
+        },
+        {
+            "Url": "https://www.microsoft.com/en-us/microsoft-365/microsoft-teams/download-app#desktopAppDownloadregion",
+            "DestinationFilePath": "004-Teams/Teams_windows_x64.exe"
         }
     ]
 }
