@@ -218,6 +218,9 @@ $split = $principalIds.Split(' ')
 $principalIds = $split[0]
 Write-Output "Found user group $targetGroup with principal Id $principalIds"
 
+# Removing the Custom Script Extension from domain controller VM. When re-running deployment, this means it will re-run the CSE, which can be used to create additional users for example
+$VMCustomScriptExtension = Get-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
+
 # Get ID of the commit we just pushed, needed for the next commit below
 $url = $("https://dev.azure.com/" + $orgName + "/" + $projectName + "/_apis/git/repositories/" + $projectName + "/refs?filter=heads/master&api-version=5.1")
 write-output $url
