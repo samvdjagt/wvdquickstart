@@ -75,9 +75,8 @@ This folder contains the <a href="https://github.com/samvdjagt/wvdquickstart/tre
 This folder contains all the templates for ARM deployment parameter files. These templates are used by the DevOps pipeline as explained <a href="devops" target="_blank">here</a> to generate the parameter files for the deployment of WVD resources in the pipeline. The name of the template file indicates what resource it's used for - I will not go deeper into these here.
 
 ### SharedDeploymentFunctions
-* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Add-CustomParameters.ps1" target="_blank">Add-CustomParameters.ps1</a>
-* file 2
-* file 3
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Add-CustomParameters.ps1" target="_blank">Add-CustomParameters.ps1</a>:
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Invoke-GeneralDeployment.ps1" target="_blank">Invoke-GeneralDeployment.ps1</a>:
 
 #### SharedDeploymentFunctions/Imaging
 #### SharedDeploymentFunctions/Storage
