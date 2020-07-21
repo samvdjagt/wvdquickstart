@@ -106,7 +106,7 @@ Every CSE is run through the *cse_run.ps1* file in each subfolder - These script
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/003-NotepadPP" target="_blank">/003-NotepadPP</a>
   * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/003-NotepadPP/cse_run.ps1" target="_blank">/cse_run.ps1</a>: Main CSE script that is called to install NotepadPlusPlus using the downloaded executable file.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/004-Teams" target="_blank">/004-Teams</a>
-
+  * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/004-Teams/cse_run.ps1" target="_blank">/cse_run.ps1</a>: Main CSE script that is called to install Microsoft Teams using the downloaded executable file. This script will also set the Teams registry key required for it to work in a virtualized environment.
 
 ### <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a>
 This is the ARM template used for the initial deployment, which is explained in a high-level <a href="concepts" target="_blank">here</a> and in a detailed breakdown <a href="armdeployment" target="_blank">here</a>.
