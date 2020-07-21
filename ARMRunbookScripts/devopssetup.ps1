@@ -20,6 +20,7 @@ $computerName = Get-AutomationVariable -Name 'computerName'
 $targetGroup = Get-AutomationVariable -Name 'targetGroup'
 $AutomationAccountName = Get-AutomationVariable -Name 'AccountName'
 $identityApproach = Get-AutomationVariable -Name 'identityApproach'
+$notificationEmail = Get-AutomationVariable -Name 'notificationEmail'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -402,6 +403,28 @@ $body = @"
         "id": "$($variableGroupId)",
         "type": "variablegroup"
     }
+}
+"@
+write-output $body
+
+$response = Invoke-RestMethod -Method PATCH -Uri $url -Headers @{Authorization = "Basic $token"} -Body $body -ContentType "application/json"
+write-output $response
+
+
+$url = $("https://dev.azure.com/" + $orgName + "/_apis/teams?api-version=5.1-preview.3")
+write-output $url
+
+$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
+write-output $response
+$teamId = $response.value.id
+
+$url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscribers/" + $teamId + "?api-version=5.1")
+write-output $url
+
+$body = @"
+{
+  "deliveryPreference": "preferredEmailAddress",
+  "preferredEmailAddress": "$($notificationEmail)"
 }
 "@
 write-output $body
