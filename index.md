@@ -19,4 +19,4 @@ On this website, you will find all the information you need to get started with 
 * <a href="customize">Customizing the WVD Quickstart</a>
 * <a href="troubleshoot">Troubleshooting your WVD Quickstart deployment</a>
 
-*Microsoft Support is not handling issues for any published tools in this repository. These tools are published as is with no implied support. However, we would like to welcome you to open issues using GitHub issues to collaborate and improve these tools. You can open <a href="https://github.com/samvdjagt/wvdquickstart/issues">an issue</a> and add the corresponding label (like 5-RDS-on-Windows-Server) to associate it with the appropriate tool.
+*Microsoft Support is not handling issues for any published tools in this repository. These tools are published as is with no implied support. However, we would like to welcome you to open issues using GitHub issues to collaborate and improve these tools. You can open an issue <a href="https://github.com/samvdjagt/wvdquickstart/issues">here</a>.*
