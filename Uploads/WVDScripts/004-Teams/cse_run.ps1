@@ -14,7 +14,7 @@ param (
     
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
-    [string] $ExecutableName = "Teams_windows_x64.exe"
+    [string] $ExecutableName = "Teams_windows_x64.msi"
 
     #[Parameter(Mandatory = $false)]
     #[ValidateNotNullOrEmpty()]
@@ -120,47 +120,11 @@ function Set-Logger {
 #endregion
 
 Set-Logger "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\Teams" # inside "executionCustomScriptExtension_$scriptName_$date.log"
-$SourcePath = $PSScriptRoot
+$MSIPath = "$($PSScriptRoot)\$ExecutableName"
+LogInfo("Installing teams from path $MSIPath")
 
-function DoInstall {
-
-    $Installer = "$($SourcePath)\Teams_windows_x64.exe"
-
-    If (!(Test-Path $Installer)) {
-        throw "Unable to locate Microsoft Teams client installer at $($installer)"
-    }
-
-    LogInfo("Attempting to install Microsoft Teams client")
-
-    try {
-        $process = Start-Process -FilePath "$Installer" -ArgumentList "-s" -Wait -PassThru -ErrorAction STOP
-
-        if ($process.ExitCode -eq 0)
-        {
-            LogInfo("Microsoft Teams setup started without error.")
-        }
-        else
-        {
-            Write-Error "Installer exit code  $($process.ExitCode)."
-        }
-    }
-    catch {
-        Write-Error $_.Exception.Message
-    }
-
-}
-
-#Check if Office is already installed, as indicated by presence of registry key
-$installpath = "$($env:LOCALAPPDATA)\Microsoft\Teams"
-
-if (-not(Test-Path "$($installpath)\Update.exe")) {
-    DoInstall
-}
-else {
-    if (Test-Path "$($installpath)\.dead") {
-        LogInfo("Teams was previously installed but has been uninstalled. Will reinstall.")
-        DoInstall
-    }
-}
+$scriptBlock = { msiexec /i $MSIPath /l*v "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\Teams" ALLUSER=1 ALLUSERS=1 }
+LogInfo("Invoking command with the following scriptblock: $scriptBlock")
+Invoke-Command $scriptBlock -Verbose
 
 LogInfo("Teams was successfully installed.")
