@@ -22,7 +22,7 @@ The folder structure in the master branch is as follows:
     * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput" target="_blank">/templates/pipelineinput</a>: In here, all the ARM parameter file templates are located, which are populated in the automation based on the parameters in appliedParameters.psd1.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions" target="_blank">SharedDeploymentFunctions</a>: This folder contains some scripts called by the DevOps automation pipeline to asssist in the deployment of certain resources.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads" target="_blank">Uploads</a>: This folder contains the Custom Script Extensions that are installed on the newly deployed WVD VMs.
-  * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">/Scripts</a>: This folder contains the three different custom script extensions that are installed: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation.
+  * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">/Scripts</a>: This folder contains the four different custom script extensions that are installed: Azure Files enablement, FSLogix configuration, NotepadPlusPlus, and Microsoft Teams installation.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">Deploy.json</a>: This is the ARM template used for the initial DevOps setup deployment.
 
 ### ARMRunbookScripts
