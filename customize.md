@@ -128,7 +128,7 @@ catch {
     Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
 }
 ```
-In case you would 
+You can use this code in your CSE to import parameters as well. If these parameters are static, you can simply save them to a .json file in your *005-<CSE-Name>* folder 
 
 Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind. In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>, you will find this section at the bottom of the file:
 ```
