@@ -4,10 +4,10 @@ layout: template
 filename: armdeployment
 ---
 
-## Breakdown of ARM Deployment to Setup Azure DevOps
+## <b>Breakdown of ARM Deployment to Setup Azure DevOps</b>
 To understand the first of the two major deployments in the WVD Quickstart (for an overview, please see <a href="concepts">Concepts</a> section), the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">ARM template</a> itself.
 
-### Parameters
+### <b>Parameters</b>
 In the parameters section of the ARM template, you'll find all the parameters that are exposed to the user input. ALl of these parameters come with a description to indicate what they're used for. These are typically pretty straightforward and will not be explained further in this documentation.
 ```
 "parameters": {
@@ -29,7 +29,7 @@ In the parameters section of the ARM template, you'll find all the parameters th
 }
 ```
 
-### Variables
+### <b>Variables</b>
 The variables section holds certain values that are used throughout the deployment, that are not exposed to the user. As these are less obvious, their meaning and use will be explained in this section.
 ```
 "variables": {
@@ -108,7 +108,7 @@ The *targetGroup* variable holds the name of the user group that will be assigne
 ```
 The *automationVariables* section, which is not shown in full here, contains a list of variables and parameters that will be saved as variables in the Automation account that is created in this deployment. These variables will be accessed by the runbook scripts to generate the appropriate parameter files for the WVD deployment.
 
-### Resources
+### <b>Resources</b>
 In this section, the Resources section of the ARM template will be explained piece by piece, showcasing exactly which resources will be deployed and with what objective.
 ```
 "resources": [
