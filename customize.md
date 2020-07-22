@@ -108,8 +108,38 @@ In case the above customization is not sufficient to support your needs, a more 
 * In your repository, go through the files and change all URLs with "samvdjagt/wvdquickstart" in it to point towards your repository. You will have to do this in the following files: *devopssetup.ps1, wvdsessionhost.parameters.template.json, Invoke-GeneralDeployment.ps1,* and the main ARM template's *deploy.json.*. Additionally, for the "Deploy to Azure" button to work properly, you should change the URL in the main Readme.MD.
 * You should now be able to customize anything you want. To customize the initial ARM deployment, you can make edits in the main folder's *deploy.json* file.
 
-### Example: Modify Custom Script Extensions
-In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>.
+### Example: Add a Custom Script Extensions
+In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>. To create a new CSE, you could go ahead and create a folder *005-<CSE-NAME>*. At the very least, this folder will have to contain a *cse_run.ps1* file. To get started with this, it's recommended to take an existing *cse_run.ps1* file from one of the other CSEs. You can reuse most of such a file, all the way to the following line:
+```
 
-Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind:
-* In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>
+
+Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind. In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>, you will find this section at the bottom of the file:
+```
+"windowsScriptExtensionFileData": {
+            "value": [
+                {
+                    "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/scriptExtensionMasterInstaller.ps1",
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                },
+                {
+                    "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/001-AzFiles.zip",
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                },
+                {
+                    "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/002-FSLogix.zip",
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                },
+                {
+                    "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/003-NotepadPP.zip",
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                },
+                {
+                    "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/004-Teams.zip",
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                }
+            ]
+        }
+```
+This specifies which CSEs will be installed on the VMs. In case you want to remove an existing one, you can simply remove it here and it will no longer be installed. If you want to add a new CSE, you will have to provide a link to it here. This link will be exactly the same as the other four, except for the name of the .zip file, which would be *005-<CSE-Name>.zip*.
+    
+
