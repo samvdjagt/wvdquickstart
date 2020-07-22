@@ -4,10 +4,10 @@ layout: template
 filename: devops
 ---
 
-## Breakdown of the DevOps Automation
+## <b>Breakdown of the DevOps Automation</b>
 To understand the second of the two major deployments in the WVD Quickstart (for an overview, please see <a href="concepts">Concepts</a> section), the Azure DevOps pipeline that deploys a WVD environment for you, let's first take a look at <a href="https://dev.azure.com" target="_blank">Azure DevOps</a> itself.
 
-### Understanding Azure DevOps
+### <b>Understanding Azure DevOps</b>
 Azure DevOps is a very powerful platform and it therefore comes with a lot of possibilites and components. To understand the structure of the WVD Quickstart automation, we'll take a look at some of the aspects of DevOps. The main two features that we will make use of are the *Repos* and the *Pipelines*, both available in the left-side menu in your DevOps project (after running the initial ARM deployment, which creates this project). The *Repos* section will look like this:
 
 ![DevOps Repository](images/devopsRepo.PNG?raw=true)
@@ -23,7 +23,7 @@ As you can see in the above image, one of the options in the Pipelines menu on t
 #### Service Connection
 Because Azure DevOps and the Azure Resource Manager are separate services, DevOps needs a way to authenticate with the Azure Resource Manager for it to get permission to deploy the WVD resources. To do so, the initial ARM deployment will create something called a *Service Connection*. You can find this service connection under your project settings -> Service Connections, and by default it will be called *WVDServiceConnection*.
 
-### Understanding the Automation Pipeline
+### <b>Understanding the Automation Pipeline</b>
 Now that you are a little more familiar of the DevOps structure, we can dive straight into our <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/pipeline.yml" target="_blank">automation pipeline</a> itself. However, before doing so, it's recommended to familiarize yourself with the YAML pipeline file structure first, which you can do <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema" target="_blank">here</a>.
 
 #### Definition
