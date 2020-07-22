@@ -4,19 +4,19 @@ layout: template
 filename: concepts
 ---
 
-## Conceptual breakdown of the WVD Quickstart
+## <b>Conceptual breakdown of the WVD Quickstart</b>
 To understand how the WVD Quickstart works, this page will walk you through a conceptual overview. In addition to the overview on this page, the links below provide a more in-depth walkthrough of certain components of the solution, which can be very helpful in case you want to understand the code behind the solution or when you want to more advanced customizations.
 
 * For an in-depth breakdown of the ARM template used to configure DevOps, which is the template used when you click the blue "Deploy to Azure" button, please see <b><a href="armdeployment">Azure Resource Manager deployment: DevOps setup</a></b>
 * For an in-depth analysis of the DevOps automation used to deploy the WVD environment, please visit <b><a href="devops">DevOps Automation</a></b>
 * To understand this GitHub repository, its structure and all its individual files, the <b><a href="repo">Respository breakdown by file</a></b> gives an in-depth walkthrough of the entire repository with explanations on individual files' purpose and role.
 
-### Conceptual Deployment Overview
+### <b>Conceptual Deployment Overview</b>
 As stated in the overview, the WVD Quickstart takes much of the WVD deployment complexity away, simplifying and automating the process, making the platform more accessible to non-expert users. As a WVD-centric end-to-end solution, the quickstart addressess reported pain points, challenges and feature gaps, empowering IT professionals to get started with WVD in a matter of clicks. This page will help you answer how exactly the Quickstart achieves that. The diagram below shows a high-level conceptual overview of the deployment with the WVD Quickstart:
 ![Deployment overview](images/overview.PNG?raw=true)
 In short, the Quickstart requires you to have some prerequisites - From which it will, in a fully automated way using Azure Devops, deploy a functional WVD environment with virtual machines running Windows 10 Enterprise Multi-Session, build 2004, with Office 365 and Microsoft Teams installed. Additionally, the virtual machines will be configured with <a href="https://docs.microsoft.com/en-us/fslogix/overview">FSLogix</a> for user profile management. Upon completion, a test user can login to the environment and experience the best of what WVD has to offer.
 
-### Resources
+### <b>Resources</b>
 In short, the deployment with the WVD Quickstart consists of two main parts:
 
 * An Azure Resource Manager (ARM) deployment that deploys a number of supporting resource and creates an Azure DevOps (ADO) automation pipeline
