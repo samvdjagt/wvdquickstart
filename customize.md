@@ -109,11 +109,11 @@ In case the above customization is not sufficient to support your needs, a more 
 * You should now be able to customize anything you want. To customize the initial ARM deployment, you can make edits in the main folder's *deploy.json* file.
 
 ### Example: Add a Custom Script Extensions
-In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>. To create a new CSE, you could go ahead and create a folder *005-<CSE-NAME>*. At the very least, this folder will have to contain a *cse_run.ps1* file. To get started with this, it's recommended to take an existing *cse_run.ps1* file from one of the other CSEs. You can reuse most of such a file, all the way to the following line:
+In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>. To create a new CSE, you could go ahead and create a folder *005-{CSE-NAME}*. At the very least, this folder will have to contain a *cse_run.ps1* file. To get started with this, it's recommended to take an existing *cse_run.ps1* file from one of the other CSEs. You can reuse most of such a file, all the way to the following line:
 ```
 Set-Logger "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\<CSE-NAME>"
 ```
-In case your CSE will need to take some input parameters, you can take a look at how this is done in, for example, the 001-AzFiles CSE. The parameters are loaded from the download file name specified at the top of the script, imported using the following code:
+Then, you can add any content to your cse_run.ps1 that you want. In case your CSE will need to take some input parameters, you can take a look at how this is done in, for example, the 001-AzFiles CSE. The parameters are loaded from the download file name specified at the top of the script, imported using the following code:
 ```
 LogInfo("###################")
 LogInfo("## 0 - LOAD DATA ##")
@@ -128,7 +128,17 @@ catch {
     Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
 }
 ```
-You can use this code in your CSE to import parameters as well. If these parameters are static, you can simply save them to a .json file in your *005-<CSE-Name>* folder 
+You can use this code in your CSE to import parameters as well. If these parameters are static, you can simply save them to a .json file in your *005-{CSE-Name}* folder, using the format used, for example in <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/fslogix.parameters.template.json" target="_blank">fslogix.parameters.template.json</a>. Should you want to generate the parameters in the DevOps pipeline, for example if they depend on user input, you will have to make a parameter template file just lik that one and save it in the templates/pipelineinput folder. To the DevOps pipeline, you would then have to add a task that copies the parameters for your CSE into your CSE folder:
+```
+              - task: CopyFiles@2
+                name: Copy_{Your-CSE-Name}_parameters
+                inputs:
+                  SourceFolder: '$(Build.Repository.LocalPath)/QS-WVD/Parameters'
+                  Contents: '{Your-CSE-Name}.parameters.json'
+                  TargetFolder: '$(Pipeline.Workspace)/s/Uploads/WVDScripts/005-{Your-CSE-Name}'
+                  OverWrite: true
+```
+You can ask this task at the top of your DevOps pipeline (*pipeline.yml* file) where the other *copy* tasks are located.
 
 Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind. In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>, you will find this section at the bottom of the file:
 ```
@@ -157,6 +167,8 @@ Apart from the files in the WVDScripts folder, there are a couple of other compo
             ]
         }
 ```
-This specifies which CSEs will be installed on the VMs. In case you want to remove an existing one, you can simply remove it here and it will no longer be installed. If you want to add a new CSE, you will have to provide a link to it here. This link will be exactly the same as the other four, except for the name of the .zip file, which would be *005-<CSE-Name>.zip*.
+This specifies which CSEs will be installed on the VMs. In case you want to remove an existing one, you can simply remove it here and it will no longer be installed. If you want to add a new CSE, you will have to provide a link to it here. This link will be exactly the same as the other four, except for the name of the .zip file, which would be *005-{CSE-Name}.zip*.
     
+One last step you might have to take is to add some lines to the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/downloads.parameters.json" target="_blank">Uploads/WVDScripts/downloads.parameters.json</a>. This files specifies certain downloads needed for the CSEs - This parameter file specifies the URL from which to download the required file and where to save it. For example, this script specifies from which URL to download FSLogix and the Microsoft Teams MSI package.
 
+Following all those steps, you should be all set to test your new CSE. Make sure all files are committed to the DevOps repository and then you can go ahead and run the pipeline.
