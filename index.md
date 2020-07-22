@@ -4,7 +4,7 @@ layout: template
 filename: index
 ---
 
-## Welcome to the WVD Quickstart!
+## <b>Welcome to the WVD Quickstart!</b>
 
 Windows Virtual Desktop (WVD) on Microsoft Azure is a desktop and app virtualization service that runs on the cloud. Windows Virtual Desktop works across devices, like Windows, Mac, iOS, Android, and Linux, with apps that you can use to access remote desktops and apps. You can also use most modern browsers to access Windows Virtual Desktop-hosted experiences. New to WVD? Check out the <a href="https://docs.microsoft.com/en-us/learn/paths/m365-wvd/" target="_blank">Microsoft Learn module on WVD</a> or the overall <a href="https://aka.ms/wvddocs" target="_blank">WVD documentation</a> for more information. 
 
@@ -12,7 +12,7 @@ WVD is a solution which is partly managed by Microsoft and partly by customers. 
 
 The Quickstart can be used to deploy a WVD Workspace, Desktop app group, Virtual Machines, and more with just a couple of clicks. To understand how the quickstart works, and what exactly it can deploy for you, please visit the <a href="concepts">Concepts</a> page.
 
-### Resources on this website
+### <b>Resources on this website</b>
 On this website, you will find all the information you need to get started with this solution. 
 * <a href="howto">How to deploy using the WVD Quickstart</a>
 * <a href="concepts">Understanding the underlying concepts of the Quickstart</a>
