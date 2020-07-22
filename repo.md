@@ -4,7 +4,7 @@ layout: template
 filename: repo
 ---
 
-## Repository Breakdown by file
+## <b>Repository Breakdown by file</b>
 On this page, you'll find an in-depth breakdown of all the files associated with the WVD Quickstart solution. This is intended for any advanced users who wish to customize the WVD Quickstart for their needs or to do some advanced troubleshooting. The GitHub repository consists of two branches:
 
 * Master branch: All code required by the WVD Quickstart lives here
@@ -25,7 +25,7 @@ The folder structure in the master branch is as follows:
   * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">/Scripts</a>: This folder contains the four different custom script extensions that are installed: Azure Files enablement, FSLogix configuration, NotepadPlusPlus, and Microsoft Teams installation.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">Deploy.json</a>: This is the ARM template used for the initial DevOps setup deployment.
 
-### ARMRunbookScripts
+### <b>ARMRunbookScripts</b>
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/checkAzureCredentials.ps1" target="_blank">checkAzureCredentials.ps1</a>: This script makes sure that the entered Azure Admin credentials are correct. 
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/configureMSI.ps1" target="_blank">configureMSI.ps1</a>: Script that configures the 'WVDServicePrincipal' managed identity in the deployment resource group to give it the *contributor* role on the subscription. This is needed to run deployment scripts in the main ARM template successfully.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/createDevopsPipeline.sh" target="_blank">createDevopsPipeline.sh</a>: This Azure CLI script creates and starts a DevOps pipeline in the newly created DevOps project.
@@ -44,7 +44,7 @@ The azuremodules.zip in this folder contains the following PowerShell modules:
 If you want to use additional Powershell modules in your runbook scripts, you can add them to this zip folder and adapt the runbookscripts accordingly to install them.
 The other two zip folder contain static files related to WVD SAAS.
 
-### Modules/ARM
+### <b>Modules/ARM</b>
 Every module in this folder follows the same folder structure:
 * /Parameters: parameters file for the ARM template
 * /Pipeline: .yml file that can be used to deploy this resource
@@ -55,7 +55,7 @@ Every module in this folder follows the same folder structure:
 
 One important module is <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation" target="_blank">UserCreation</a>, as this folder contains the script <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation/scripts/createUsers.ps1" target="_blank">createUsers.ps1</a> that is used in Native AD deployments to create a new user in on the domain controller through a custom script extension.
 
-### QS-WVD
+### <b>QS-WVD</b>
 This is a crucial folder, as it contains the deployment parameters as well as the DevOps automation files. Directly in the folder you will find the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/pipeline.yml" target="_blank">pipeline.yml</a> and <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/variables.template.yml" target="_blank">variables.template.yml</a> files, which are both further explained <a href="devops" target="_blank">here</a>. The remaining subfolders are explained below.
 
 #### QS-WVD/parameters
@@ -74,7 +74,7 @@ This folder contains the <a href="https://github.com/samvdjagt/wvdquickstart/tre
 #### QS-WVD/static/templates/pipelineinput
 This folder contains all the templates for ARM deployment parameter files. These templates are used by the DevOps pipeline as explained <a href="devops" target="_blank">here</a> to generate the parameter files for the deployment of WVD resources in the pipeline. The name of the template file indicates what resource it's used for - I will not go deeper into these here.
 
-### SharedDeploymentFunctions
+### <b>SharedDeploymentFunctions</b>
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Add-CustomParameters.ps1" target="_blank">Add-CustomParameters.ps1</a>: This script is called by the pipeline to add additional parameters to a resource deployment, in certain cases; For example, this function is used to add an extra parameter when using AADDS as identity solution to correctly configure the storage account settings.
 * <b><a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Invoke-GeneralDeployment.ps1" target="_blank">Invoke-GeneralDeployment.ps1</a></b>: This all-important script is called for any resource deployment in the pipeline. This script finds the correct ARM template to deploy that resource, passes the correct parameters as arguments, and starts the ARM deployment.
 
@@ -87,7 +87,7 @@ This folder contains three scripts that are used in the deployment of the Assets
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Storage/Export-WVDCSEContentToBlob.ps1" target="_blank">Export-WVDCSEContentToBlob.ps1</a>: This script uploads the created zip folders to a blog storage in the assets storage account.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/SharedDeploymentFunctions/Storage/Import-WVDSoftware.ps1" target="_blank">Import-WVDSoftware.ps1</a>: This script downloads the zip folders onto the VM onto which the CSE is to be installed.
 
-### Uploads
+### <b>Uploads</b>
 This folder contains the CSEs for the WVD VMs, and it's named uploads as it will in its entirety be uploaded to the assets storage account. It also contains the ZIP folder *Configuration.zip* which contains the configuration files for the DSC extension to be installed on the WVD VMs. 
 
 #### Uploads/WVDScripts
@@ -108,6 +108,6 @@ Every CSE is run through the *cse_run.ps1* file in each subfolder - These script
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/004-Teams" target="_blank">/004-Teams</a>
   * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts/004-Teams/cse_run.ps1" target="_blank">/cse_run.ps1</a>: Main CSE script that is called to install Microsoft Teams using the downloaded executable file. This script will also set the Teams registry key required for it to work in a virtualized environment.
 
-### <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a>
+### <b><a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a></b>
 This is the ARM template used for the initial deployment, which is explained in a high-level <a href="concepts" target="_blank">here</a> and in a detailed breakdown <a href="armdeployment" target="_blank">here</a>.
  
