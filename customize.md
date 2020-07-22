@@ -74,24 +74,24 @@ variables:
 #### Parameters that occur in both variables.yml and appliedParameters.psd1
 To provide a complete overview of which values you will need to change in both of the parameter files, please find a list below of all the parameter that occur twice. In case of any customization, please make sure to change these values in both files before re-running the pipeline.
 
-* Location (Location in which WVD resources will be deployed)
-* wvdMgmtResourceGroupName (Name of the assets / profiles storage account resource group)
-* domainJoinUserName (domain controller admin username, taken from domainJoinUser UPN)
-* wvdAssetsStorage (Name of the assets storage account)
-* resourceGroupName (Name of the resource group in which WVD resources will be deployed)
+* *Location* (Location in which WVD resources will be deployed)
+* *wvdMgmtResourceGroupName* (Name of the assets / profiles storage account resource group)
+* *domainJoinUserName* (domain controller admin username, taken from domainJoinUser UPN)
+* *wvdAssetsStorage* (Name of the assets storage account)
+* *resourceGroupName* (Name of the resource group in which WVD resources will be deployed)
 * Image-related parameters:
-  * publisher: MicrosoftWindowsDesktop (default)
-  * offer: office-365 (default)
-  * sku: 20h1-evd-o365pp (default, Windows 10 Enterprise Multi-Session, Build 2004 + Office 365 ProPlus)
-  * version: latest (default)
-* HostPoolName (Name of WVD host pool)
-* profilesStorageAccountName (Name of the storage account where user profiles will be stored)
-* identityApproach (identity approach to use, either a 'Native AD' or Azure Active Directory Domain Services (AADDS) approach)
+  * *publisher*: MicrosoftWindowsDesktop (default)
+  * *offer*: office-365 (default)
+  * *sku*: 20h1-evd-o365pp (default, Windows 10 Enterprise Multi-Session, Build 2004 + Office 365 ProPlus)
+  * *version*: latest (default)
+* *HostPoolName* (Name of WVD host pool)
+* *profilesStorageAccountName* (Name of the storage account where user profiles will be stored)
+* *identityApproach* (identity approach to use, either a 'Native AD' or Azure Active Directory Domain Services (AADDS) approach)
 
 #### Pipeline.yml
 For more advanced customization, you can also choose to edit the DevOps pipeline itself. This pipeline can be found in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/pipeline.yml" target="_blank">pipeline.yml</a> file, which will be stored in your DevOps project's repository under QS-WVD/pipeline.yml. The main reason to modify this file would be to either remove or add a job to the pipeline, or to edit an existing one. In the case of adding a new job, you might find the pipeline.yml files in the Modules/ARM/{moduleName}/Pipeline subfolders useful, as these provide a template for likely any resource you want to deploy in the automation. To support new jobs, you can always add new parameters to the variables.yml file as well.
 
-#### Example: Using A Custom VM Image
+### Example: Using A Custom VM Image
 The WVD Quickstart is not an advanced image management solution, nor does it offer functionality to build a custom image for you. For more information about custom images, feel free to check out the Azure Image Builder and Microsoft Documentation. Once you have a custom image in Azure, it's very easy to use it in the WVD Quickstart to deploy your WVD Virtual Machines with. All you have to do is go into the *variables.yml* file and edit the following section:
 ```
 #customImageReferenceId, as value, put: '/subscriptions/<subscriptionId>/resourceGroups/<image-resource-group-name>/providers/Microsoft.Compute/galleries/<SIG name>/images/<image name>/versions/<version>'
