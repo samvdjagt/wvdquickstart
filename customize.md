@@ -5,7 +5,7 @@ filename: customize
 ---
 
 ## <b>How To Customize the WVD Quickstart</b>
-While many of the parameters for a Quickstart WVD deployment are set to defaults to simplify the process, you can modify your deployment any way you want. Most customizations can be completed directly in the repository of the DevOps project created in the initial ARM deployment, as will be explained below. However, for more advanced customizations, including modification of the inital ARM deployment, you can also clone this GitHub repository as will be explained at the bottom of this page.
+hWhile many of the parameters for a Quickstart WVD deployment are set to defaults to simplify the process, you can modify your deployment any way you want. Most customizations can be completed directly in the repository of the DevOps project created in the initial ARM deployment, as will be explained below. However, for more advanced customizations, including modification of the inital ARM deployment, you can also clone this GitHub repository as will be explained at the bottom of this page.
 
 You can find your DevOps repository by navigating to <a href="https://dev.azure.com" target="_blank">Azure DevOps</a> and by clicking on the project that's there. In the side menu on the left, you will see a button "Repos" where you will find all your files. You can edit files online in DevOps, or create an online copy of this repository using the clone functionality. In the image below, you will see what your repository will look like.
 ![DevOps Repository](images/devopsRepo.PNG?raw=true)
