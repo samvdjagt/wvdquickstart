@@ -33,3 +33,12 @@ The first step in troubleshooting any pipeline failures is to check the paramete
 Within this *Artifact* you will find a folder called 'Parameters' - Click on it, and you'll see all the generated parameter files. You can then download the one with associated resource that failed the pipeline to check it for correctness. If the error was indeed due to a parameter error, please change this parameter in either the *appliedParameters.psd1* and/or *variables.yml* files as explained in the <a href="customize" target="_blank">Customize</a> section. Then, you can start a new run of the pipeline, which will regenerate the parameter files (don't click "rerun failed jobs", as this will use the same faulty parameter files). 
 
 As a last resort, if the above does not fix your problem, you can try hard-coding some parameters in the parameter template files located in the QS-WVD/static/templates/pipelineinput folder in your DevOps repository. This is not a recommended course of action though.
+
+#### Assets Storage Account Post-Deployment Failed: Download Failed
+In deploying the assets storage account, one of the tasks is to download the Microsoft Teams MSI package. There's a slight possibility that this particular task gives you the following error in the DevOps pipeline
+
+Download FAILED: Exception calling "DownloadFile" with "2"
+     | argument(s): "The SSL connection could not be established, see
+     | inner exception. Authentication failed, see inner exception."
+
+If this happens, you can simply click "Rerun failed jobs" at the top of the screen - This should fix this issue, as it's not a user error.
