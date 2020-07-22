@@ -91,8 +91,14 @@ To provide a complete overview of which values you will need to change in both o
 #### Pipeline.yml
 For more advanced customization, you can also choose to edit the DevOps pipeline itself. This pipeline can be found in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/pipeline.yml" target="_blank">pipeline.yml</a> file, which will be stored in your DevOps project's repository under QS-WVD/pipeline.yml. The main reason to modify this file would be to either remove or add a job to the pipeline, or to edit an existing one. In the case of adding a new job, you might find the pipeline.yml files in the Modules/ARM/{moduleName}/Pipeline subfolders useful, as these provide a template for likely any resource you want to deploy in the automation. To support new jobs, you can always add new parameters to the variables.yml file as well.
 
-#### Example: Deploying Personal Desktops
-In this example, we'll walkthrough the necessary steps to deploy a WVD environment with a number of personal desktops. In order to do so, we're going to change some of the parameters in the files listed above.
+#### Example: Using A Custom VM Image
+The WVD Quickstart is not an advanced image management solution, nor does it offer functionality to build a custom image for you. For more information about custom images, feel free to check out the Azure Image Builder and Microsoft Documentation. Once you have a custom image in Azure, it's very easy to use it in the WVD Quickstart to deploy your WVD Virtual Machines with. All you have to do is go into the *variables.yml* file and edit the following section:
+```
+#customImageReferenceId, as value, put: '/subscriptions/<subscriptionId>/resourceGroups/<image-resource-group-name>/providers/Microsoft.Compute/galleries/<SIG name>/images/<image name>/versions/<version>'
+- name: customImageReferenceId
+  value: ''
+```
+By default, the customImageReferenceId is set to an empty string as value. To use your custom image, take the link you see above and replace all the <fields> with your own values. Then put this link as the value for the customImageReferenceId, commit the file in your DevOps project's repository, and run the pipeline. If you've previously deployed with the Quickstart, however, this pipeline will fail when deploying the host pool - Since a host pool can only have one image definition. To avoid this from happening, you either want to delete your previously deployed VMs and remove them from the host pool, or you can change the name of the host pool in both *appliedParameters.psd1* and *variables.yml*. The same goes for the workspace and the desktop app group as for the host pool - you would want to go through the same steps for those two to ensure the pipeline succeeds.
 
 ### Advanced: Customize the WVD Quickstart Code
 In case the above customization is not sufficient to support your needs, a more advanced customization is possible by editing the source code of the WVD Quickstart yourself. Before doing any customizations, it is highly recommended to review the <a href="repo" target="_blank">repository structure</a> and the accompanying breakdown of all files. After doing so, you can start customizing by doing the following:
