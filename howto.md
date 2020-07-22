@@ -45,7 +45,7 @@ If you click on the pipeline's jobs, you will be able to follow along with the d
 ![DevOps Pipeline Progress](images/devopsPipelineProgress.PNG?raw=true)
 
 ### <b>Using Your New WVD Environment</b>
-The Quickstart creates a test user for you to try out the environment. Navigate to the <a href="https://rdweb.wvd.microsoft.com/arm/webclient/index.html" target="_blank">WVD web client</a> and login with the following test user credentials:
+The Quickstart creates a test user for you to try out the environment. Navigate to the <a href="https://rdweb.wvd.microsoft.com/arm/webclient/index.html" target="_blank">WVD web client</a> or install the WVD client locally (from <a href="aka.ms/wvd/clients" target="_blank">here</a>) and login with the following test user credentials:
 
 Username: WVDTestUser001@{your-domain}.com <br>
 Password: wvdTest123!
