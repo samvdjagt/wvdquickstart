@@ -6,7 +6,7 @@ filename: howto
 
 ## <b>How To Deploy With The WVD Quickstart</b>
 
-<iframe width="672" height="378" src="https://www.youtube.com/embed/7nZJhvb_5aA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="784" height="441" src="https://www.youtube.com/embed/7nZJhvb_5aA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### <b>Prerequisites</b>
 In order to successfully deploy a WVD environment with the Quickstart, a couple of prerequisites need to be satisfied beforehand. All of these prerequisites are listed below, together with links to documentation that can help you with setting them up.
