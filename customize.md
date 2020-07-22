@@ -107,3 +107,9 @@ In case the above customization is not sufficient to support your needs, a more 
 * Commit your copy of the repository to a repository in your own account (NOTE: This repository must be public for the automation to work)
 * In your repository, go through the files and change all URLs with "samvdjagt/wvdquickstart" in it to point towards your repository. You will have to do this in the following files: *devopssetup.ps1, wvdsessionhost.parameters.template.json, Invoke-GeneralDeployment.ps1,* and the main ARM template's *deploy.json.*. Additionally, for the "Deploy to Azure" button to work properly, you should change the URL in the main Readme.MD.
 * You should now be able to customize anything you want. To customize the initial ARM deployment, you can make edits in the main folder's *deploy.json* file.
+
+### Example: Modify Custom Script Extensions
+In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>.
+
+Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind:
+* In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>
