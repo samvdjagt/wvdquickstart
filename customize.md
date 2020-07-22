@@ -111,7 +111,24 @@ In case the above customization is not sufficient to support your needs, a more 
 ### Example: Add a Custom Script Extensions
 In this example, we'll walk through the process of modifying the Custom Script Extensions (CSE) that are installed on the WVD VMs. These steps can be used to either modify an existing CSE, to add a new CSE, or to remove one. As explained in the <a href="repo" target="_blank">repository breakdown</a>, the custom script extensions are located in the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a> folder. As you can see there, there are currently four CSEs that are being installed on the VMs. These are also explained in the <a href="repo" target="_blank">repository breakdown</a>. To create a new CSE, you could go ahead and create a folder *005-<CSE-NAME>*. At the very least, this folder will have to contain a *cse_run.ps1* file. To get started with this, it's recommended to take an existing *cse_run.ps1* file from one of the other CSEs. You can reuse most of such a file, all the way to the following line:
 ```
+Set-Logger "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\<CSE-NAME>"
+```
+In case your CSE will need to take some input parameters, you can take a look at how this is done in, for example, the 001-AzFiles CSE. The parameters are loaded from the download file name specified at the top of the script, imported using the following code:
+```
+LogInfo("###################")
+LogInfo("## 0 - LOAD DATA ##")
+LogInfo("###################")
 
+$ConfigurationFilePath= Join-Path $PSScriptRoot $ConfigurationFileName
+
+$ConfigurationJson = Get-Content -Path $ConfigurationFilePath -Raw -ErrorAction 'Stop'
+
+try { $FSLogixConfig = $ConfigurationJson | ConvertFrom-Json -ErrorAction 'Stop' }
+catch {
+    Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
+}
+```
+In case you would 
 
 Apart from the files in the WVDScripts folder, there are a couple of other components to keep in mind. In <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/static/templates/pipelineinput/wvdsessionhost.parameters.template.json" target="_blank">wvdsessionhost.parameters.template.json</a>, you will find this section at the bottom of the file:
 ```
