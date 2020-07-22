@@ -37,8 +37,8 @@ As a last resort, if the above does not fix your problem, you can try hard-codin
 #### Assets Storage Account Post-Deployment Failed: Download Failed
 In deploying the assets storage account, one of the tasks is to download the Microsoft Teams MSI package. There's a slight possibility that this particular task gives you the following error in the DevOps pipeline
 
-Download FAILED: Exception calling "DownloadFile" with "2" <br>
+*Download FAILED: Exception calling "DownloadFile" with "2" <br>
      | argument(s): "The SSL connection could not be established, see <br>
-     | inner exception. Authentication failed, see inner exception."
+     | inner exception. Authentication failed, see inner exception."*
 
 If this happens, you can simply click "Rerun failed jobs" at the top of the screen - This should fix this issue, as it's not a user error.
