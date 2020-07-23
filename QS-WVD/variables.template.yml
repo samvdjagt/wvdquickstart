@@ -61,7 +61,7 @@ variables:
 
 ## Jobs
 - name: enableApplicationJob
-  value: false  # To enable/disable remote apps job
+  value: true  # To enable/disable remote apps job
 
 - name: enableImageUpdate
   value: false    # To enable/disable Image Lifecycle job
