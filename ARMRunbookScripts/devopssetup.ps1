@@ -187,8 +187,6 @@ write-output $body
 $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Post -Body $Body -ContentType application/json
 write-output $response
 
-start-sleep -Seconds 20
-
 $split = $tenantAdminDomainJoinUPN.Split("@")
 $domainUsername = $split[0]
 $domainName = $split[1]
@@ -232,13 +230,14 @@ if ($VMCustomScriptExtension -ne $null) {
 $url = $("https://dev.azure.com/" + $orgName + "/" + $projectName + "/_apis/git/repositories/" + $projectName + "/refs?filter=heads/master&api-version=5.1")
 write-output $url
 
+# It is possible at this point that the push has not completed yet. Logic below allows for 1 minute of waiting before timing out. 
 $currentTry = 0
 do {
     Start-Sleep -Seconds 2
     $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
     write-output $response
     $currentTry++
-} while ($currentTry -le 15 -and ($response.value.ObjectId -eq $null))
+} while ($currentTry -le 30 -and ($response.value.ObjectId -eq $null))
 
 if ($response.value.ObjectId -eq $null) {
   throw "Pushing repository to DevOps timed out. Please try again later."

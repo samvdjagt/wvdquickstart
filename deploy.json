@@ -407,7 +407,7 @@
                 }
             },
             "dependsOn": [
-               "[concat('Microsoft.Resources/deploymentScripts', '/checkAzureCredentials')]"
+               "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
             ],
             "resources": [
             ]
@@ -434,7 +434,7 @@
               "accountName": "[variables('devOpsName')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Resources/deploymentScripts', '/checkAzureCredentials')]"
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
             ],
             "resources": []
         },
@@ -459,32 +459,6 @@
                 "arguments": "[concat(variables('devOpsName'), ' ', variables('devOpsProjectName'), ' ', parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'), ' ', 'true')]",
                 "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createDevopsPipeline.sh')]",
                 "timeout": "PT30M",
-                "cleanupPreference": "OnSuccess",
-                "retentionInterval": "P1D"
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2019-10-01-preview",
-            "name": "checkAzureCredentials",
-            "location": "[variables('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
-                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
-            ],
-            "kind": "AzurePowerShell",
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]": {}
-                }
-            },
-            "properties": {
-                "forceUpdateTag": 1,
-                "azPowerShellVersion": "3.0",
-                "timeout": "PT30M",
-                "arguments": "[concat('-username ', parameters('azureAdminUpn'), ' -password ', parameters('azureAdminPassword'))]",
-                "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/checkAzureCredentials.ps1')]",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
             }
