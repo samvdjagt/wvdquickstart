@@ -62,26 +62,15 @@ The *location* variable will hold the location in which all WVD resources will b
 ```
 The above variables hold the names of resources deployed in this template that require a unique identifier, in this case being a Keyvault, two Storage Accounts (the assets storage, which will hold the Modules/ARM folder, and the profiles storage for FSLogix), and an Automation Account.
 ```
-    "uniquestr": "[uniqueString(resourceGroup().id, deployment().name)]",
-    "runbookName": "[concat('wvdrunbook','-',variables('uniquestr'))]",
-```
-The *uniquestr* variable is used to generate a unique name for the runbooks used in this ARM template
-```
     "tenantId": "[subscription().tenantId]",
 ```
 The *tenantId* variable holds the ID of your AAD tenant.
 ```
-    "uniqueBase0": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'MSISetup'))]",
-    "uniqueBase": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName')))]",
-    "uniqueBase2": "[toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup'))]",
-    "newGuid0": "[guid(variables('uniqueBase0'))]",
-    "newGuid": "[guid(variables('uniqueBase'))]",
-    "newGuid2": "[guid(variables('uniqueBase2'))]",
-    "scriptUri0": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/configureMSI.ps1')]",
-    "scriptUri1": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
-    "scriptUri2": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
+    "jobGuid0": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials')))]",
+    "jobGuid": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName'))))]",
+    "jobGuid2": "[guid(toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup')))]",
 ```
-The above variables are used to create unique names for the runbook jobs that will be executed in this ARM deployment. The *scriptUri* variables hold the location of the three runbook scripts that will be run.
+The above variables are used to create unique names for the runbook jobs that will be executed in this ARM deployment. The *jobGuid* variables hold the unique guids of the three jobs that will be run.
 ```
     "devOpsName": "WVDQuickstart0715",   
     "devOpsProjectName": "WVDQuickstart0715",
@@ -171,10 +160,10 @@ This section deploys an Automation Account. This automation account is used for 
 ```
 The above part of the Automation Account deployment creates two Automation credentials, saving both the Azure Admin credentials and the domain join service account credentials entered by the user for later access by the runbook scripts to authenticate.
 ```
-            {
+             {
                 "type": "runbooks",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[concat(variables('runbookName'), '0')]",
+                "name": "checkCredentialsRunbook",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -187,7 +176,7 @@ The above part of the Automation Account deployment creates two Automation crede
                     "logProgress": false,
                     "logVerbose": false,
                     "publishContentLink": {
-                        "uri": "[variables('scriptUri0')]",
+                        "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/checkCredentials.ps1')]",
                         "version": "1.0.0.0"
                     }
                 } 
@@ -195,28 +184,27 @@ The above part of the Automation Account deployment creates two Automation crede
             {
                 "type": "jobs",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[variables('newGuid0')]",
+                "name": "[variables('jobGuid0')]",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]"
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/checkCredentialsRunbook')]"
                 ],
                 "tags": {
                     "key": "value"
                 },
                 "properties": {
                     "runbook": {
-                        "name": "[concat(variables('runbookName'), '0')]"
+                        "name": "checkCredentialsRunbook"
                     }
                 }
             },
-```
 The first runbook above runs the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/configureMSI.ps1" target="_blank">configureMSI.ps1</a> script. This is a script that configures the 'WVDServicePrincipal' managed identity in the deployment resource group to give it the *contributor* role on the subscription. This is needed to run deployment scripts in the ARM template successfully.
 ```
             {
                 "type": "runbooks",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[variables('runbookName')]",
+                "name": "ServicePrincipalRunbook",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -229,7 +217,7 @@ The first runbook above runs the <a href="https://github.com/samvdjagt/wvdquicks
                     "logProgress": false,
                     "logVerbose": false,
                     "publishContentLink": {
-                        "uri": "[variables('scriptUri1')]",
+                        "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
                         "version": "1.0.0.0"
                     }
                 }
@@ -237,20 +225,20 @@ The first runbook above runs the <a href="https://github.com/samvdjagt/wvdquicks
             {
                 "type": "jobs",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[variables('newGuid')]",
+                "name": "[variables('jobGuid')]",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'))]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/ServicePrincipalRunbook')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/checkCredentialsRunbook')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
                 ],
                 "tags": {
                     "key": "value"
                 },
                 "properties": {
                     "runbook": {
-                        "name": "[variables('runbookName')]"
+                        "name": "ServicePrincipalRunbook"
                     }
                 }
             },
@@ -260,7 +248,7 @@ The second runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/
             {
                 "type": "runbooks",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[concat(variables('runbookName'), '2')]",
+                "name": "devOpsSetupRunbook",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -272,7 +260,7 @@ The second runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/
                     "logProgress": false,
                     "logVerbose": false,
                     "publishContentLink": {
-                        "uri": "[variables('scriptUri2')]",
+                        "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
                         "version": "1.0.0.0"
                     }
                 }
@@ -280,13 +268,13 @@ The second runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/
             {
                 "type": "jobs",
                 "apiVersion": "2015-01-01-preview",
-                "name": "[variables('newGuid2')]",
+                "name": "[variables('jobGuid2')]",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
                     "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('newGuid'))]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/',variables('runbookName'), '2')]",
-                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('jobGuid'))]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/devOpsSetupRunbook')]",
+                    "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]",
                     "[concat('microsoft.visualstudio/account/', variables('devOpsName'))]",
                     "[concat('Microsoft.Resources/Deployments/userCreation')]"
                 ],
@@ -295,7 +283,7 @@ The second runbook runs the <a href="https://github.com/samvdjagt/wvdquickstart/
                 },
                 "properties": {
                     "runbook": {
-                        "name": "[concat(variables('runbookName'), '2')]"
+                        "name": "devOpsSetupRunbook"
                     }
                 }
             }
@@ -397,7 +385,7 @@ The above section creates the DevOps organization that will host the WVD deploym
         "name": "createDevopsPipeline",
         "location": "[variables('location')]",
         "dependsOn": [
-            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid2'))]"
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid2'))]"
         ],
         "kind": "AzureCLI",
         "identity": {
@@ -426,7 +414,7 @@ The above deployment script *createDevopspipeline* executes the <a href="https:/
         "location": "[variables('location')]",
         "dependsOn": [
             "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
-            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
         ],
         "kind": "AzurePowerShell",
         "identity": {
@@ -454,7 +442,7 @@ The above deployment script *checkAzureCredentials* executes the <a href="https:
         "name": "userCreation",
         "dependsOn": [
             "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
-            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+            "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
         ],
         "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
         "subscriptionId": "[subscription().subscriptionId]",
