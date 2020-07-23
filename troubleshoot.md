@@ -17,7 +17,7 @@ In case you run into any issues while using the WVD Quickstart, this page might 
 A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>.
 
 ### <b>checkCredentialsRunbook failed</b>
-If you get an error that looks like the image below, it means that the deployment was unable to authenticate to your Azure account, or that there was some other error with your current Azure environment.
+If you get an error that looks like the image below, it means that the deployment was unable to authenticate to your Azure account, or that there was some other error with your current Azure environment. Note: While this section covers the checkCredentialsRunbook specifically, the process is the same for any runbook error in your deployment.
 ![Job failed](images/jobFail.PNG?raw=true)
 <br>To troubleshoot this issue, go to the resource group to which you are currently deploying, and click on the checkCredentialsRunbook as shown below:
 ![runbook](images/runbook.PNG?raw=true)
