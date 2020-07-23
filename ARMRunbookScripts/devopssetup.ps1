@@ -232,8 +232,17 @@ if ($VMCustomScriptExtension -ne $null) {
 $url = $("https://dev.azure.com/" + $orgName + "/" + $projectName + "/_apis/git/repositories/" + $projectName + "/refs?filter=heads/master&api-version=5.1")
 write-output $url
 
-$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
-write-output $response
+$currentTry = 0
+do {
+    Start-Sleep -Seconds 2
+    $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
+    write-output $response
+    $currentTry++
+} while ($currentTry -le 15 -and ($response.value.ObjectId -eq $null))
+
+if ($response.value.ObjectId -eq $null) {
+  throw "Pushing repository to DevOps timed out. Please try again later."
+}
 
 # Parse user input into the template variables file and the deployment parameter file and commit them to the devops repo
 $url = $("https://dev.azure.com/" + $orgName + "/" + $projectName + "/_apis/git/repositories/" + $projectName + "/pushes?api-version=5.1")
@@ -383,7 +392,7 @@ $body = @"
   "description": "Azure credentials neede for DevOps pipeline"
 }
 "@
-write-output $body
+write-output "Request body for this request not printed to logs because it contains sensitive information."
 
 $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Post -Body $Body -ContentType application/json
 write-output $response
