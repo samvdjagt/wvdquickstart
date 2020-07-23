@@ -19,13 +19,13 @@ A likely cause of a WVD Quickstart failure is if one or more of the <a href="how
 ### <b>checkCredentialsRunbook failed</b>
 If you get an error that looks like the image below, it means that the deployment was unable to authenticate to your Azure account, or that there was some other error with your current Azure environment.
 ![Job failed](images/jobFail.PNG?raw=true)
-To troubleshoot this issue, go to the resource group to which you are currently deploying, and click on the checkCredentialsRunbook as shown below:
+<br>To troubleshoot this issue, go to the resource group to which you are currently deploying, and click on the checkCredentialsRunbook as shown below:
 ![runbook](images/runbook.PNG?raw=true)
-Within that runbook, you will see that the job Failed, as shown below:
+<br>Within that runbook, you will see that the job Failed, as shown below:
 ![Job failed](images/runbookFailed.PNG?raw=true)
-If you click on the job, and navigate to the *Errors* tab, you'll see the error messaging from the script. This will help you understand the cause of the error. In the example below, we can see that the wrong credentials were entered - Which indicates a spelling mistake in either the Azure Admin UPN or password. 
+<br>If you click on the job, and navigate to the *Errors* tab, you'll see the error messaging from the script. This will help you understand the cause of the error. In the example below, we can see that the wrong credentials were entered - Which indicates a spelling mistake in either the Azure Admin UPN or password. 
 ![job error](images/jobError.PNG?raw=true)
-To fix this, simply click "Redeploy" in the main deployment, and make sure the credentials you entered are correct before clicking "Purchase" again.
+<br>To fix this, simply click "Redeploy" in the main deployment, and make sure the credentials you entered are correct before clicking "Purchase" again.
 
 ### <b>Native AD: Creating Users</b>
 In case you are running a Native AD deployment, and the 'UserCreation' fails, there are a number of possible causes:
