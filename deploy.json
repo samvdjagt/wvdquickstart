@@ -88,18 +88,10 @@
         "assetsName": "[concat('aset', toLower(parameters('utcValue')))]",
         "profilesName": "[concat('prof', toLower(parameters('utcValue')))]",
         "autoAccountName": "[concat('auto', toLower(parameters('utcValue')))]",
-        "uniquestr": "[uniqueString(resourceGroup().id, deployment().name)]",
-        "runbookName": "[concat('wvdrunbook','-',variables('uniquestr'))]",
         "tenantId": "[subscription().tenantId]",
-        "uniqueBase0": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials'))]",
-        "uniqueBase": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName')))]",
-        "uniqueBase2": "[toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup'))]",
-        "newGuid0": "[guid(variables('uniqueBase0'))]",
-        "newGuid": "[guid(variables('uniqueBase'))]",
-        "newGuid2": "[guid(variables('uniqueBase2'))]",
-        "scriptUri0": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/checkCredentials.ps1')]",
-        "scriptUri1": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
-        "scriptUri2": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
+        "jobGuid0": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials')))]",
+        "jobGuid": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName'))))]",
+        "jobGuid2": "[guid(toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup')))]",
         "devOpsName": "[concat('WVDQuickstartOrg', skip(parameters('utcValue'), 9))]",   
         "devOpsProjectName": "[concat('WVDQuickstartProj', skip(parameters('utcValue'), 9))]",
         "targetGroup": "WVDTestUsers",
@@ -245,7 +237,7 @@
                 {
                     "type": "runbooks",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[concat(variables('runbookName'), '0')]",
+                    "name": "checkCredentialsRunbook",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -258,7 +250,7 @@
                         "logProgress": false,
                         "logVerbose": false,
                         "publishContentLink": {
-                            "uri": "[variables('scriptUri0')]",
+                            "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/checkCredentials.ps1')]",
                             "version": "1.0.0.0"
                         }
                     } 
@@ -266,25 +258,25 @@
                 {
                     "type": "jobs",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[variables('newGuid0')]",
+                    "name": "[variables('jobGuid0')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]"
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/checkCredentialsRunbook')]"
                     ],
                     "tags": {
                         "key": "value"
                     },
                     "properties": {
                         "runbook": {
-                            "name": "[concat(variables('runbookName'), '0')]"
+                            "name": "checkCredentialsRunbook"
                         }
                     }
                 },
                 {
                     "type": "runbooks",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[variables('runbookName')]",
+                    "name": "ServicePrincipalRunbook",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -297,7 +289,7 @@
                         "logProgress": false,
                         "logVerbose": false,
                         "publishContentLink": {
-                            "uri": "[variables('scriptUri1')]",
+                            "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
                             "version": "1.0.0.0"
                         }
                     }
@@ -305,27 +297,27 @@
                 {
                     "type": "jobs",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[variables('newGuid')]",
+                    "name": "[variables('jobGuid')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/ServicePrincipalRunbook')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/checkCredentialsRunbook')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
                     ],
                     "tags": {
                         "key": "value"
                     },
                     "properties": {
                         "runbook": {
-                            "name": "[variables('runbookName')]"
+                            "name": "ServicePrincipalRunbook"
                         }
                     }
                 },
                 {
                     "type": "runbooks",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[concat(variables('runbookName'), '2')]",
+                    "name": "devOpsSetupRunbook",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
@@ -337,7 +329,7 @@
                         "logProgress": false,
                         "logVerbose": false,
                         "publishContentLink": {
-                            "uri": "[variables('scriptUri2')]",
+                            "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
                             "version": "1.0.0.0"
                         }
                     }
@@ -345,13 +337,13 @@
                 {
                     "type": "jobs",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[variables('newGuid2')]",
+                    "name": "[variables('jobGuid2')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('newGuid'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/',variables('runbookName'), '2')]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('jobGuid'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/devOpsSetupRunbook')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]",
                         "[concat('microsoft.visualstudio/account/', variables('devOpsName'))]",
                         "[concat('Microsoft.Resources/Deployments/userCreation')]"
                     ],
@@ -360,7 +352,7 @@
                     },
                     "properties": {
                         "runbook": {
-                            "name": "[concat(variables('runbookName'), '2')]"
+                            "name": "devOpsSetupRunbook"
                         }
                     }
                 }
@@ -407,7 +399,7 @@
                 }
             },
             "dependsOn": [
-               "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+               "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
             ],
             "resources": [
             ]
@@ -434,7 +426,7 @@
               "accountName": "[variables('devOpsName')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
             ],
             "resources": []
         },
@@ -444,7 +436,7 @@
             "name": "createDevopsPipeline",
             "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid2'))]"
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid2'))]"
             ],
             "kind": "AzureCLI",
             "identity": {
@@ -469,7 +461,7 @@
             "name": "userCreation",
             "dependsOn": [
                 "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
-                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
             ],
             "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
             "subscriptionId": "[subscription().subscriptionId]",
