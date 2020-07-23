@@ -11,12 +11,21 @@ In case you run into any issues while using the WVD Quickstart, this page might 
 * In the *userCreation* custom script extension, there's a small chance it will fail when trying to sync the newly created user to Azure AD, if a cync cycle is already running
 * In the *userCreation* custom script extension, the profiles storage account will be joined to the domain using a new *computerAccount*. By default, this computerAccount will be created in the *Domain Controllers* Organizational Unit (OU). In case this OU doesn't exist in your environment, the script will fail. In that case, you would have to change this default in the createUsers.ps1 script in the Modules/ARM/UserCreation/scripts folder. For this customization, you'll have to clone this GitHub repository as explained in the <a href="customize">Customize</a> section.
 * The WVD Quickstart cannot configure your native AD environment for you. You will have to have a virtual network and domain controller setup and synced to Azure AD (with AD Connect) as a prerequisite before deploying with the Quickstart. In the case of using AADDS, you will also have to have your environment setup as this is not automated in the Quickstart either.
+* Currently, the Quickstart will only work if you are the subscription owner. In theory, it could work if you have both *contributor* and *user access administrator* roles on the subscription, but this is not currently a supported scenario.
 
 ### <b>Invalid Configuration</b>
 A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>.
 
-### <b>CheckAzureCredentials failed</b>
-If you get this error, it means that the deployment was unable to authenticate to your Azure account. Please make sure that the Azure Admin credentials you entered are correct and try to redeploy.
+### <b>checkCredentialsRunbook failed</b>
+If you get an error that looks like the image below, it means that the deployment was unable to authenticate to your Azure account, or that there was some other error with your current Azure environment.
+![Job failed](images/jobFail.PNG?raw=true)
+To troubleshoot this issue, go to the resource group to which you are currently deploying, and click on the checkCredentialsRunbook as shown below:
+![runbook](images/runbook.PNG?raw=true)
+Within that runbook, you will see that the job Failed, as shown below:
+![Job failed](images/runbookFailed.PNG?raw=true)
+If you click on the job, and navigate to the *Errors* tab, you'll see the error messaging from the script. This will help you understand the cause of the error. In the example below, we can see that the wrong credentials were entered - Which indicates a spelling mistake in either the Azure Admin UPN or password. 
+![job error](images/jobError.PNG?raw=true)
+To fix this, simply click "Redeploy" in the main deployment, and make sure the credentials you entered are correct before clicking "Purchase" again.
 
 ### <b>Native AD: Creating Users</b>
 In case you are running a Native AD deployment, and the 'UserCreation' fails, there are a number of possible causes:
