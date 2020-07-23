@@ -409,7 +409,7 @@ stages:
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 
-  - deployment: Deploy_RemoteAppGroup01
+  - deployment: Deploy_RemoteAppGroup
     dependsOn: 
     - Deploy_WVDHostPool
     - Deploy_WVDSessionHosts
@@ -453,7 +453,7 @@ stages:
   - deployment: Deploy_Application
     dependsOn:
     - Deploy_WVDSessionHosts
-    - Deploy_RemoteAppGroup01
+    - Deploy_RemoteAppGroup
     environment: SBX
     condition: and(succeeded(), eq(variables['enableApplicationJob'], true))
     timeoutInMinutes: 120
