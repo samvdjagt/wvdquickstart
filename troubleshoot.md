@@ -21,6 +21,9 @@ If you get this error, it means that the deployment was unable to authenticate t
 ### <b>Native AD: Creating Users</b>
 In case you are running a Native AD deployment, and the 'UserCreation' fails, there are a number of possible causes:
 
+* <b>Incorrect domain join credentials entered</b>: This is the most common reason for this step to fail. If this is the reason, the error message would look like the following:
+![userCreation error](images/credError.PNG?raw=true)
+In that case, go back to the deployment page, click "redeploy", re-enter your password and simply click "purchase" again to retry the deployment.
 * Incorrect configuration of the domain controller VM: Please ensure that the VM is running and healthy, and that the RDAgent is installed and running on your domain controller VM
 * There's another Custom Script Extension already installed on your domain controller VM: In this case, the userCreation will not be able to run. If possible, uninstall the existing custom script extension. Otherwise, create the user manually as explained below.
 * A failure when running the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM/UserCreation/scripts/createUsers.ps1" target="_blank">createUsers.ps1</a> script: You could try and edit it to troubleshoot, but it might be easier to log on to your domain controller and create the user manually. Be sure to then assign that user to a Security Group with the same name as the variable 'targetGroup' in the main <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a> and to sync this change to Azure with AD Connect. Your deployment will only work if the user is synced to Azure. If you go down this manual route, you do want to get rid of the 'UserCreation' deployment in the main deploy.json to avoid your deployment failing again.
