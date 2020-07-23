@@ -41,7 +41,7 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 $context = Get-AzContext
 if ($context -eq $null)
 {
-	Write-Error "Please authenticate to Azure & Azure AD using Login-AzAccount and Connect-AzureAD cmdlets and then run this script"
+	throw "Authentication with Azure failed. Please make sure your Azure credentials are spelled correctly before redeploying."
 	exit
 }
 
