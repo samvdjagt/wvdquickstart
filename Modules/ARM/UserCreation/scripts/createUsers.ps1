@@ -125,7 +125,7 @@ catch {
     Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
 }
 
-LogInfo(Import-Module activedirectory)
+Import-Module activedirectory
 
 $adminUsername = $domainName + "\" + $domainUsername
 if ((new-object directoryservices.directoryentry "",$adminUsername,$domainPassword).psbase.name -ne $null)
