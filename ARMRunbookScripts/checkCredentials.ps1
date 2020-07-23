@@ -41,6 +41,7 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 $context = Get-AzContext
 if ($context -eq $null)
 {
+	Write-Error "Authentication with Azure failed. Please make sure your Azure credentials are spelled correctly before redeploying."
 	throw "Authentication with Azure failed. Please make sure your Azure credentials are spelled correctly before redeploying."
 	exit
 }
