@@ -409,7 +409,6 @@ stages:
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 
-
   - deployment: Deploy_RemoteAppGroup01
     dependsOn: 
     - Deploy_WVDHostPool

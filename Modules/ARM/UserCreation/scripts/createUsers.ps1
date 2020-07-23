@@ -3,6 +3,8 @@ $ConfigurationFileName = "users.parameters.json"
 $domainName = $args[0]
 $targetGroup = $args[1]
 $artifactsLocation = $args[2]
+$domainUsername = $args[3]
+$domainPassword = $args[4]
 
 $domainName
 
@@ -124,6 +126,16 @@ catch {
 }
 
 LogInfo(Import-Module activedirectory)
+
+$adminUsername = $domainName + "\" + $domainUsername
+if ((new-object directoryservices.directoryentry "",$adminUsername,$domainPassword).psbase.name -ne $null)
+{
+    LogInfo("Valid domain join credentials credentials") 
+}
+else
+{
+    Write-Error "Invalid domain join credentials entered" -ErrorAction 'Stop'
+}
 
 foreach ($config in $UserConfig.userconfig) {
 

@@ -67,7 +67,7 @@ variables:
   value: false    # To enable/disable Image Lifecycle job
 
 ## Hostpool
-#customImageReferenceId: '/subscriptions/67f81d7b-30fe-46c7-a789-56d6f2d5decc/resourceGroups/QS-WVD-IMG-RG/providers/Microsoft.Compute/galleries/sigto/images/W10-20H1-O365/versions/0.24282.50570'
+#customImageReferenceId, as value, put: '/subscriptions/<subscriptionId>/resourceGroups/<image-resource-group-name>/providers/Microsoft.Compute/galleries/<SIG name>/images/<image name>/versions/<version>'
 - name: customImageReferenceId
   value: ''
 
