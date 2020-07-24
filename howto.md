@@ -50,4 +50,4 @@ The Quickstart creates a test user for you to try out the environment. Navigate 
 Username: WVDTestUser001@{your-domain}.com <br>
 Password: wvdTest123!
 
-You should see a "WVD Workspace" appear, to which you can login to experience the best of Windows Virtual Desktop. Within this virtualized environment, your user will find Microsoft Office 365 amongst other built-in Microsoft applications. Additionally, since the Quickstart configures FSLogix profile management for you, a user profile will be created. This will be stored in the QS-WVD-MGMT-RG resource group, in the profiles storage account, in the *wvdprofiles* file share.
+You should see a "WVD Workspace" appear, to which you can login to experience the best of Windows Virtual Desktop. Within this virtualized environment, your user will find Microsoft Office 365 amongst other built-in Microsoft applications. Additionally, since the Quickstart configures FSLogix profile management for you, a user profile will be created. This will be stored in the profiles storage account, in the *wvdprofiles* file share.

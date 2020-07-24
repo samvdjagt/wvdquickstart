@@ -134,7 +134,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -145,7 +145,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/storageaccount.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"
@@ -183,7 +183,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-The job above deploys the *Assets* storage account in the QS-WVD-MGMT-RG resource group (by default). This storage account will be used to store the contents of the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a>: This folder contains the three different custom script extensions that will be installed on the WVD Virtual Machines: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation. It fetches these files from the WVD Quickstart GitHub repository by default. 
+The job above deploys the *Assets* storage account in your resource group. This storage account will be used to store the contents of the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a>: This folder contains the three different custom script extensions that will be installed on the WVD Virtual Machines: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation. It fetches these files from the WVD Quickstart GitHub repository by default. 
 
 #### Profiles Storage Account Deployment
 ```
@@ -201,7 +201,7 @@ The job above deploys the *Assets* storage account in the QS-WVD-MGMT-RG resourc
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task_01
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -212,7 +212,7 @@ The job above deploys the *Assets* storage account in the QS-WVD-MGMT-RG resourc
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdprofiles-storageaccount-01.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"
@@ -240,7 +240,7 @@ The job above deploys the *Assets* storage account in the QS-WVD-MGMT-RG resourc
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-This pipeline job takes care of the profiles storage account deployment. This storage account, by default deployed in the QS-WVD-MGMT-RG resource group, will be used to store the FSLogix user profiles in a file share called *wvdprofiles* by default. This deployment does not carry out the Azure Files enablement for a native AD environment (domain joining the storage account), as this is done through a custom script extensions. In case of using the AADDS identity approach, this flag will in fact be set on the storage account within this pipeline job.
+This pipeline job takes care of the profiles storage account deployment. This storage account, deployed in your resource group, will be used to store the FSLogix user profiles in a file share called *wvdprofiles* by default. This deployment does not carry out the Azure Files enablement for a native AD environment (domain joining the storage account), as this is done through a custom script extensions. In case of using the AADDS identity approach, this flag will in fact be set on the storage account within this pipeline job.
 
 #### WVD Host Pool Deployment
 ```

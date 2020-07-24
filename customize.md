@@ -27,7 +27,6 @@ The <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/stati
     # ResourceGroups
     location                              = "eastus"                # Location in which WVD resources will be deployed
     resourceGroupName                     = "[resourceGroupName]"   # Name of the resource group in which WVD resources will be deployed
-    wvdMgmtResourceGroupName              = "QS-WVD-MGMT-RG"        # Name of the assets / profiles storage account resource group
     ...
     ...
 ```
@@ -75,7 +74,6 @@ variables:
 To provide a complete overview of which values you will need to change in both of the parameter files, please find a list below of all the parameter that occur twice. In case of any customization, please make sure to change these values in both files before re-running the pipeline.
 
 * *Location* (Location in which WVD resources will be deployed)
-* *wvdMgmtResourceGroupName* (Name of the assets / profiles storage account resource group)
 * *domainJoinUserName* (domain controller admin username, taken from domainJoinUser UPN)
 * *wvdAssetsStorage* (Name of the assets storage account)
 * *resourceGroupName* (Name of the resource group in which WVD resources will be deployed)
@@ -146,23 +144,23 @@ Apart from the files in the WVDScripts folder, there are a couple of other compo
             "value": [
                 {
                     "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/scriptExtensionMasterInstaller.ps1",
-                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[resourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
                 },
                 {
                     "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/001-AzFiles.zip",
-                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[resourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
                 },
                 {
                     "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/002-FSLogix.zip",
-                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[resourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
                 },
                 {
                     "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/003-NotepadPP.zip",
-                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[resourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
                 },
                 {
                     "uri": "https://[wvdAssetsStorage].blob.core.windows.net/wvdscripts/004-Teams.zip",
-                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[wvdMgmtResourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
+                    "storageAccountId": "/subscriptions/[subscriptionId]/resourceGroups/[resourceGroupName]/providers/Microsoft.Storage/storageAccounts/[wvdAssetsStorage]"
                 }
             ]
         }
