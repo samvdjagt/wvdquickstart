@@ -12,7 +12,7 @@ $keyvaultName = Get-AutomationVariable -Name 'keyvaultName'
 $wvdAssetsStorage = Get-AutomationVariable -Name 'assetsName'
 $profilesStorageAccountName = Get-AutomationVariable -Name 'profilesName'
 $ObjectId = Get-AutomationVariable -Name 'ObjectId'
-$tenantAdminDomainJoinUPN = Get-AutomationVariable -Name 'tenantAdminDomainJoinUPN'
+$DomainJoinAccountUPN = Get-AutomationVariable -Name 'DomainJoinAccountUPN'
 $existingSubnetName = Get-AutomationVariable -Name 'existingSubnetName'
 $virtualNetworkResourceGroupName = Get-AutomationVariable -Name 'virtualNetworkResourceGroupName'
 $existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
@@ -187,7 +187,7 @@ write-output $body
 $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Post -Body $Body -ContentType application/json
 write-output $response
 
-$split = $tenantAdminDomainJoinUPN.Split("@")
+$split = $DomainJoinAccountUPN.Split("@")
 $domainUsername = $split[0]
 $domainName = $split[1]
 
@@ -272,7 +272,7 @@ $parameters = $parameters.Replace("[existingVnetName]", $existingVnetName)
 $parameters = $parameters.Replace("[computerName]", $computerName)
 $parameters = $parameters.Replace("[existingDomainUsername]", $domainUsername)
 $parameters = $parameters.Replace("[existingDomainName]", $domainName)
-$parameters = $parameters.Replace("[tenantAdminDomainJoinUPN]", $tenantAdminDomainJoinUPN)
+$parameters = $parameters.Replace("[DomainJoinAccountUPN]", $DomainJoinAccountUPN)
 $parameters = $parameters.Replace("[objectId]", $ObjectId)
 $parameters = $parameters.Replace("[tenantId]", $tenant)
 $parameters = $parameters.Replace("[subscriptionId]", $subscriptionId)

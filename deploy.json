@@ -2,13 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "utcValue": {
-            "type": "string",
-            "metadata": {
-                "description": "Please leave this value as '[utcNow()]', as this is used to generate unique names in the deployment. This is a requirement for resources like a keyvault or storage account."
-            },
-            "defaultValue": "[utcNow()]"
-        },
         "existingVnetName": {
             "type": "string",
             "metadata": {
@@ -46,16 +39,16 @@
                 "description": "The password that corresponds to the Azure admin UPN above."
             }
         },
-        "tenantAdminDomainJoinUPN": {
+        "DomainJoinAccountUPN": {
             "type": "string",
             "metadata": {
-                "description": "The template will fail if you enter a user account that requires MFA or an application that is secured by a certificate. The UPN or ApplicationId must be an RDS Owner in the Windows Virtual Desktop Tenant to create the hostpool or an RDS Owner of the host pool to provision the host pool with additional VMs."
+                "description": "User or service account UPN with sufficient privileges to domain join virtual machines. Additionally, please make sure the username is allowed (aka.ms/usernames) - Certain common usernames such as 'admin' are not allowed for this account. The template will fail if you enter a user account that requires MFA or an application that is secured by a certificate."
             }
         },
-        "tenantAdminDomainJoinPassword": {
+        "DomainJoinAccountPassword": {
             "type": "securestring",
             "metadata": {
-                "description": "The password that corresponds to the tenant admin UPN."
+                "description": "The password that corresponds to the domain join account UPN."
             }
         },
         "identityApproach": {
@@ -74,13 +67,20 @@
                 "description": "If desired, you can provide an email address to which we'll send a notification once your WVD deployment completes. DevOps will, by default, attempt to send an email to your Azure account, regardless of whether you provide a value here."
             },
             "defaultValue": "[parameters('azureAdminUpn')]"
+        },
+        "utcValue": {
+            "type": "string",
+            "metadata": {
+                "description": "Please leave this value as '[utcNow()]', as this is used to generate unique names in the deployment. This is a requirement for resources like a keyvault or storage account."
+            },
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
         "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/wvdquickstart/master",
         "AdminPasswordSecret": "adminPassword",
-        "existingDomainUsername": "[first(split(parameters('tenantAdminDomainJoinUPN'), '@'))]",
-        "existingDomainName": "[split(parameters('tenantAdminDomainJoinUPN'), '@')[1]]",
+        "existingDomainUsername": "[first(split(parameters('DomainJoinAccountUPN'), '@'))]",
+        "existingDomainName": "[split(parameters('DomainJoinAccountUPN'), '@')[1]]",
         "identityName": "WVDServicePrincipal",
         "location": "[resourcegroup().location]",
         "rgName": "[resourcegroup().name]",
@@ -149,8 +149,8 @@
                 "value": "[concat('\"',variables('profilesName'),'\"')]"
             },
             {
-                "name": "tenantAdminDomainJoinUPN",
-                "value": "[concat('\"',parameters('tenantAdminDomainJoinUPN'),'\"')]"
+                "name": "DomainJoinAccountUPN",
+                "value": "[concat('\"',parameters('DomainJoinAccountUPN'),'\"')]"
             },
             {
                 "name": "computerName",
@@ -230,8 +230,8 @@
                     ],
                     "tags": {},
                     "properties": {
-                        "userName": "[parameters('tenantAdminDomainJoinUPN')]",
-                        "password": "[parameters('tenantAdminDomainJoinPassword')]"
+                        "userName": "[parameters('DomainJoinAccountUPN')]",
+                        "password": "[parameters('DomainJoinAccountPassword')]"
                     }
                 },
                 {
@@ -410,7 +410,7 @@
             "name": "[concat(variables('keyvaultName'), '/', variables('AdminPasswordSecret'))]",
             "properties": {
                 "name": "[variables('AdminPasswordSecret')]",
-                "value": "[parameters('tenantAdminDomainJoinPassword')]"
+                "value": "[parameters('DomainJoinAccountPassword')]"
             },
             "dependsOn": [
                 "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
@@ -490,7 +490,7 @@
                             "fileUris": [
                                 "[concat(variables('_artifactsLocation'), '/Modules/ARM/UserCreation/scripts/createUsers.ps1')]"
                             ],
-                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'), ' ', variables('_artifactsLocation'), ' ', variables('existingDomainUsername'), ' ', parameters('tenantAdminDomainJoinPassword'))]"
+                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'), ' ', variables('_artifactsLocation'), ' ', variables('existingDomainUsername'), ' ', parameters('DomainJoinAccountPassword'))]"
                         }
                     }
                 }

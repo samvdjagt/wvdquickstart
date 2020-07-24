@@ -38,7 +38,7 @@
     vmInitialNumber                       = 1                                   # default
     diskSizeGB                            = 128                                 # Size of the VMs' disk
     vmDiskType                            = "Premium_LRS"                       # SKU of the above disk
-    domainJoinUser                        = "[tenantAdminDomainJoinUPN]"        # The domain join service account UPN
+    domainJoinUser                        = "[DomainJoinAccountUPN]"            # The domain join account UPN
     domainName                            = "[existingDomainName]"              # domain for the VMs to join, taken from domainJoinUser
     adminUsername                         = "[existingDomainUsername]"          # domain controller admin username, taken from domainJoinUser
     computerName                          = "[computerName]"                    # The name of the VM with the domain controller on it. Required only when using AD Identity Approach.
