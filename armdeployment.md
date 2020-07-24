@@ -41,8 +41,8 @@ The *artifactslocation* variable holds the URL to the GitHub repository that is 
 ```
 The *AdminPasswordSecret* variable holds the name of the Keyvault secret in which the password of the domain join service account will be stored.
 ```
-    "existingDomainUsername": "[first(split(parameters('tenantAdminDomainJoinUPN'), '@'))]",
-    "existingDomainName": "[split(parameters('tenantAdminDomainJoinUPN'), '@')[1]]",
+    "existingDomainUsername": "[first(split(parameters('DomainJoinAccountUPN'), '@'))]",
+    "existingDomainName": "[split(parameters('DomainJoinAccountUPN'), '@')[1]]",
 ```
 The *existingDomainUsername* and *existingDomainName* variables are both taken from the domain join service account UPN, where the domain name is used to perform the domain join of the virtual machines.
 ```
@@ -153,8 +153,8 @@ This section deploys an Automation Account. This automation account is used for 
                 ],
                 "tags": {},
                 "properties": {
-                    "userName": "[parameters('tenantAdminDomainJoinUPN')]",
-                    "password": "[parameters('tenantAdminDomainJoinPassword')]"
+                    "userName": "[parameters('DomainJoinAccountUPN')]",
+                    "password": "[parameters('DomainJoinAccountPassword')]"
                 }
             },
 ```
@@ -349,7 +349,7 @@ The above section deploys the Automation variables previously mentioned in the *
         "name": "[concat(variables('keyvaultName'), '/', variables('AdminPasswordSecret'))]",
         "properties": {
             "name": "[variables('AdminPasswordSecret')]",
-            "value": "[parameters('tenantAdminDomainJoinPassword')]"
+            "value": "[parameters('DomainJoinAccountPassword')]"
         },
         "dependsOn": [
             "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
