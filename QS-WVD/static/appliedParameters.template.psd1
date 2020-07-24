@@ -9,7 +9,6 @@
     # ResourceGroups
     location                              = "[location]"            # Location in which WVD resources will be deployed
     resourceGroupName                     = "[resourceGroupName]"   # Name of the resource group in which WVD resources will be deployed
-    wvdMgmtResourceGroupName              = "QS-WVD-MGMT-RG"        # Name of the assets / profiles storage account resource group
     #######################
 
     # Key Vault related #

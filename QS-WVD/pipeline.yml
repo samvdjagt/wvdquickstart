@@ -76,11 +76,7 @@ stages:
     condition:
       and (
           not(canceled()),
-          eq(variables['enableJobDeployAssetsStorageAccount'], true),
-          or(
-            eq(dependencies.Deploy_MgmtResourceGroup.result, ''),
-            in(dependencies.Deploy_MgmtResourceGroup.result, 'Succeeded', 'Skipped')
-          )
+          eq(variables['enableJobDeployAssetsStorageAccount'], true)
       )
     timeoutInMinutes: 120
     pool:
@@ -91,7 +87,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -102,7 +98,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/storageaccount.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"
@@ -154,7 +150,7 @@ stages:
             steps:
               - checkout: self
               - task: AzurePowerShell@4
-                displayName: 'Deploy module [StorageAccounts] in [$(wvdMgmtResourceGroupName)] via [$(serviceConnection)]'
+                displayName: 'Deploy module [StorageAccounts] in [$(resourceGroupName)] via [$(serviceConnection)]'
                 name: Deploy_StorageAccounts_Task_01
                 inputs:
                   azureSubscription: $(serviceConnection)
@@ -165,7 +161,7 @@ stages:
 
                     $parameterFilePath = '$(Pipeline.Workspace)/parameters/wvdprofiles-storageaccount-01.parameters.json'
                     $functionInput = @{
-                      resourcegroupName             = "$(wvdMgmtResourceGroupName)"
+                      resourcegroupName             = "$(resourceGroupName)"
                       location                      = "$(location)"
                       moduleName                    = "StorageAccounts"
                       moduleVersion                 = "2020-06-02"

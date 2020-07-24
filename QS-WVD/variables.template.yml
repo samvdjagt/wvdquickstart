@@ -31,10 +31,6 @@ variables:
 - name: parameterFolderPath
   value: 'QS-WVD'
 
-## Management ResourceGroup for assets / profiles storage account
-- name: wvdMgmtResourceGroupName
-  value: "QS-WVD-MGMT-RG"
-
 ### Key Vault ###
 - group: "WVDSecrets" # Name of DevOps variable group name
 
