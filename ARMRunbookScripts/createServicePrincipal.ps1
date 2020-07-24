@@ -72,6 +72,7 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 			exit
 		}
 	}
+	Start-sleep -Seconds 5
 
 	# Create a Client Secret
 	$StartDate = Get-Date

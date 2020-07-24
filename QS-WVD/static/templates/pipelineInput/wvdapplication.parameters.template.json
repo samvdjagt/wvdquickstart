@@ -14,6 +14,17 @@
                     "showInPortal": true,
                     "iconPath": "C:\\Program Files (x86)\\Notepad++\\Notepad++.exe",
                     "iconIndex": 0
+                },
+                {
+                    "name": "Microsoft Teams",
+                    "description": "Microsoft Teams by ARM template",
+                    "friendlyName": "Microsoft Teams",
+                    "filePath": "C:\\Program Files (x86)\\Teams Installer\\Teams.exe",
+                    "commandLineSetting": "DoNotAllow",
+                    "commandLineArguments": "",
+                    "showInPortal": true,
+                    "iconPath": "C:\\Program Files (x86)\\Teams Installer\\Teams.exe",
+                    "iconIndex": 0
                 }
             ]
         },
