@@ -36,8 +36,15 @@ $AzCredentials.password.MakeReadOnly()
 Connect-AzAccount -Environment 'AzureCloud' -Credential $AzCredentials
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
+$context = Get-AzContext
+if ($context -eq $null)
+{
+	Write-Error "Please authenticate to Azure & Azure AD using Login-AzAccount and Connect-AzureAD cmdlets and then run this script"
+	throw
+}
+$AADUsername = $context.Account.Id
+
 #region connect to Azure and check if Owner
-# The password property of the credentials object is cleared after the call for to Connect-AzAccount hece regenerating the,
 Try {
 	Write-Output "Try to connect AzureAD."
 	Connect-AzureAD -Credential $AzCredentials
@@ -45,14 +52,14 @@ Try {
 	Write-Output "Connected to AzureAD."
 	
 	# get user object 
-	$userInAzureAD = Get-AzureADUser -Filter "UserPrincipalName eq `'$AzCredentials.Username`'"
-	Write-Output "Found user $userInAzureAD"
+	$userInAzureAD = Get-AzureADUser -Filter "UserPrincipalName eq `'$AADUsername`'"
+	Write-Output "Found user `'$userInAzureAD`'"
 
 	$isOwner = Get-AzRoleAssignment -ObjectID $userInAzureAD.ObjectId | Where-Object { $_.RoleDefinitionName -eq "Owner"}
-	Write-Output "Found role $isOwner"
+	Write-Output "Found role `'$isOwner`'"
 
 	if ($isOwner.RoleDefinitionName -eq "Owner") {
-		Write-Output $($AzCredentials.Username + " has Owner role assigned")        
+		Write-Output $($AADUsername + " has Owner role assigned")        
 	} 
 	else {
 		Write-Output "Missing Owner role."   
@@ -60,7 +67,7 @@ Try {
 	}
 }
 Catch {    
-	Write-Output  $($AzCredentials.Username + " does not have Owner role assigned")
+	Write-Output  $($AADUsername + " does not have Owner role assigned")
 }
 #endregion
 
@@ -68,10 +75,10 @@ Catch {
 Try {
 	# this depends on the previous segment completeing 
 	$role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
-	$isMember = Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser | Where-Object {$_.UserPrincipalName -eq $AzCredentials.Username}
+	$isMember = Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser | Where-Object {$_.UserPrincipalName -eq $AADUsername}
 	
 	if ($isMember.UserType -eq "Member") {
-		Write-Output $($AzCredentials.Username + " has " + $role.DisplayName + " role assigned")        
+		Write-Output $($AADUsername + " has " + $role.DisplayName + " role assigned")        
 	} 
 	else {
 		Write-Output "Missing Owner role."   
@@ -79,7 +86,7 @@ Try {
 	}
 }
 Catch {    
-	Write-Output  $($AzCredentials.Username + " does not have " + $role.DisplayName + " role assigned")
+	Write-Output  $($AADUsername + " does not have " + $role.DisplayName + " role assigned")
 }
 #endregion
 
