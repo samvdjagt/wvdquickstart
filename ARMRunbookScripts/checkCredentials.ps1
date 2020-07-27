@@ -2,6 +2,9 @@
 $SubscriptionId = Get-AutomationVariable -Name 'subscriptionid'
 $ResourceGroupName = Get-AutomationVariable -Name 'ResourceGroupName'
 $fileURI = Get-AutomationVariable -Name 'fileURI'
+$existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
+$existingSubnetName = Get-AutomationVariable -Name 'existingSubnetName'
+$virtualNetworkResourceGroupName = Get-AutomationVariable -Name 'virtualNetworkResourceGroupName'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -20,6 +23,7 @@ Import-Module Az.Websites -Global
 Import-Module Az.Automation -Global
 Import-Module Az.Managedserviceidentity -Global
 Import-Module Az.Keyvault -Global
+Import-Module Az.Network -Global
 Import-Module AzureAD -Global
 
 Set-ExecutionPolicy -ExecutionPolicy Undefined -Scope Process -Force -Confirm:$false
@@ -104,6 +108,26 @@ Catch {
 	catch {
 		Write-Output  $("Registering " + $wvdResourceProviderName + " has failed!" )
 	}
+}
+#endregion
+
+#region check VNET
+Try {        
+	$VNET = Get-AzVirtualNetwork -name $existingVnetName
+	($VNET).AddressSpace.AddressPrefixes 
+	Write-Output $("Found the VNET " + $VNET.Name)   
+	
+	# subner 
+	If (($VNET).Subnets.Name -eq $existingSubnetName) {
+		Write-Output $("Found the subnet " + $existingSubnetName)   
+	}
+	else {
+		Throw "Subnet not found!"
+	}
+}
+Catch {                
+	Write-Output $("Did not find the VNET " + $VNET)     
+	throw  "Virtual network not found."
 }
 #endregion
 
