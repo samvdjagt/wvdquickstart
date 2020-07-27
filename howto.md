@@ -6,7 +6,8 @@ filename: howto
 
 ## <b>How To Deploy With The WVD Quickstart</b>
 
-<iframe width="784" height="441" src="https://www.youtube.com/embed/7nZJhvb_5aA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Tz3KgruovYc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+The video above shows you a full end-to-end deployment with the WVD Quickstart, including the configuration of the prerequisites listed below.
 
 ### <b>Prerequisites</b>
 In order to successfully deploy a WVD environment with the Quickstart, a couple of prerequisites need to be satisfied beforehand. All of these prerequisites are listed below, together with links to documentation that can help you with setting them up.
@@ -22,6 +23,8 @@ In order to successfully deploy a WVD environment with the Quickstart, a couple 
     * With the DNS setting to *custom*
     * Domain join service account needs to have administrator privileges on the domain controller in this VNET
 * Firewall configuration: ensure all the <a href="https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list" target="_blank">required ports</a> are accessible to the WVD resource provider
+
+Once you have all of these prerequisites satisfied, <a href="https://www.youtube.com/watch?v=7nZJhvb_5aA&feature=youtu.be&t=360" target="_blank">this video</a> will show you a walkthrough of the Quickstart deployment outlined below.
 
 ### <b>ARM Deployment: Azure DevOps Setup</b>
 Once you've satisfied all the prerequisites, you are ready to deploy using the Quickstart! As explained in the <a href="concepts">Concepts</a> section, the deployment consists of two main components: an Azure Resource Manager (ARM) deployment and an Azure DevOps (ADO) pipeline. The first of the two will deploy a number of resources supporting the deployment automation, including the creation of a DevOps project and automation pipeline. By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal for a custom deployment. There, you can fill out the required user input and click *purchase*. 
