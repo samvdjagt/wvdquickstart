@@ -46,9 +46,11 @@ Try {
 	
 	# get user object 
 	$userInAzureAD = Get-AzureADUser -Filter "UserPrincipalName eq `'$AzCredentials.Username`'"
+	Write-Output "Found user $userInAzureAD"
 
 	$isOwner = Get-AzRoleAssignment -ObjectID $userInAzureAD.ObjectId | Where-Object { $_.RoleDefinitionName -eq "Owner"}
-	
+	Write-Output "Found role $isOwner"
+
 	if ($isOwner.RoleDefinitionName -eq "Owner") {
 		Write-Output $($AzCredentials.Username + " has Owner role assigned")        
 	} 
@@ -63,7 +65,6 @@ Catch {
 #endregion
 
 #region connect to Azure and check if admin on Azure AD 
-# The password property of the credentials object is cleared after the call for to Connect-AzAccount hece regenerating the,
 Try {
 	# this depends on the previous segment completeing 
 	$role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
