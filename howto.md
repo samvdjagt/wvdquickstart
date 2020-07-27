@@ -24,7 +24,7 @@ In order to successfully deploy a WVD environment with the Quickstart, a couple 
     * Domain join service account needs to have administrator privileges on the domain controller in this VNET
 * Firewall configuration: ensure all the <a href="https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list" target="_blank">required ports</a> are accessible to the WVD resource provider
 
-Once you have all of these prerequisites satisfied, <a href="https://youtu.be/7nZJhvb_5aA?t=360" target="_blank">this video</a> will show you a walkthrough of the Quickstart deployment outlined below.
+Once you have all of these prerequisites satisfied, <a href="https://youtu.be/Tz3KgruovYc?t=360" target="_blank">this video</a> will show you a walkthrough of the Quickstart deployment outlined below.
 
 ### <b>ARM Deployment: Azure DevOps Setup</b>
 Once you've satisfied all the prerequisites, you are ready to deploy using the Quickstart! As explained in the <a href="concepts">Concepts</a> section, the deployment consists of two main components: an Azure Resource Manager (ARM) deployment and an Azure DevOps (ADO) pipeline. The first of the two will deploy a number of resources supporting the deployment automation, including the creation of a DevOps project and automation pipeline. By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal for a custom deployment. There, you can fill out the required user input and click *purchase*. 
