@@ -34,17 +34,72 @@ $AzCredentialsAsset = 'AzureCredentials'
 $AzCredentials = Get-AutomationPSCredential -Name $AzCredentialsAsset
 $AzCredentials.password.MakeReadOnly()
 Connect-AzAccount -Environment 'AzureCloud' -Credential $AzCredentials
-Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $AzCredentials
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
-# Get the context
-$context = Get-AzContext
-if ($context -eq $null)
-{
-	Write-Error "Authentication with Azure failed. Please make sure your Azure credentials are spelled correctly before redeploying."
-	throw "Authentication with Azure failed. Please make sure your Azure credentials are spelled correctly before redeploying."
-	exit
+#region connect to Azure and check if Owner
+# The password property of the credentials object is cleared after the call for to Connect-AzAccount hece regenerating the,
+Try {
+	Write-Output "Try to connect AzureAD."
+	Connect-AzureAD -Credential $AzCredentials
+	
+	Write-Output "Connected to AzureAD."
+	
+	# get user object 
+	$userInAzureAD = Get-AzureADUser -Filter "UserPrincipalName eq `'$AzCredentials.Username`'"
+
+	$isOwner = Get-AzRoleAssignment -ObjectID $userInAzureAD.ObjectId | Where-Object { $_.RoleDefinitionName -eq "Owner"}
+	
+	if ($isOwner.RoleDefinitionName -eq "Owner") {
+		Write-Output $($AzCredentials.Username + " has Owner role assigned")        
+	} 
+	else {
+		Write-Output "Missing Owner role."   
+		Throw
+	}
 }
+Catch {    
+	Write-Output  $($AzCredentials.Username + " does not have Owner role assigned")
+}
+#endregion
+
+#region connect to Azure and check if admin on Azure AD 
+# The password property of the credentials object is cleared after the call for to Connect-AzAccount hece regenerating the,
+Try {
+	# this depends on the previous segment completeing 
+	$role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
+	$isMember = Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser | Where-Object {$_.UserPrincipalName -eq $AzCredentials.Username}
+	
+	if ($isMember.UserType -eq "Member") {
+		Write-Output $($AzCredentials.Username + " has " + $role.DisplayName + " role assigned")        
+	} 
+	else {
+		Write-Output "Missing Owner role."   
+		Throw
+	}
+}
+Catch {    
+	Write-Output  $($AzCredentials.Username + " does not have " + $role.DisplayName + " role assigned")
+}
+#endregion
+
+#region check Microsoft.DesktopVirtualization resource provider has been registerred 
+$wvdResourceProviderName = "Microsoft.DesktopVirtualization"
+try {
+	Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $wvdResourceProviderName  }
+	Write-Output  $($wvdResourceProviderName + " is registerred!" )
+}
+Catch {
+	Write-Output  $("Resource provider " + $wvdResourceProviderName + " is not registerred")
+	try {
+		Write-Output  $("Registerring " + $wvdResourceProviderName )
+		Register-AzResourceProvider -ProviderNamespace $wvdResourceProviderName
+		Write-Output  $("Registration of " + $wvdResourceProviderName + " completed!" )
+	} 
+	catch {
+		Write-Output  $("Registerring " + $wvdResourceProviderName + " has failed!" )
+	}
+}
+#endregion
 
 # Grant managed identity contributor role on subscription level
 $identity = Get-AzUserAssignedIdentity -ResourceGroupName $ResourceGroupName -Name "WVDServicePrincipal"
