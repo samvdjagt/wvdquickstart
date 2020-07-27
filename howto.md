@@ -16,7 +16,7 @@ In order to successfully deploy a WVD environment with the Quickstart, a couple 
    * A 
 <a href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank">Windows Server Active Directory</a> (AD) in sync with <a href="https://azure.microsoft.com/en-us/services/active-directory/" target="_blank">Azure Active Directory</a> (AAD), configured with <a href="https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-install-express" target="_blank">AD Connect</a>
    * OR: Configured <a href="https://azure.microsoft.com/en-us/services/active-directory-ds/" target="_blank">Azure Active Directory Domain Services (AADDS)</a> setup
-* Sufficient <a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-portal" target="_blank">administrator privileges</a> on your subscription: you will need the *contributor* or *owner* role at the minimum
+* Sufficient <a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-portal" target="_blank">administrator privileges</a> on your subscription: you will need the *owner* role
 * Domain join service account (Must be without MFA) with sufficient priviliges to join machines to the domain. When using AADDS, this user must be a member of the *AAD DC Administrators* Azure AD Group
 * Existing virtual network (VNET)
     * With an available subnet
