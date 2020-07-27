@@ -53,10 +53,8 @@ Try {
 	
 	# get user object 
 	$userInAzureAD = Get-AzureADUser -Filter "UserPrincipalName eq `'$AADUsername`'"
-	Write-Output "Found user `'$userInAzureAD`'"
 
 	$isOwner = Get-AzRoleAssignment -ObjectID $userInAzureAD.ObjectId | Where-Object { $_.RoleDefinitionName -eq "Owner"}
-	Write-Output "Found role `'$isOwner`'"
 
 	if ($isOwner.RoleDefinitionName -eq "Owner") {
 		Write-Output $($AADUsername + " has Owner role assigned")        
