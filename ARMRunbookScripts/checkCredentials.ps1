@@ -92,17 +92,17 @@ Catch {
 $wvdResourceProviderName = "Microsoft.DesktopVirtualization"
 try {
 	Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $wvdResourceProviderName  }
-	Write-Output  $($wvdResourceProviderName + " is registerred!" )
+	Write-Output  $($wvdResourceProviderName + " is registered!" )
 }
 Catch {
-	Write-Output  $("Resource provider " + $wvdResourceProviderName + " is not registerred")
+	Write-Output  $("Resource provider " + $wvdResourceProviderName + " is not registered")
 	try {
-		Write-Output  $("Registerring " + $wvdResourceProviderName )
+		Write-Output  $("Registering " + $wvdResourceProviderName )
 		Register-AzResourceProvider -ProviderNamespace $wvdResourceProviderName
 		Write-Output  $("Registration of " + $wvdResourceProviderName + " completed!" )
 	} 
 	catch {
-		Write-Output  $("Registerring " + $wvdResourceProviderName + " has failed!" )
+		Write-Output  $("Registering " + $wvdResourceProviderName + " has failed!" )
 	}
 }
 #endregion
