@@ -126,7 +126,7 @@ Try {
 	}
 }
 Catch {                
-	Write-Output $("Did not find the VNET " + $VNET)     
+	Write-Output $("Did not find the VNET " + $VNET + " with subnet " + $existingSubnetName)     
 	throw  "Virtual network not found."
 }
 #endregion
