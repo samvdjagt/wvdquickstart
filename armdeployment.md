@@ -5,7 +5,7 @@ filename: armdeployment
 ---
 
 ## <b>Breakdown of ARM Deployment to Setup Azure DevOps</b>
-To understand the first of the two major deployments in the WVD Quickstart (for an overview, please see <a href="concepts">Concepts</a> section), the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">ARM template</a> itself.
+To understand the first of the two major deployments in the WVD QuickStart (for an overview, please see <a href="concepts">Concepts</a> section), the ARM deployment that configures the Azure DevOps automation and deploys some supporting resources, let's dive into the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">ARM template</a> itself.
 
 ### <b>Parameters</b>
 In the parameters section of the ARM template, you'll find all the parameters that are exposed to the user input. ALl of these parameters come with a description to indicate what they're used for. These are typically pretty straightforward and will not be explained further in this documentation.
@@ -72,8 +72,8 @@ The *tenantId* variable holds the ID of your AAD tenant.
 ```
 The above variables are used to create unique names for the runbook jobs that will be executed in this ARM deployment. The *jobGuid* variables hold the unique guids of the three jobs that will be run.
 ```
-    "devOpsName": "WVDQuickstart0715",   
-    "devOpsProjectName": "WVDQuickstart0715",
+    "devOpsName": "WVDQuickStart0715",   
+    "devOpsProjectName": "WVDQuickStart0715",
 ```
 The above variables contain the name of the DevOps organization (*devOpsName*) and the DevOps project that will be created in this deployment.
 ```

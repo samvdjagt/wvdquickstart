@@ -5,20 +5,20 @@ filename: devops
 ---
 
 ## <b>Breakdown of the DevOps Automation</b>
-To understand the second of the two major deployments in the WVD Quickstart (for an overview, please see <a href="concepts">Concepts</a> section), the Azure DevOps pipeline that deploys a WVD environment for you, let's first take a look at <a href="https://dev.azure.com" target="_blank">Azure DevOps</a> itself.
+To understand the second of the two major deployments in the WVD QuickStart (for an overview, please see <a href="concepts">Concepts</a> section), the Azure DevOps pipeline that deploys a WVD environment for you, let's first take a look at <a href="https://dev.azure.com" target="_blank">Azure DevOps</a> itself.
 
 ### <b>Understanding Azure DevOps</b>
-Azure DevOps is a very powerful platform and it therefore comes with a lot of possibilites and components. To understand the structure of the WVD Quickstart automation, we'll take a look at some of the aspects of DevOps. The main two features that we will make use of are the *Repos* and the *Pipelines*, both available in the left-side menu in your DevOps project (after running the initial ARM deployment, which creates this project). The *Repos* section will look like this:
+Azure DevOps is a very powerful platform and it therefore comes with a lot of possibilites and components. To understand the structure of the WVD QuickStart automation, we'll take a look at some of the aspects of DevOps. The main two features that we will make use of are the *Repos* and the *Pipelines*, both available in the left-side menu in your DevOps project (after running the initial ARM deployment, which creates this project). The *Repos* section will look like this:
 
 ![DevOps Repository](images/devopsRepo.PNG?raw=true)
 
-This repository functions just like any other git repository. By default, it will be set to private and it holds all the files used by the WVD Quickstart to deploy a WVD environment for you. In this repository, you can do many of the customizations explained in the <a href="customize" target="_blank">Customize</a> section. The more exciting part of DevOps will be under the *Pipelines* section, which will look something like the image below:
+This repository functions just like any other git repository. By default, it will be set to private and it holds all the files used by the WVD QuickStart to deploy a WVD environment for you. In this repository, you can do many of the customizations explained in the <a href="customize" target="_blank">Customize</a> section. The more exciting part of DevOps will be under the *Pipelines* section, which will look something like the image below:
 
 ![DevOps Pipeline Overview](images/devopsPipelineOverview.PNG?raw=true)
 
-DevOps pipelines are very powerful tools that allow you to create custom build and/or release automization. In our case, the pipeline in the DevOps project takes care of the deployment of all WVD resources in an automated and repeatable way. The Quickstart uses only part of the pipeline functionalities, which are described in a high-level overview <a href="https://azure.microsoft.com/en-us/services/devops/pipelines/" target="_blank">here</a>. A pipeline is based on a *.yml* or *YAML* file, which in our case can be found in  QS-WVD/pipeline.yml - We will dive deeper into this file later. 
+DevOps pipelines are very powerful tools that allow you to create custom build and/or release automization. In our case, the pipeline in the DevOps project takes care of the deployment of all WVD resources in an automated and repeatable way. The QuickStart uses only part of the pipeline functionalities, which are described in a high-level overview <a href="https://azure.microsoft.com/en-us/services/devops/pipelines/" target="_blank">here</a>. A pipeline is based on a *.yml* or *YAML* file, which in our case can be found in  QS-WVD/pipeline.yml - We will dive deeper into this file later. 
 
-As you can see in the above image, one of the options in the Pipelines menu on the left is *Library*. A library can be used to store (secret) variable groups or files, that can hold values that can be accessed by the pipeline. In the WVD Quickstart case, the initial ARM deployment will create a variable group called *WVDSecrets*, which holds certain authentication credentials used by the pipeline to authenticate against Azure and agains the domain controller. 
+As you can see in the above image, one of the options in the Pipelines menu on the left is *Library*. A library can be used to store (secret) variable groups or files, that can hold values that can be accessed by the pipeline. In the WVD QuickStart case, the initial ARM deployment will create a variable group called *WVDSecrets*, which holds certain authentication credentials used by the pipeline to authenticate against Azure and agains the domain controller. 
 
 #### Service Connection
 Because Azure DevOps and the Azure Resource Manager are separate services, DevOps needs a way to authenticate with the Azure Resource Manager for it to get permission to deploy the WVD resources. To do so, the initial ARM deployment will create something called a *Service Connection*. You can find this service connection under your project settings -> Service Connections, and by default it will be called *WVDServiceConnection*.
@@ -35,7 +35,7 @@ variables:
 
 trigger: none
 ```
-At the top of the pipeline, you will find its name defined, as well as a link to a *variables.yml* file. This file contains certain parameters used in the automation - to learn more about this, check out the <a href="customize" target="_blank">Customize</a> section. You can also see that there's currently no *trigger* set for the pipeline, which means it will never automatically start running (with the exception of the initial deployment). If you want to further develop the WVD Quickstart and automate future WVD Deployments, you can learn more about <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops&tabs=yaml#ci-triggers" target="_blank">triggers in DevOps pipelines</a>.
+At the top of the pipeline, you will find its name defined, as well as a link to a *variables.yml* file. This file contains certain parameters used in the automation - to learn more about this, check out the <a href="customize" target="_blank">Customize</a> section. You can also see that there's currently no *trigger* set for the pipeline, which means it will never automatically start running (with the exception of the initial deployment). If you want to further develop the WVD QuickStart and automate future WVD Deployments, you can learn more about <a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/azure-repos-git?view=azure-devops&tabs=yaml#ci-triggers" target="_blank">triggers in DevOps pipelines</a>.
 
 #### Processing Input Parameters
 ```
@@ -183,7 +183,7 @@ The next part of this same job consists of a couple of *Copy* tasks. What happen
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-The job above deploys the *Assets* storage account in your resource group. This storage account will be used to store the contents of the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a>: This folder contains the three different custom script extensions that will be installed on the WVD Virtual Machines: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation. It fetches these files from the WVD Quickstart GitHub repository by default. 
+The job above deploys the *Assets* storage account in your resource group. This storage account will be used to store the contents of the <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Uploads/WVDScripts" target="_blank">Uploads/WVDScripts</a>: This folder contains the three different custom script extensions that will be installed on the WVD Virtual Machines: Azure Files enablement, FSLogix configuration, and NotepadPlusPlus installation. It fetches these files from the WVD QuickStart GitHub repository by default. 
 
 #### Profiles Storage Account Deployment
 ```

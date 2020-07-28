@@ -5,9 +5,9 @@ filename: repo
 ---
 
 ## <b>Repository Breakdown by file</b>
-On this page, you'll find an in-depth breakdown of all the files associated with the WVD Quickstart solution. This is intended for any advanced users who wish to customize the WVD Quickstart for their needs or to do some advanced troubleshooting. The GitHub repository consists of two branches:
+On this page, you'll find an in-depth breakdown of all the files associated with the WVD QuickStart solution. This is intended for any advanced users who wish to customize the WVD QuickStart for their needs or to do some advanced troubleshooting. The GitHub repository consists of two branches:
 
-* Master branch: All code required by the WVD Quickstart lives here
+* Master branch: All code required by the WVD QuickStart lives here
 * gh-pages branch: All files required for the GitHub pages website are located here
 
 The folder structure in the master branch is as follows:

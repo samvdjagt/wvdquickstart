@@ -4,7 +4,7 @@ layout: template
 filename: index
 ---
 
-## <b>Welcome to the WVD Quickstart!</b>
+## <b>Welcome to the WVD QuickStart!</b>
 
 Windows Virtual Desktop (WVD) is a desktop and app virtualization service that runs on Microsoft Azure. Windows Virtual Desktop can be accessed from many client devices with applications for Windows, MacOS, iOS, Android, and Linux. You can also use most modern browsers (that support HTML5) to access Windows Virtual Desktop-hosted experiences, all allowing you to access your hosted remote desktop and (remote) applications. New to WVD? Check out the <a href="https://docs.microsoft.com/en-us/learn/paths/m365-wvd/" target="_blank">Microsoft Learn module on WVD</a> or the overall <a href="https://aka.ms/wvddocs" target="_blank">WVD documentation</a> for more information. 
 
@@ -14,10 +14,10 @@ To understand how the quickstart works, and what exactly it can deploy for you, 
 
 ### <b>Resources on this website</b>
 On this website, you will find all the information you need to get started with this solution. 
-* <a href="concepts">Understanding the underlying concepts of the Quickstart</a>
+* <a href="concepts">Understanding the underlying concepts of the QuickStart</a>
   * <a href="repo">In-depth overview of the repository structure and files</a>
   * <a href="armdeployment">Conceptual deep-dive in the initial ARM deployment</a>
   * <a href="devops">Conceptual deep-dive in the DevOps automation</a>
-* <a href="howto">How to deploy using the WVD Quickstart</a>
-* <a href="customize">Customizing the WVD Quickstart</a>
-* <a href="troubleshoot">Troubleshooting your WVD Quickstart deployment</a>
+* <a href="howto">How to deploy using the WVD QuickStart</a>
+* <a href="customize">Customizing the WVD QuickStart</a>
+* <a href="troubleshoot">Troubleshooting your WVD QuickStart deployment</a>
