@@ -94,7 +94,7 @@ write-output $url
 $body = @"
 {
   "name": "$($projectName)",
-  "description": "WVD Quickstart",
+  "description": "WVD QuickStart",
   "capabilities": {
     "versioncontrol": {
       "sourceControlType": "Git"
@@ -213,6 +213,10 @@ if ($identityApproach -eq 'AADDS') {
 }
 
 $principalIds = (Get-AzureADGroup -SearchString $targetGroup).objectId
+if ($principalIds -eq $null) {
+  Write-Error "Did not find user group. Please check if the user group creation completed successfully."
+  throw "Did not find user group. Please check if the user group creation completed successfully."
+}
 # In case the above search finds multiple groups, pick the first PrincipalId. Template only works when one principalId is supplied, not for multiple.
 $split = $principalIds.Split(' ')
 $principalIds = $split[0]

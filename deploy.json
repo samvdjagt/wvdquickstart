@@ -5,13 +5,13 @@
         "existingVnetName": {
             "type": "string",
             "metadata": {
-                "description": "The name of the virtual network the VMs will be connected to."
+                "description": "The name of the virtual network the VMs will be connected to. For example, this could be 'adVnet'"
             }
         },
         "existingSubnetName": {
             "type": "string",
             "metadata": {
-                "description": "The subnet the VMs will be placed in."
+                "description": "The subnet the VMs will be placed in. For example, this could be 'adSubnet', or 'default'"
             }
         },
         "virtualNetworkResourceGroupName": {
@@ -42,7 +42,7 @@
         "DomainJoinAccountUPN": {
             "type": "string",
             "metadata": {
-                "description": "User or service account UPN with sufficient privileges to domain join virtual machines. Additionally, please make sure the username is allowed (aka.ms/usernames) - Certain common usernames such as 'admin' are not allowed for this account. The template will fail if you enter a user account that requires MFA or an application that is secured by a certificate."
+                "description": "User or service account UPN (<username>@<domain-to-join>.com) with sufficient privileges to domain join virtual machines. Additionally, please make sure the username is allowed (aka.ms/usernames) - Certain common usernames such as 'admin' are not allowed for this account. The template will fail if you enter a user account that requires MFA or an application that is secured by a certificate."
             }
         },
         "DomainJoinAccountPassword": {
@@ -92,8 +92,8 @@
         "jobGuid0": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials')))]",
         "jobGuid": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName'))))]",
         "jobGuid2": "[guid(toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup')))]",
-        "devOpsName": "[concat('WVDQuickstartOrg', skip(parameters('utcValue'), 9))]",   
-        "devOpsProjectName": "[concat('WVDQuickstartProj', skip(parameters('utcValue'), 9))]",
+        "devOpsName": "[concat('WVDQuickStartOrg', skip(parameters('utcValue'), 9))]",   
+        "devOpsProjectName": "[concat('WVDQuickStartProj', skip(parameters('utcValue'), 9))]",
         "targetGroup": "WVDTestUsers",
         "automationVariables": [
             {
