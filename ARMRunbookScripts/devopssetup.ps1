@@ -427,7 +427,11 @@ write-output $response
 # Get Azure DevOps notification subscriber
 $url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscriptions?api-version=5.1")
 write-output $url
-$subId = ($response2.value | where-Object { $_.description -eq "Build completes"}).subscriber.id
+
+$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
+write-output $response
+
+$subId = ($response.value | where-Object { $_.description -eq "Build completes"}).subscriber.id
 
 # Update subscriber's preferred email address to the specified notification email
 $url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscribers/" + $subId + "?api-version=5.1")
