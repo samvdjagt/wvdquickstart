@@ -13,12 +13,13 @@ In case you run into any issues while using the WVD Quickstart, this page might 
 * The WVD Quickstart cannot configure your native AD environment for you. You will have to have a virtual network and domain controller setup and synced to Azure AD (with AD Connect) as a prerequisite before deploying with the Quickstart. The video on the <a href="howto">How-To page</a> shows you how you can do that. In the case of using AADDS, you will also have to have your environment setup as this is not automated in the Quickstart either.
 * Currently, the Quickstart will only work if you are the subscription owner. In theory, it could work if you have both *contributor* and *user access administrator* roles on the subscription, but this is not currently a tested scenario.
 * Currently, the DevOps organization will by default be created in the *Central US* region. DevOps available regions are different from the Azure Portal regions and the user input on this is therefore not used to select a DevOps regionl. This has no effect on where your WVD environment will be deployed, only on where the DevOps repository is hosted. This region can be manually modified in the main ARM deployment template (<a href="https://github.com/samvdjagt/wvdquickstart/tree/master/deploy.json" target="_blank">deploy.json</a>)
+* After crossing a certain compute threshold, using Azure DevOps will start incurring costs for you. The Quickstart remains well within those limits and will likely not incur any costs at all. For more information on Azure DevOps billing, see the documentation <a href="https://docs.microsoft.com/en-us/azure/devops/organizations/billing/overview?view=azure-devops" target="_blank">here</a>.
 
 ### <b>Invalid Configuration</b>
 A likely cause of a WVD Quickstart failure is if one or more of the <a href="howto">prerequisites</a> is either not present or incorrectly configured. While some of these are validated in the automation, these prerequisites are an absolute requirement in the configuration specified <a href="howto">here</a>.
 
 ### <b>DevOps Pipeline Error</b>
-Sometimes, the DevOps pipeline will give you an error that has no clear cause. Often times, such an error can be fixed by simply running the pipeline again - By clicking "Run New" at the top of your screen. 
+Sometimes, the DevOps pipeline will give you an error that has no clear cause. Often times, these are transient errors error can be fixed by simply running the pipeline again - By clicking "Run New" at the top of your screen. 
 
 ### <b>checkCredentialsRunbook failed</b>
 If you get an error that looks like the image below, it means that the deployment was unable to authenticate to your Azure account, or that there was some other error with your current Azure environment. Note: While this section covers the checkCredentialsRunbook specifically, the process is the same for any runbook error in your deployment.
