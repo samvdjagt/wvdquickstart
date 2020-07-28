@@ -424,15 +424,13 @@ write-output $body
 $response = Invoke-RestMethod -Method PATCH -Uri $url -Headers @{Authorization = "Basic $token"} -Body $body -ContentType "application/json"
 write-output $response
 
-
-$url = $("https://dev.azure.com/" + $orgName + "/_apis/teams?api-version=5.1-preview.3")
+# Get Azure DevOps notification subscriber
+$url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscriptions?api-version=5.1")
 write-output $url
+$subId = ($response2.value | where-Object { $_.description -eq "Build completes"}).subscriber.id
 
-$response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
-write-output $response
-$teamId = $response.value.id
-
-$url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscribers/" + $teamId + "?api-version=5.1")
+# Update subscriber's preferred email address to the specified notification email
+$url = $("https://dev.azure.com/" + $orgName + "/_apis/notification/subscribers/" + $subId + "?api-version=5.1")
 write-output $url
 
 $body = @"
