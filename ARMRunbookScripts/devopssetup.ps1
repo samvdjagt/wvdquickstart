@@ -212,11 +212,24 @@ if ($identityApproach -eq 'AADDS') {
   }
 }
 
+# In case of using AD, and ADSync didn't work in user creation, this block will allow for the regular sync cycle to sync the group to Azure instead
+Write-Output "Fetching test user group $targetGroup. In case of using AD, this can take up to 30 minutes..."
+$currentTry = 0
+if ($identityApproach -eq "AD") {
+  do {
+      $principalIds = (Get-AzureADGroup -SearchString $targetGroup).objectId
+      $currentTry++
+      Start-Sleep -Seconds 10
+  } while ($currentTry -le 180 -and ($principalIds -eq $null))
+}
+
+# In both AD and AADDS case, the user group should now exist in Azure. Throw an error of the group is not found.
 $principalIds = (Get-AzureADGroup -SearchString $targetGroup).objectId
 if ($principalIds -eq $null) {
   Write-Error "Did not find user group $targetGroup. Please check if the user group creation completed successfully."
   throw "Did not find user group $targetGroup. Please check if the user group creation completed successfully."
 }
+
 # In case the above search finds multiple groups, pick the first PrincipalId. Template only works when one principalId is supplied, not for multiple.
 $split = $principalIds.Split(' ')
 $principalIds = $split[0]
