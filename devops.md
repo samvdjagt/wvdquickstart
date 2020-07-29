@@ -220,11 +220,11 @@ The job above deploys the *Assets* storage account in your resource group. This 
                     }
                     
                     Write-Verbose "Checking identity approach: $(identityApproach)" -Verbose
-                    If("$(identityApproach)" -eq "AADDS") {
-                      Write-Verbose "Creating azureFilesIdentityBasedAuthentication object and set to AADDS" -Verbose
+                    If("$(identityApproach)" -eq "Azure AD DS") {
+                      Write-Verbose "Creating azureFilesIdentityBasedAuthentication object and set to Azure AD DS" -Verbose
                       $parameterObjects=@{
                         azureFilesIdentityBasedAuthentication=@{
-                          directoryServiceOptions = "AADDS"
+                          directoryServiceOptions = "Azure AD DS"
                         }
                       }
                       $functionInput += @{
@@ -240,7 +240,7 @@ The job above deploys the *Assets* storage account in your resource group. This 
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-This pipeline job takes care of the profiles storage account deployment. This storage account, deployed in your resource group, will be used to store the FSLogix user profiles in a file share called *wvdprofiles* by default. This deployment does not carry out the Azure Files enablement for a native AD environment (domain joining the storage account), as this is done through a custom script extensions. In case of using the AADDS identity approach, this flag will in fact be set on the storage account within this pipeline job.
+This pipeline job takes care of the profiles storage account deployment. This storage account, deployed in your resource group, will be used to store the FSLogix user profiles in a file share called *wvdprofiles* by default. This deployment does not carry out the Azure Files enablement for a native AD environment (domain joining the storage account), as this is done through a custom script extensions. In case of using the Azure AD DS identity approach, this flag will in fact be set on the storage account within this pipeline job.
 
 #### WVD Host Pool Deployment
 ```
