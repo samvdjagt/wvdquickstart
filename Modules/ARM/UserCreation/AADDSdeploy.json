@@ -71,7 +71,7 @@
                 "azPowerShellVersion": "3.0",
                 "timeout": "PT30M",
                 "arguments": "[concat('-username ', parameters('azureAdminUpn'), ' -password ', parameters('azureAdminPassword'), ' -targetgroup ', parameters('targetGroup'), ' -domainName ', parameters('existingDomainName'), ' -artifactsLocation ', parameters('_artifactsLocation'))]",
-                "primaryScriptUri": "[concat(parameters('_artifactsLocation'),'/Modules/ARM/UserCreation/scripts/Azure AD DSCreateUsers.ps1')]",
+                "primaryScriptUri": "[concat(parameters('_artifactsLocation'),'/Modules/ARM/UserCreation/scripts/AADDSCreateUsers.ps1')]",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
             }

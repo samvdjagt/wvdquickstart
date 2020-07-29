@@ -170,10 +170,10 @@ stages:
                     
                     Write-Verbose "Checking identity approach: $(identityApproach)" -Verbose
                     If("$(identityApproach)" -eq "Azure AD DS") {
-                      Write-Verbose "Creating azureFilesIdentityBasedAuthentication object and set to Azure AD DS" -Verbose
+                      Write-Verbose "Creating azureFilesIdentityBasedAuthentication object and set to AADDS" -Verbose
                       $parameterObjects=@{
                         azureFilesIdentityBasedAuthentication=@{
-                          directoryServiceOptions = "Azure AD DS"
+                          directoryServiceOptions = "AADDS"
                         }
                       }
                       $functionInput += @{
