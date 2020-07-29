@@ -48,6 +48,7 @@
     Install-Module -Name Az -Force -Verbose
     
     Import-Module -Name AzFilesHybrid -Force -Verbose
+    Import-Module -Name activedirectory -Force -Verbose
     
     $domain = $U.split('@')[1]
     $DC = $domain.split('.')
