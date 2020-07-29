@@ -63,7 +63,7 @@ The default parameter values are based on the needs of deploying a diagnostic st
 
 ### Parameter Usage: `azureFilesIdentityBasedAuthentication`
 
-The `azureFilesIdentityBasedAuthentication` parameter accepts a JSON object providing the identity based authentication settings for Azure Files with the "directoryServiceOptions" property to specify the directory service used. Allowed values for that property are "None", "AADDS" or "AD" to respectively disable the identity based access for file shares, enable it for Azure Active Directory Domain Service (AAD DS) or for Active Directory (AD).
+The `azureFilesIdentityBasedAuthentication` parameter accepts a JSON object providing the identity based authentication settings for Azure Files with the "directoryServiceOptions" property to specify the directory service used. Allowed values for that property are "None", "Azure AD DS" or "AD" to respectively disable the identity based access for file shares, enable it for Azure Active Directory Domain Service (AAD DS) or for Active Directory (AD).
 
 In case of AD additional properties are required to be specified in the "activeDirectoryProperties" object as shown in the example below.
 
@@ -79,14 +79,14 @@ Here's an example of specifying no identity based access for file shares (disabl
 }
 ```
 
-#### `AADDS`
+#### `Azure AD DS`
 
 Here's an example of specifying identity based access for file shares leveraging Azure Active Directory Domain Service (enabled).
 
 ```json
 "azureFilesIdentityBasedAuthentication": {
     "value": {
-        "directoryServiceOptions": "AADDS"
+        "directoryServiceOptions": "Azure AD DS"
     }
 }
 ```

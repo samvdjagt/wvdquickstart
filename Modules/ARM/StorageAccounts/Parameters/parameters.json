@@ -16,7 +16,7 @@
     },
     // "azureFilesIdentityBasedAuthentication": {
     //   "value": {
-    //     "directoryServiceOptions": "AADDS"
+    //     "directoryServiceOptions": "Azure AD DS"
     //   }
     // },
     // "roleAssignments": {

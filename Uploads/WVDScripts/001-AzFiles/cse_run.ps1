@@ -180,8 +180,8 @@ foreach ($config in $azfilesconfig.azfilesconfig) {
 
             LogInfo("Azure Files Enabled!")
         }
-        elseif ($config.identityApproach -eq "AADDS") {
-            LogInfo("AADDS is used, for which the storage account has been enabled in the DevOps pipeline. No further action is needed in this Custom Script Extension")
+        elseif ($config.identityApproach -eq "Azure AD DS") {
+            LogInfo("Azure AD DS is used, for which the storage account has been enabled in the DevOps pipeline. No further action is needed in this Custom Script Extension")
         }
     }
 }

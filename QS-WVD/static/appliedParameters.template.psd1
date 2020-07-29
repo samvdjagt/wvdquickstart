@@ -74,5 +74,5 @@
 
     # Authentication related
     # ==================== #
-    identityApproach                      = "[identityApproach]"                # (AD or AADDS) identity approach to use
+    identityApproach                      = "[identityApproach]"                # (AD or Azure AD DS) identity approach to use
 }

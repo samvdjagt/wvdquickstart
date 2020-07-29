@@ -108,7 +108,7 @@ variables:
 ################################
 #region specific
 
-## IdentityApproach (AD or AADDS)
+## IdentityApproach (AD or Azure AD DS)
 - name: identityApproach
   value: "[identityApproach]"
 

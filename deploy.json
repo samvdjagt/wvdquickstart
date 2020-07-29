@@ -54,11 +54,11 @@
         "identityApproach": {
             "type": "string",
             "metadata": {
-                "description": "Specify which identity approach you would like to use for your WVD deployment. Pick either AD (Active Directory Domain Services) or AADDS (Azure Active Directory Domain Services)"
+                "description": "Specify which identity approach you would like to use for your WVD deployment. Pick either AD (Active Directory Domain Services) or Azure AD DS (Azure Active Directory Domain Services)"
             },
             "allowedValues": [
                 "AD",
-                "AADDS"
+                "Azure AD DS"
             ]
         },
         "optionalNotificationEmail": {
@@ -85,9 +85,9 @@
         "location": "[resourcegroup().location]",
         "rgName": "[resourcegroup().name]",
         "keyvaultName": "[concat('keyvault', parameters('utcValue'))]",
-        "assetsName": "[concat('aset', toLower(parameters('utcValue')))]",
-        "profilesName": "[concat('prof', toLower(parameters('utcValue')))]",
-        "autoAccountName": "[concat('auto', toLower(parameters('utcValue')))]",
+        "assetsName": "[concat('assets', toLower(skip(parameters('utcValue'), 4)))]",
+        "profilesName": "[concat('profils', toLower(skip(parameters('utcValue'), 4)))]",
+        "autoAccountName": "[concat('automate', toLower(skip(parameters('utcValue'), 4)))]",
         "tenantId": "[subscription().tenantId]",
         "jobGuid0": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials')))]",
         "jobGuid": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName'))))]",
