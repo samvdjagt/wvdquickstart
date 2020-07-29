@@ -86,7 +86,7 @@
         "rgName": "[resourcegroup().name]",
         "keyvaultName": "[concat('keyvault', parameters('utcValue'))]",
         "assetsName": "[concat('assets', toLower(skip(parameters('utcValue'), 4)))]",
-        "profilesName": "[concat('profils', toLower(skip(parameters('utcValue'), 4)))]",
+        "profilesName": "[concat('profiles', toLower(skip(parameters('utcValue'), 4)))]",
         "autoAccountName": "[concat('automate', toLower(skip(parameters('utcValue'), 4)))]",
         "tenantId": "[subscription().tenantId]",
         "jobGuid0": "[guid(toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'credentials')))]",
