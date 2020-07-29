@@ -49,10 +49,17 @@
     
     Import-Module -Name AzFilesHybrid -Force -Verbose
     
-    
+    $domain = $U.split('@')[1]
+    $DC = $domain.split('.')
+    foreach($name in $DC) {
+        $path = $path + ',DC=' + $name
+    }
+    $path = $path.substring(1)
+    New-ADOrganizationalUnit -name 'Profiles Storage' -path $path
+
     $Credential = New-Object System.Management.Automation.PsCredential($U, (ConvertTo-SecureString $P -AsPlainText -Force))
     Connect-AzAccount -Credential $Credential
     $context = Get-AzContext
     Select-AzSubscription -SubscriptionId $context.Subscription.Id
     
-    Join-AzStorageAccountForAuth -ResourceGroupName $RG -StorageAccountName $S -DomainAccountType 'ComputerAccount' -OrganizationalUnitName 'Domain Controllers' -OverwriteExistingADObject
+    Join-AzStorageAccountForAuth -ResourceGroupName $RG -StorageAccountName $S -DomainAccountType 'ComputerAccount' -OrganizationalUnitName 'Profiles Storage' -OverwriteExistingADObject
