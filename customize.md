@@ -44,9 +44,6 @@ variables:
 - name: orchestrationFunctionsPath # Name of folder where some functions are located
   value: SharedDeploymentFunctions
 
-- name: vmImage # Image of agent used in DevOps pipeline
-  value: "ubuntu-latest"
-
 - name: serviceConnection # Name of the service connection between the Azure subscription and DevOps
   value: "WVDServiceConnection"
 
