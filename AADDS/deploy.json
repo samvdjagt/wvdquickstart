@@ -375,7 +375,7 @@
                         "logProgress": false,
                         "logVerbose": false,
                         "publishContentLink": {
-                            "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
+                            "uri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/AADDSdevopssetup.ps1')]",
                             "version": "1.0.0.0"
                         }
                     }

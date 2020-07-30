@@ -2,9 +2,6 @@
 $SubscriptionId = Get-AutomationVariable -Name 'subscriptionid'
 $ResourceGroupName = Get-AutomationVariable -Name 'ResourceGroupName'
 $fileURI = Get-AutomationVariable -Name 'fileURI'
-$existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
-$existingSubnetName = Get-AutomationVariable -Name 'existingSubnetName'
-$virtualNetworkResourceGroupName = Get-AutomationVariable -Name 'virtualNetworkResourceGroupName'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -114,6 +111,25 @@ Catch {
 $domainJoinCredAsset = 'domainJoinCredentials'
 $domainJoinCredentials = Get-AutomationPSCredential -Name $domainJoinCredAsset
 $domainJoinCredentials.password.MakeReadOnly()
+
+$PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
+
+$split = $domainJoinCredentials.username.Split("@")
+$domainUsername = $split[0]
+
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($domainJoinCredentials.password)
+$UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+$PasswordProfile.Password = $UnsecurePassword
+
+New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainJoinCredentials.username -AccountEnabled $true -MailNickName $domainUsername
+
+Disconnect-AzureAD
+Connect-AzureAD $domainJoinCredentials
+
+Update-AzureADSignedInUserPassword -CurrentPassword $domainJoinCredentials.password -NewPassword $AzCredentials.password
+
+Disconnect-AzureAD
+Connect-AzureAD $AzCredentials
 
 New-AzADServicePrincipal -ApplicationId "2565bd9d-da50-47d4-8b85-4c97f669dc36"
 
