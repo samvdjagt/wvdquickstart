@@ -177,7 +177,7 @@ foreach ($config in $UserConfig.userconfig) {
         -GivenName $userName `
         -Surname $userName `
         -Enabled $True `
-        -ChangePasswordAtLogon $True `
+        -ChangePasswordAtLogon $False `
         -DisplayName "$userName" `
         -AccountPassword (convertto-securestring $config.password -AsPlainText -Force) -Verbose)
 
