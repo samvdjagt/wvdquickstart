@@ -130,7 +130,7 @@ Import-Module activedirectory
 $adminUsername = $domainName + "\" + $domainUsername
 if ((new-object directoryservices.directoryentry "",$adminUsername,$domainPassword).psbase.name -ne $null)
 {
-    LogInfo("Valid domain join credentials credentials") 
+    LogInfo("Valid domain join credentials") 
 }
 else
 {
@@ -179,7 +179,7 @@ foreach ($config in $UserConfig.userconfig) {
         -Enabled $True `
         -ChangePasswordAtLogon $False `
         -DisplayName "$userName" `
-        -AccountPassword (convertto-securestring $config.password -AsPlainText -Force) -Verbose)
+        -AccountPassword (convertto-securestring $domainPassword -AsPlainText -Force) -Verbose)
 
         LogInfo("Create user completed.")
     }
