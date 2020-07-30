@@ -56,7 +56,10 @@
         $path = $path + ',DC=' + $name
     }
     $path = $path.substring(1)
-    New-ADOrganizationalUnit -name 'Profiles Storage' -path $path
+    $ou = Get-ADOrganizationalUnit -Filter 'Name -like "Profiles Storage"'
+    if ($ou -eq $null) {
+        New-ADOrganizationalUnit -name 'Profiles Storage' -path $path
+    }
 
     $Credential = New-Object System.Management.Automation.PsCredential($U, (ConvertTo-SecureString $P -AsPlainText -Force))
     Connect-AzAccount -Credential $Credential
