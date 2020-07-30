@@ -595,7 +595,10 @@
             "name": "[parameters('domainName')]",
             "apiVersion": "2017-06-01",
             "location": "[parameters('location')]",
-            "dependsOn": ["[parameters('domainServicesVnetName')]"],
+            "dependsOn": [
+                "[parameters('domainServicesVnetName')]",
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('jobGuid0'))]"
+            ],
             "properties": {
             "domainName": "[parameters('domainName')]",
             "vnetSiteID": "[variables('vnetRefId')]",

@@ -124,12 +124,12 @@ $PasswordProfile.Password = $UnsecurePassword
 New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainJoinCredentials.username -AccountEnabled $true -MailNickName $domainUsername
 
 Disconnect-AzureAD
-Connect-AzureAD $domainJoinCredentials
+Connect-AzureAD -Credential $domainJoinCredentials
 
 Update-AzureADSignedInUserPassword -CurrentPassword $domainJoinCredentials.password -NewPassword $AzCredentials.password
 
 Disconnect-AzureAD
-Connect-AzureAD $AzCredentials
+Connect-AzureAD -Credential $AzCredentials
 
 New-AzADServicePrincipal -ApplicationId "2565bd9d-da50-47d4-8b85-4c97f669dc36"
 
