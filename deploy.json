@@ -261,6 +261,7 @@
                     "name": "[variables('jobGuid0')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
+                        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/checkCredentialsRunbook')]"
                     ],
