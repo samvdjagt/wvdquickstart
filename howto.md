@@ -11,7 +11,7 @@ The video above shows you a full end-to-end deployment with the WVD QuickStart, 
 
 ### <b>Prerequisites</b>
 In order to successfully deploy a WVD environment with the QuickStart, a couple of prerequisites need to be satisfied beforehand. All of these prerequisites are listed below, together with links to documentation that can help you with setting them up.
-* An active <a href="https://azure.microsoft.com/en-us/" target="_blank">Azure subscription</a>
+* An active <a href="https://azure.microsoft.com/en-us/" target="_blank">Azure subscription</a>, where you are logged in as Global Administrator
 * Either one of the following: 
    * A 
 <a href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank">Windows Server Active Directory</a> (AD) in sync with <a href="https://azure.microsoft.com/en-us/services/active-directory/" target="_blank">Azure Active Directory</a> (AAD), configured with <a href="https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-install-express" target="_blank">AD Connect</a>
