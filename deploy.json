@@ -71,7 +71,7 @@
         "utcValue": {
             "type": "string",
             "metadata": {
-                "description": "Please leave this value as '[utcNow()]', as this is used to generate unique names in the deployment. This is a requirement for resources like a keyvault or storage account."
+                "description": "Please leave this as '[utcNow()]', as this is used to generate unique names in the deployment. This is a requirement for resources like a keyvault or storage account."
             },
             "defaultValue": "[utcNow()]"
         }
