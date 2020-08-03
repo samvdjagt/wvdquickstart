@@ -117,19 +117,34 @@ $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordPro
 $split = $domainJoinCredentials.username.Split("@")
 $domainUsername = $split[0]
 
-$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($domainJoinCredentials.password)
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($AzCredentials.password)
 $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 $PasswordProfile.Password = $UnsecurePassword
+$PasswordProfile.ForceChangePasswordNextLogin = $False
 
 New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainJoinCredentials.username -AccountEnabled $true -MailNickName $domainUsername
 
-Disconnect-AzureAD
-Connect-AzureAD -Credential $domainJoinCredentials
+$domainUser = Get-AzureADUser -Filter "UserPrincipalName eq '$($domainJoinCredentials.username)'" | Select-Object ObjectId
+# Fetch user to assign to role
+$roleMember = Get-AzureADUser -ObjectId $domainUser.ObjectId
 
-Update-AzureADSignedInUserPassword -CurrentPassword $domainJoinCredentials.password -NewPassword $AzCredentials.password
+# Fetch User Account Administrator role instance
+$role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
+# If role instance does not exist, instantiate it based on the role template
+if ($role -eq $null) {
+    # Instantiate an instance of the role template
+    $roleTemplate = Get-AzureADDirectoryRoleTemplate | Where-Object {$_.displayName -eq 'Company Administrator'}
+    Enable-AzureADDirectoryRole -RoleTemplateId $roleTemplate.ObjectId
+    # Fetch User Account Administrator role instance again
+    $role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
+}
+# Add user to role
+Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $roleMember.ObjectId
+# Fetch role membership for role to confirm
+Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser
 
-Disconnect-AzureAD
-Connect-AzureAD -Credential $AzCredentials
+New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '603b25af-b6ce-4e7c-9b9b-adb670f16acc' -Id '7af32be4-ebe7-4d61-8282-c09945b47490'
+New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '2af31936-bd69-4703-b8ea-67788bb07f47' -Id '299dad25-58e3-473d-9733-171fb3034713'
 
 New-AzADServicePrincipal -ApplicationId "2565bd9d-da50-47d4-8b85-4c97f669dc36"
 
@@ -143,11 +158,8 @@ New-AzureADGroup -DisplayName "AAD DC Administrators" `
 # First, retrieve the object ID of the newly created 'AAD DC Administrators' group.
 $GroupObjectId = Get-AzureADGroup -Filter "DisplayName eq 'AAD DC Administrators'" | Select-Object ObjectId
 
-# Now, retrieve the object ID of the user you'd like to add to the group.
-$UserObjectId = Get-AzureADUser -Filter "UserPrincipalName eq $($domainJoinCredentials.username)" | Select-Object ObjectId
-
 # Add the user to the 'AAD DC Administrators' group.
-Add-AzureADGroupMember -ObjectId $GroupObjectId.ObjectId -RefObjectId $UserObjectId.ObjectId
+Add-AzureADGroupMember -ObjectId $GroupObjectId.ObjectId -RefObjectId $domainUser.ObjectId
 
 # Grant managed identity contributor role on subscription level
 $identity = Get-AzUserAssignedIdentity -ResourceGroupName $ResourceGroupName -Name "WVDServicePrincipal"

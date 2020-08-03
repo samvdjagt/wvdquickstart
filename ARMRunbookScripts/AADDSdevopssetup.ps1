@@ -62,17 +62,28 @@ $domainCredentialsAsset = 'domainJoinCredentials'
 #Authenticate Azure
 #Get the credential with the above name from the Automation Asset store
 $domainCredentials = Get-AutomationPSCredential -Name $domainCredentialsAsset
+$domainCredentials.password.MakeReadOnly()
 
 #The name of the Automation Credential Asset this runbook will use to authenticate to Azure.
 $AzCredentialsAsset = 'AzureCredentials'
+$AzCredentials = Get-AutomationPSCredential -Name $AzCredentialsAsset
+$AzCredentials.password.MakeReadOnly()
+
+$tempCred = New-Object System.Management.Automation.PSCredential ($domainCredentials.username, $AzCredentials.password)
+Connect-AzureAD -Credential $tempCred
+
+Update-AzureADSignedInUserPassword -CurrentPassword $AzCredentials.password -NewPassword $domainCredentials.password
+Disconnect-AzureAD
 
 #Authenticate Azure
 #Get the credential with the above name from the Automation Asset store
-$AzCredentials = Get-AutomationPSCredential -Name $AzCredentialsAsset
-$AzCredentials.password.MakeReadOnly()
 Connect-AzAccount -Environment 'AzureCloud' -Credential $AzCredentials
 Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $AzCredentials
 Select-AzSubscription -SubscriptionId $SubscriptionId
+
+$vnet = Get-AzVirtualNetwork -ResourceGroupName $virtualNetworkResourceGroupName -name $existingVnetName
+$vnet.DhcpOptions.DnsServers = "10.0.0.5"
+Set-AzVirtualNetwork -VirtualNetwork $vnet
 
 # Get the context
 $context = Get-AzContext
