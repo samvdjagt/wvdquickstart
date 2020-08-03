@@ -202,11 +202,12 @@ if ($identityApproach -eq 'Azure AD DS') {
     Write-Error "Configuration JSON content could not be converted to a PowerShell object" -ErrorAction 'Stop'
   }
 
+  $userPassword = $orgName.substring(13) + '!'
   foreach ($config in $UserConfig.userconfig) {
     $userName = $config.userName
     $upn = $($userName + "@" + $domainName)
       if ($config.createGroup) { New-AzADGroup -DisplayName "$targetGroup" -MailNickname "$targetGroup" }
-      if ($config.createUser) { New-AzADUser -UserPrincipalName $upn -DisplayName "$userName" -MailNickname $userName -Password (convertto-securestring $config.password -AsPlainText -Force) }
+      if ($config.createUser) { New-AzADUser -UserPrincipalName $upn -DisplayName "$userName" -MailNickname $userName -Password (convertto-securestring $userPassword -AsPlainText -Force) }
       if ($config.assignUsers) { Add-AzADGroupMember -MemberUserPrincipalName  $upn -TargetGroupDisplayName $targetGroup }
       Start-Sleep -Seconds 1
   }
