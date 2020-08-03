@@ -10,7 +10,7 @@
 
 
 az login --identity
-$secret = az keyvault secret show --name 'azurePassword' --vault-name ${4} --query '[value]' -o tsv 
+secret="$(az keyvault secret show --name 'azurePassword' --vault-name ${4} --query '[value]' -o tsv)" 
 az logout
 
 az login -u ${3} -p $secret
