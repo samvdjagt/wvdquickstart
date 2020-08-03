@@ -9,7 +9,7 @@
 #     [Required]  ${5}  <createPipeline>   
 
 
-# az login -u ${3} -p ${4}
+az login --identity
 
 if [[ ${5} == 'true' ]]; then 
 az extension add --name azure-devops
