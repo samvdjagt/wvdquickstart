@@ -50,6 +50,7 @@ If you click on the pipeline's jobs, you will be able to follow along with the d
 The QuickStart creates a test user for you to try out the environment. Navigate to the <a href="https://rdweb.wvd.microsoft.com/arm/webclient/index.html" target="_blank">WVD web client</a> or install the WVD client locally (from <a href="https://aka.ms/wvd/clients" target="_blank">here</a>) and login with the following test user credentials:
 
 Username: WVDTestUser001@{your-domain}.com <br>
-Password: wvdTest123! (Disclaimer: You should change this password at your earliest convenience.)
+Password: Taken from DevOps organization in the following way: If organization is called "WVDQuickStartOrg120011Z", your password will be "Org120011Z!" (case sensitive, and don't forget the exclamation point at the end) 
+(Disclaimer: You should change this password at your earliest convenience.)
 
 You should see a "WVD Workspace" appear, to which you can login to experience the best of Windows Virtual Desktop. Within this virtualized environment, your user will find Microsoft Office 365 amongst other built-in Microsoft applications. Additionally, since the QuickStart configures FSLogix profile management for you, a user profile will be created. This will be stored in the profiles storage account, in the *wvdprofiles* file share.
