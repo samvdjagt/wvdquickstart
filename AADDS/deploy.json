@@ -463,6 +463,18 @@
             ]
         },
         {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2015-06-01",
+            "name": "[concat(variables('keyvaultName'), '/azurePassword')]",
+            "properties": {
+                "name": "azurePassword",
+                "value": "[parameters('azureAdminPassword')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
+            ]
+        },
+        {
             "name": "[variables('devOpsName')]",
             "type": "microsoft.visualstudio/account",
             "location": "centralus",

@@ -432,7 +432,7 @@
                 "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
             ]
         },
-                {
+        {
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2015-06-01",
             "name": "[concat(variables('keyvaultName'), '/azurePassword')]",
