@@ -5,11 +5,15 @@
 #     [Required]  ${1}  <orgName>        
 #     [Required]  ${2}  <projectName>         
 #     [Required]  ${3}  <azureAdminUpn>             
-#     [Required]  ${4}  <azureAdminPassword>
+#     [Required]  ${4}  <keyvaultName>
 #     [Required]  ${5}  <createPipeline>   
 
 
-az login -u ${3} -p ${4}
+az login --identity
+secret="$(az keyvault secret show --name 'azurePassword' --vault-name ${4} --query '[value]' -o tsv)" 
+az logout
+
+az login -u ${3} -p $secret
 
 if [[ ${5} == 'true' ]]; then 
 az extension add --name azure-devops
