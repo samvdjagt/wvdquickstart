@@ -503,6 +503,68 @@
         },
         {
             "apiVersion": "2018-10-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('domainServicesNSGName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "AllowPSRemotingSliceP",
+                        "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "5986",
+                        "sourceAddressPrefixes": "[variables('PSRemotingSlicePIPAddresses')]",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 301,
+                        "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "AllowRDP",
+                        "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "3389",
+                        "sourceAddressPrefixes": "[variables('RDPIPAddresses')]",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 201,
+                        "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "AllowSyncWithAzureAD",
+                        "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 101,
+                        "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "AllowPSRemotingSliceT",
+                        "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "5986",
+                        "sourceAddressPrefixes": "[variables('PSRemotingSliceTIPAddresses')]",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 302,
+                        "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2018-10-01",
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('domainServicesVnetName')]",
             "location": "[parameters('location')]",
@@ -520,7 +582,10 @@
                 "name": "[parameters('domainServicesSubnetName')]",
                 "dependsOn": ["[parameters('domainServicesVnetName')]"],
                 "properties": {
-                "addressPrefix": "[parameters('domainServicesSubnetAddressPrefix')]"
+                    "addressPrefix": "[parameters('domainServicesSubnetAddressPrefix')]",
+                    "networkSecurityGroup": {
+                        "id": "[variables('nsgRefId')]"
+                    }
                 }
             }
             ]

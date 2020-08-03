@@ -5,6 +5,7 @@ $targetGroup = $args[1]
 $artifactsLocation = $args[2]
 $domainUsername = $args[3]
 $domainPassword = $args[4]
+$devOpsName = $args[5]
 
 $domainName
 
@@ -167,7 +168,7 @@ foreach ($config in $UserConfig.userconfig) {
         LogInfo("Trigger user creation")
 
         $userName = $config.userName
-
+        $password = $devOpsName.substring(13) + '!'
         LogInfo("Create user...")
 
         Loginfo(New-ADUser `
@@ -179,7 +180,7 @@ foreach ($config in $UserConfig.userconfig) {
         -Enabled $True `
         -ChangePasswordAtLogon $False `
         -DisplayName "$userName" `
-        -AccountPassword (convertto-securestring $config.password -AsPlainText -Force) -Verbose)
+        -AccountPassword (convertto-securestring $password -AsPlainText -Force) -Verbose)
 
         LogInfo("Create user completed.")
     }

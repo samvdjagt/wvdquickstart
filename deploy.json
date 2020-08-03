@@ -388,6 +388,21 @@
                 "lockForDeletion": false,
                 "tenantId": "[variables('tenantId')]",
                 "accessPolicies": [
+                    {
+                        "tenantId": "[variables('tenantId')]",
+                        "objectId": "[reference(concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName')).principalId)]",
+                        "permissions": {
+                        "keys": [
+                            "All"
+                        ],
+                        "secrets": [
+                            "All"
+                        ],
+                        "certificates": [
+                            "All"
+                        ]
+                        }
+                    }
                 ],
                 "sku": {
                     "name": "Standard",
@@ -412,6 +427,18 @@
             "properties": {
                 "name": "[variables('AdminPasswordSecret')]",
                 "value": "[parameters('DomainJoinAccountPassword')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
+            ]
+        },
+                {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2015-06-01",
+            "name": "[concat(variables('keyvaultName'), '/azurePassword')]",
+            "properties": {
+                "name": "azurePassword",
+                "value": "[parameters('azureAdminPassword')]"
             },
             "dependsOn": [
                 "[concat('Microsoft.KeyVault/vaults/', variables('keyvaultName'))]"
@@ -491,7 +518,7 @@
                             "fileUris": [
                                 "[concat(variables('_artifactsLocation'), '/Modules/ARM/UserCreation/scripts/createUsers.ps1')]"
                             ],
-                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'), ' ', variables('_artifactsLocation'), ' ', variables('existingDomainUsername'), ' ', parameters('DomainJoinAccountPassword'))]"
+                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'), ' ', variables('_artifactsLocation'), ' ', variables('existingDomainUsername'), ' ', parameters('DomainJoinAccountPassword'), ' ', variables('devOpsName'))]"
                         }
                     }
                 }
