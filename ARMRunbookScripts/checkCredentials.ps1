@@ -4,7 +4,6 @@ $ResourceGroupName = Get-AutomationVariable -Name 'ResourceGroupName'
 $fileURI = Get-AutomationVariable -Name 'fileURI'
 $existingVnetName = Get-AutomationVariable -Name 'existingVnetName'
 $existingSubnetName = Get-AutomationVariable -Name 'existingSubnetName'
-$virtualNetworkResourceGroupName = Get-AutomationVariable -Name 'virtualNetworkResourceGroupName'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
