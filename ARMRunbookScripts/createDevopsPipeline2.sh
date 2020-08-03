@@ -10,6 +10,10 @@
 
 
 az login --identity
+secret ="$(az keyvault secret show --name 'azurePassword' --vault-name ${4})" 
+az logout
+
+az login -u ${3} -p $secret
 
 if [[ ${5} == 'true' ]]; then 
 az extension add --name azure-devops
