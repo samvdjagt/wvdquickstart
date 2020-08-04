@@ -21,7 +21,7 @@ $AutomationAccountName = Get-AutomationVariable -Name 'AccountName'
 $identityApproach = Get-AutomationVariable -Name 'identityApproach'
 $notificationEmail = Get-AutomationVariable -Name 'notificationEmail'
 
-write-output "Starting 45 minutes of sleep"
+write-output "Starting 45 minutes of sleep to allow for domain to start running, which typically takes 30-40 minutes."
 start-sleep -Seconds 2700
 
 # Download files required for this script from github ARMRunbookScripts/static folder
