@@ -130,6 +130,46 @@ Catch {
 }
 #endregion
 
+#region check firewall
+Write-Output ('Veryfing firewall allows connection to reguired URLs...')
+
+$safeUrls = "rdbroker.wvdselfhost.microsoft.com","prod.warmpath.msftcloudes.com","catalogartifact.azureedge.net","wvdportalstorageblob.blob.core.windows.net","login.windows.net","catalogartifact.azureedge.net","www.msftconnecttest.com","settings-win.data.microsoft.com","fs.microsoft.com","slscr.update.microsoft.com","production.diagnostics.monitoring.core.windows.net","production.billing.monitoring.core.windows.net","production.diagnostics.monitoring.core.windows.net","firstparty.monitoring.windows.net","monitoring.windows.net"
+
+foreach($url in $safeUrls) {
+    $var = test-netconnection $url -port 443
+
+    if ($var.TcpTestSucceeded) {
+    Write-Output "$url is reachable."
+    } 
+    else {
+        Write-Output "$url cannot be reached."   
+        Throw
+    }    
+}
+
+$url = "kms.core.windows.net"
+$var = test-netconnection $url -port 1688
+if ($var.TcpTestSucceeded) {
+Write-Output "$url is reachable."
+} 
+else {
+    Write-Output "$url cannot be reached."   
+    Throw
+}
+
+$url = "169.254.169.254"
+$var = test-netconnection $url -port 80
+if ($var.TcpTestSucceeded) {
+Write-Output "$url is reachable."
+} 
+else {
+    Write-Output "$url cannot be reached."   
+    Throw
+}
+
+Write-Output ('End verification.')
+#endregion
+
 # Grant managed identity contributor role on subscription level
 $identity = Get-AzUserAssignedIdentity -ResourceGroupName $ResourceGroupName -Name "WVDServicePrincipal"
 New-AzRoleAssignment -RoleDefinitionName "Contributor" -ObjectId $identity.PrincipalId -Scope "/subscriptions/$subscriptionId"
