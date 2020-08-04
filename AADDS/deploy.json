@@ -433,6 +433,21 @@
                 "lockForDeletion": false,
                 "tenantId": "[variables('tenantId')]",
                 "accessPolicies": [
+                    {
+                        "tenantId": "[variables('tenantId')]",
+                        "objectId": "[reference(concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))).principalId]",
+                        "permissions": {
+                        "keys": [
+                            "All"
+                        ],
+                        "secrets": [
+                            "All"
+                        ],
+                        "certificates": [
+                            "All"
+                        ]
+                        }
+                    }
                 ],
                 "sku": {
                     "name": "Standard",
