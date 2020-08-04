@@ -91,21 +91,23 @@ Catch {
 }
 #endregion
 
-#region check Microsoft.DesktopVirtualization resource provider has been registerred 
+#region check Microsoft.DesktopVirtualization resource provider has been registerred
+Write-Output "Checking if required resource providers are installed..."
 $wvdResourceProviderNames = "Microsoft.DesktopVirtualization","microsoft.visualstudio"
 foreach ($resourceProvider in $wvdResourceProviderNames) {
 	$states = (Get-AzResourceProvider -ProviderNamespace $resourceProvider).RegistrationState
 	if ($states -contains 'NotRegistered' -or $states -contains 'Unregistered') {
-		Write-Verbose "Resource provider '$resourceProvider' not registered. Registering" -Verbose
+		Write-Output "Resource provider '$resourceProvider' not registered. Registering" -Verbose
 		Register-AzResourceProvider -ProviderNamespace $resourceProvider
 	}
 	else {
-		Write-Verbose "Resource provider '$resourceProvider' already registered" -Verbose
+		Write-Output "Resource provider '$resourceProvider' already registered" -Verbose
 	}
 }
 #endregion
 
 #region check VNET
+Write-Output "Validating vNet and subnet..."
 Try {        
 	$VNET = Get-AzVirtualNetwork -name $existingVnetName
 	($VNET).AddressSpace.AddressPrefixes 
