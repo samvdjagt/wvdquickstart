@@ -80,7 +80,7 @@ Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $AzCredentials
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $virtualNetworkResourceGroupName -name $existingVnetName
-$vnet.DhcpOptions.DnsServers = "10.0.0.5"
+$vnet.DhcpOptions.DnsServers = "10.0.0.4"
 Set-AzVirtualNetwork -VirtualNetwork $vnet
 
 # Get the context
