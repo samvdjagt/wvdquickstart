@@ -92,22 +92,15 @@ Catch {
 #endregion
 
 #region check Microsoft.DesktopVirtualization resource provider has been registerred 
-$wvdResourceProviderNames = "Microsoft.DesktopVirtualization","microsoft.visualstudio","Microsoft.AAD"
-foreach($resourceProvider in $wvdResourceProviderNames) {
-	try {
-		Get-AzResourceProvider -ListAvailable | Where-Object { $_.ProviderNamespace -eq $resourceProvider  }
-		Write-Output  $($resourceProvider + " is registered!" )
+$wvdResourceProviderNames = "Microsoft.DesktopVirtualization","microsoft.visualstudio"
+foreach ($resourceProvider in $wvdResourceProviderNames) {
+	$states = (Get-AzResourceProvider -ProviderNamespace $resourceProvider).RegistrationState
+	if ($states -contains 'NotRegistered' -or $states -contains 'Unregistered') {
+		Write-Verbose "Resource provider '$resourceProvider' not registered. Registering" -Verbose
+		Register-AzResourceProvider -ProviderNamespace $resourceProvider
 	}
-	Catch {
-		Write-Output  $("Resource provider " + $resourceProvider + " is not registered")
-		try {
-			Write-Output  $("Registering " + $resourceProvider )
-			Register-AzResourceProvider -ProviderNamespace $resourceProvider
-			Write-Output  $("Registration of " + $resourceProvider + " completed!" )
-		} 
-		catch {
-			Write-Output  $("Registering " + $resourceProvider + " has failed!" )
-		}
+	else {
+		Write-Verbose "Resource provider '$resourceProvider' already registered" -Verbose
 	}
 }
 #endregion

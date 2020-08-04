@@ -171,8 +171,12 @@ foreach ($config in $UserConfig.userconfig) {
         $password = $devOpsName.substring(13) + '!'
         LogInfo("Create user...")
 
-        Loginfo(New-ADUser `
-        -SamAccountName $userName `
+        $existingUser = Get-ADUser -Filter "Name -eq '$($userName)'"
+        if($existingUser -ne $null) {
+            Remove-ADUser -Identity $userName -Confirm:$False
+        }
+        New-ADUser `
+        -SamAccountName $userNamSe `
         -UserPrincipalName $($userName + "@" + $domainName) `
         -Name "$userName" `
         -GivenName $userName `
@@ -180,7 +184,7 @@ foreach ($config in $UserConfig.userconfig) {
         -Enabled $True `
         -ChangePasswordAtLogon $False `
         -DisplayName "$userName" `
-        -AccountPassword (convertto-securestring $password -AsPlainText -Force) -Verbose)
+        -AccountPassword (convertto-securestring $password -AsPlainText -Force) -Verbose
 
         LogInfo("Create user completed.")
     }
