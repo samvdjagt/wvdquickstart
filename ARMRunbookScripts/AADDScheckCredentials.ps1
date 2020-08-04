@@ -120,7 +120,7 @@ $domainUsername = $split[0]
 $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($AzCredentials.password)
 $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 $PasswordProfile.Password = $UnsecurePassword
-$PasswordProfile.ForceChangePasswordNextLogin = $False
+$PasswordProfile.ForceChangePasswordNextLogin = $True
 
 New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainJoinCredentials.username -AccountEnabled $true -MailNickName $domainUsername
 

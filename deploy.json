@@ -476,7 +476,7 @@
             "properties": {
                 "forceUpdateTag": 1,
                 "azCliVersion": "2.0.80",
-                "arguments": "[concat(variables('devOpsName'), ' ', variables('devOpsProjectName'), ' ', parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
+                "arguments": "[concat(variables('devOpsName'), ' ', variables('devOpsProjectName'), ' ', parameters('azureAdminUpn'), ' ', variables('keyvaultName'))]",
                 "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createDevopsPipeline.sh')]",
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",
