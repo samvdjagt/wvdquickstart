@@ -67,11 +67,11 @@ $AzCredentialsAsset = 'AzureCredentials'
 $AzCredentials = Get-AutomationPSCredential -Name $AzCredentialsAsset
 $AzCredentials.password.MakeReadOnly()
 
-$tempCred = New-Object System.Management.Automation.PSCredential ($domainCredentials.username, $AzCredentials.password)
-Connect-AzureAD -Credential $tempCred
+#$tempCred = New-Object System.Management.Automation.PSCredential ($domainCredentials.username, $AzCredentials.password)
+#Connect-AzureAD -Credential $tempCred
 
-Update-AzureADSignedInUserPassword -CurrentPassword $AzCredentials.password -NewPassword $domainCredentials.password
-Disconnect-AzureAD
+#Update-AzureADSignedInUserPassword -CurrentPassword $AzCredentials.password -NewPassword $domainCredentials.password
+#Disconnect-AzureAD
 
 #Authenticate Azure
 #Get the credential with the above name from the Automation Asset store
@@ -82,6 +82,46 @@ Select-AzSubscription -SubscriptionId $SubscriptionId
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $virtualNetworkResourceGroupName -name $existingVnetName
 $vnet.DhcpOptions.DnsServers = "10.0.0.4"
 Set-AzVirtualNetwork -VirtualNetwork $vnet
+
+$PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
+
+$split = $domainCredentials.username.Split("@")
+$domainUsername = $split[0]
+
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($domainCredentials.password)
+$UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+$PasswordProfile.Password = $UnsecurePassword
+$PasswordProfile.ForceChangePasswordNextLogin = $False
+
+New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainCredentials.username -AccountEnabled $true -MailNickName $domainUsername
+
+$domainUser = Get-AzureADUser -Filter "UserPrincipalName eq '$($domainCredentials.username)'" | Select-Object ObjectId
+# Fetch user to assign to role
+$roleMember = Get-AzureADUser -ObjectId $domainUser.ObjectId
+
+# Fetch User Account Administrator role instance
+$role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
+# If role instance does not exist, instantiate it based on the role template
+if ($role -eq $null) {
+    # Instantiate an instance of the role template
+    $roleTemplate = Get-AzureADDirectoryRoleTemplate | Where-Object {$_.displayName -eq 'Company Administrator'}
+    Enable-AzureADDirectoryRole -RoleTemplateId $roleTemplate.ObjectId
+    # Fetch User Account Administrator role instance again
+    $role = Get-AzureADDirectoryRole | Where-Object {$_.displayName -eq 'Company Administrator'}
+}
+# Add user to role
+Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $roleMember.ObjectId
+# Fetch role membership for role to confirm
+Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser
+
+New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '603b25af-b6ce-4e7c-9b9b-adb670f16acc' -Id '7af32be4-ebe7-4d61-8282-c09945b47490'
+New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '2af31936-bd69-4703-b8ea-67788bb07f47' -Id '299dad25-58e3-473d-9733-171fb3034713'
+
+# First, retrieve the object ID of the newly created 'AAD DC Administrators' group.
+$GroupObjectId = Get-AzureADGroup -Filter "DisplayName eq 'AAD DC Administrators'" | Select-Object ObjectId
+
+# Add the user to the 'AAD DC Administrators' group.
+Add-AzureADGroupMember -ObjectId $GroupObjectId.ObjectId -RefObjectId $domainUser.ObjectId
 
 # Get the context
 $context = Get-AzContext
@@ -98,8 +138,6 @@ $profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMPr
 $pat = $profileClient.AcquireAccessToken($context.Subscription.TenantId).AccessToken
 $token = $pat
 $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($token)"))
-
-$url = "https://main.iam.ad.ext.azure.com/api/PasswordReset/ResetPasswordByUpn?userPrincipalName=domainJoin%40gt1128.onmicrosoft.com"
 
 #Create devops project
 $url= $("https://dev.azure.com/" + $orgName + "/_apis/projects?api-version=5.1")

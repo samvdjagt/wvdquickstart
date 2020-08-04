@@ -115,16 +115,17 @@ $domainJoinCredentials.password.MakeReadOnly()
 $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
 
 $split = $domainJoinCredentials.username.Split("@")
-$domainUsername = $split[0]
+$domainName = $split[1]
+$username = "tempUser@" + $domainName
 
 $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($AzCredentials.password)
 $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 $PasswordProfile.Password = $UnsecurePassword
-$PasswordProfile.ForceChangePasswordNextLogin = $True
+$PasswordProfile.ForceChangePasswordNextLogin = $False
 
-New-AzureADUser -DisplayName $domainUsername -PasswordProfile $PasswordProfile -UserPrincipalName $domainJoinCredentials.username -AccountEnabled $true -MailNickName $domainUsername
+New-AzureADUser -DisplayName $username -PasswordProfile $PasswordProfile -UserPrincipalName $username -AccountEnabled $true -MailNickName $username
 
-$domainUser = Get-AzureADUser -Filter "UserPrincipalName eq '$($domainJoinCredentials.username)'" | Select-Object ObjectId
+$domainUser = Get-AzureADUser -Filter "UserPrincipalName eq '$($username)'" | Select-Object ObjectId
 # Fetch user to assign to role
 $roleMember = Get-AzureADUser -ObjectId $domainUser.ObjectId
 
