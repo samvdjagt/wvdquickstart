@@ -68,27 +68,22 @@ $AzCredentialsAsset = 'AzureCredentials'
 $AzCredentials = Get-AutomationPSCredential -Name $AzCredentialsAsset
 $AzCredentials.password.MakeReadOnly()
 
-#$tempCred = New-Object System.Management.Automation.PSCredential ($domainCredentials.username, $AzCredentials.password)
-#Connect-AzureAD -Credential $tempCred
-
-#Update-AzureADSignedInUserPassword -CurrentPassword $AzCredentials.password -NewPassword $domainCredentials.password
-#Disconnect-AzureAD
-
 #Authenticate Azure
 #Get the credential with the above name from the Automation Asset store
 Connect-AzAccount -Environment 'AzureCloud' -Credential $AzCredentials
 Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $AzCredentials
 Select-AzSubscription -SubscriptionId $SubscriptionId
 
+#Set vnet DNS settings to "custom"
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $virtualNetworkResourceGroupName -name $existingVnetName
 $vnet.DhcpOptions.DnsServers = "10.0.0.4"
 Set-AzVirtualNetwork -VirtualNetwork $vnet
 
-$PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
-
+# Create admin user for domain join
 $split = $domainCredentials.username.Split("@")
 $domainUsername = $split[0]
 
+$PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
 $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($domainCredentials.password)
 $UnsecurePassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 $PasswordProfile.Password = $UnsecurePassword

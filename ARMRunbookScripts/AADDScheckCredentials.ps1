@@ -151,6 +151,7 @@ New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $do
 
 New-AzADServicePrincipal -ApplicationId "2565bd9d-da50-47d4-8b85-4c97f669dc36"
 
+# Create domain controller admin group
 New-AzureADGroup -DisplayName "AAD DC Administrators" `
                  -Description "Delegated group to administer Azure AD Domain Services" `
                  -SecurityEnabled $true -MailEnabled $false `
