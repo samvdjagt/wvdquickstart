@@ -224,9 +224,6 @@ write-output $body
 $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Post -Body $Body -ContentType application/json
 write-output $response
 
-$split = $DomainJoinAccountUPN.Split("@")
-
-
 # In case Azure AD DS is used, create a new user here, and assign it to the targetGroup. The principalID of this group will then be used.
 if ($identityApproach -eq 'Azure AD DS') {
   $url = $($fileURI + "/Modules/ARM/UserCreation/Parameters/users.parameters.json")
@@ -317,7 +314,7 @@ $parameters = $parameters.Replace("[virtualNetworkResourceGroupName]", $virtualN
 $parameters = $parameters.Replace("[existingVnetName]", $existingVnetName)
 $parameters = $parameters.Replace("[existingDomainUsername]", $adminUsername)
 $parameters = $parameters.Replace("[existingDomainName]", $domainName)
-$parameters = $parameters.Replace("[DomainJoinAccountUPN]", $DomainJoinAccountUPN)
+$parameters = $parameters.Replace("[DomainJoinAccountUPN]", $domainJoinUPN)
 $parameters = $parameters.Replace("[objectId]", $ObjectId)
 $parameters = $parameters.Replace("[tenantId]", $tenant)
 $parameters = $parameters.Replace("[subscriptionId]", $subscriptionId)
