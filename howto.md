@@ -11,12 +11,12 @@ The video above shows you a full end-to-end deployment with the WVD QuickStart, 
 
 ### <b>Prerequisites</b>
 In order to successfully deploy a WVD environment with the QuickStart, a couple of prerequisites need to be satisfied beforehand. All of these prerequisites are listed below, together with links to documentation that can help you with setting them up.
-* An active <a href="https://azure.microsoft.com/en-us/" target="_blank">Azure subscription</a>, where you are logged in as Global Administrator
+* An active <a href="https://azure.microsoft.com/en-us/" target="_blank">Azure subscription</a>
+* Sufficient <a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-portal" target="_blank">administrator privileges</a> on your subscription: you will need the *owner* role
 * Either one of the following: 
    * A 
 <a href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank">Windows Server Active Directory</a> (AD) in sync with <a href="https://azure.microsoft.com/en-us/services/active-directory/" target="_blank">Azure Active Directory</a> (AAD), configured with <a href="https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-install-express" target="_blank">AD Connect</a>
    * OR: Configured <a href="https://azure.microsoft.com/en-us/services/active-directory-ds/" target="_blank">Azure Active Directory Domain Services (Azure AD DS)</a> setup
-* Sufficient <a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-portal" target="_blank">administrator privileges</a> on your subscription: you will need the *owner* role
 * Domain join service account (Must be without MFA) with sufficient priviliges to join machines to the domain. When using Azure AD DS, this user must be a member of the *AAD DC Administrators* Azure AD Group
 * Existing virtual network (VNET)
     * With an available subnet
