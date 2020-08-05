@@ -2,6 +2,7 @@
 $SubscriptionId = Get-AutomationVariable -Name 'subscriptionid'
 $ResourceGroupName = Get-AutomationVariable -Name 'ResourceGroupName'
 $fileURI = Get-AutomationVariable -Name 'fileURI'
+$domainName = Get-AutomationVariable -Name 'domainName'
 
 # Download files required for this script from github ARMRunbookScripts/static folder
 $FileNames = "msft-wvd-saas-api.zip,msft-wvd-saas-web.zip,AzureModules.zip"
@@ -110,14 +111,8 @@ foreach($resourceProvider in $wvdResourceProviderName) {
 }
 #endregion
 
-$domainJoinCredAsset = 'domainJoinCredentials'
-$domainJoinCredentials = Get-AutomationPSCredential -Name $domainJoinCredAsset
-$domainJoinCredentials.password.MakeReadOnly()
-
 $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
 
-$split = $domainJoinCredentials.username.Split("@")
-$domainName = $split[1]
 $username = "tempUser@" + $domainName
 
 $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($AzCredentials.password)
