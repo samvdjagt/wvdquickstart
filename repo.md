@@ -12,7 +12,7 @@ On this page, you'll find an in-depth breakdown of all the files associated with
 
 The folder structure in the master branch is as follows:
 
-* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/AADDS" target="_blank">ARMRunbookScripts</a>: In this folder, there's the QuickStart ARM template that is used when you start with an empty subscription.
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/AADDS" target="_blank">AADDS</a>: In this folder, there's the QuickStart ARM template that is used when you start with an empty subscription.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts" target="_blank">ARMRunbookScripts</a>: In this folder, a number of custom scripts are located that are run by the ARM deployment, either through an automation runbook or a deployment script.
   * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/ARMRunbookScripts/static" target="_blank">/static</a>: In this folder, some PowerShell modules required by the above scripts are located
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/Modules/ARM" target="_blank">Modules/ARM</a>: This folder contains modular ARM templates that are called by the DevOps automation to deploy Azure resources. For every resource, there's a dedicated deploy.json file, as well as a parameters file, pipeline file, and a testing script. These files are generic and should typically not be modified.
@@ -67,7 +67,7 @@ While this folder only holds a Readme.MD file, it is used in the automation to s
 #### QS-WVD/scripts
 This folder contains certain Powershell scripts that are invoked by the DevOps pipeline:
 
-* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Invoke-StorageAccountPostDeployment.ps1" target="_blank">Invoke-StorageAccountPostDeployment.ps1</a>: This script is used in the deployment of the Assets storage account (see <a href="devops" target="_blank">DevOps</a> to upload the required files for the WVD Virtual Machine Custom Script Extensions.
+* <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Invoke-StorageAccountPostDeployment.ps1" target="_blank">Invoke-StorageAccountPostDeployment.ps1</a>: This script is used in the deployment of the Assets storage account (see <a href="devops" target="_blank">DevOps</a>) to upload the required files for the WVD Virtual Machine Custom Script Extensions.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/New-PipelineParameterSetup.ps1" target="_blank">New-PipelineParameterSetup.ps1</a>: This script is called at the beginning of the DevOps pipeline (explained <a href="devops" target="_blank">here</a>) to generate the parameter files for the deployment of WVD resources.
 * <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Update-WVDHostPool.ps1" target="_blank">Update-WVDHostPool.ps1</a> and <a href="https://github.com/samvdjagt/wvdquickstart/tree/master/QS-WVD/scripts/Update-WVDHostPoolV2.ps1" target="_blank">Update-WVDHostPoolV2.ps1</a> are currently not used in the automation, but they can be used to update existing host pools with a new image.
 
