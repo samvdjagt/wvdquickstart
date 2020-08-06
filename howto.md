@@ -6,6 +6,6 @@ filename: howto
 
 ## <b>How To Deploy With The WVD QuickStart</b>
 
-Empty subscription                                                     |  Existing Native AD or AADDS setup
-:---------------------------------------------------------------------:|:----------------------------------------------------------------------------:
-<a href="howtoEmpty"><img src="images/emptyButton.PNG?raw=true"/></a>  |  <a href="howtoExisting"><img src="images/existingButton.PNG?raw=true"/></a>
+If you want to start with an empty Azure subscription, click the button below:  |  If you have an existing Native AD or Azure AD DS setup in your Azure subscription, click the button below:
+:------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------:
+<a href="howtoEmpty"><img src="images/emptyButton.PNG?raw=true"/></a>           |  <a href="howtoExisting"><img src="images/existingButton.PNG?raw=true"/></a>
