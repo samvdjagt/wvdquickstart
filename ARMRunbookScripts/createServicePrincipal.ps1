@@ -147,7 +147,7 @@ if ($RoleAssignment.RoleDefinitionName -eq "Owner" -or $RoleAssignment.RoleDefin
 	$AzureGraphApiAccessObject.ResourceAccess += New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $permission4.Id,"Role"
 
 	# Add the WVD API,Log Analytics API and Microsoft Graph API permissions to the ADApplication
-	Set-AzureADApplication -ObjectId $azAdApplication.ObjectId -RequiredResourceAccess $AzureAdResouceAcessObject,$AzureServMgmtApiResouceAcessObject,$AzureGraphApiAccessObject -ErrorAction Stop
+	Set-AzureADApplication -ObjectId $azAdApplication.ObjectId -RequiredResourceAccess $AzureServMgmtApiResouceAcessObject,$AzureGraphApiAccessObject -ErrorAction Stop
     #Set-AzureADApplication -ObjectId $azAdApplication.ObjectId -Oauth2Permissions $AzureAdOauth2Object -Oauth2RequirePostResponse $false -Oauth2AllowImplicitFlow $true
 	
 	# Create credential for the service principal and store in the automation account
