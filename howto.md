@@ -6,4 +6,6 @@ filename: howto
 
 ## <b>How To Deploy With The WVD QuickStart</b>
 
-<nav><a href="howtoEmpty"><img src="images/emptyButton.PNG?raw=true"/></a><a href="howtoExisting"><img src="images/existingButton.PNG?raw=true"/></a></nav>
+Empty subscription                                                     |  Existing Native AD or AADDS setup
+:---------------------------------------------------------------------:|:----------------------------------------------------------------------------:
+<a href="howtoEmpty"><img src="images/emptyButton.PNG?raw=true"/></a>  |  <a href="howtoExisting"><img src="images/existingButton.PNG?raw=true"/></a>
