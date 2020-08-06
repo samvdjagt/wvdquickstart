@@ -99,9 +99,6 @@ Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $roleMember
 # Fetch role membership for role to confirm
 Get-AzureADDirectoryRoleMember -ObjectId $role.ObjectId | Get-AzureADUser
 
-New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '603b25af-b6ce-4e7c-9b9b-adb670f16acc' -Id '7af32be4-ebe7-4d61-8282-c09945b47490'
-New-AzureADUserAppRoleAssignment -ObjectId $domainUser.ObjectId -PrincipalId $domainUser.ObjectId -ResourceId '2af31936-bd69-4703-b8ea-67788bb07f47' -Id '299dad25-58e3-473d-9733-171fb3034713'
-
 # First, retrieve the object ID of the newly created 'AAD DC Administrators' group.
 $GroupObjectId = Get-AzureADGroup -Filter "DisplayName eq 'AAD DC Administrators'" | Select-Object ObjectId
 
