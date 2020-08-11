@@ -566,5 +566,5 @@ This pipeline job is currently turned off, but it can be used to deploy a Remote
                   azurePowerShellVersion: LatestVersion
                 enabled: true
 ```
-This pipeline job is used to deploy, by default, deploy two remote applications: Microsoft Teams and Notepad++. These remote applications will appear in the workspace.
+This pipeline job is used to deploy, by default, deploy two remote applications specified in the <a href="https://github.com/samvdjagt/wvdquickstart/blob/master/QS-WVD/static/templates/pipelineInput/wvdapplication.parameters.template.json" target="_blank">wvdapplication ARM template</a>:: Microsoft Teams and Notepad++. These remote applications will appear in the workspace.
 

@@ -19,13 +19,15 @@ Additionally, the QuickStart will set up <a href="https://dev.azure.com" target=
 ### <b>Get started: ARM Deployment - Azure AD DS & Azure DevOps Setup</b>
 Once you've satisfied all the prerequisites, you are ready to deploy using the QuickStart! As explained in the <a href="concepts">Concepts</a> section, the deployment consists of two main components: an Azure Resource Manager (ARM) deployment and an Azure DevOps (ADO) pipeline. The first of the two will deploy a number of resources supporting the deployment automation, including the creation of an Azure AD DS managed domain, to which the WVD virtual machines will be 'domain-joined', as well as an Azure DevOps project and automation pipeline. By clicking the "Deploy to Azure" button, you will be taken to the Azure Portal for a custom deployment. There, you can fill out the required user input and click *purchase*. 
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fsamvdjagt%2Fwvdquickstart%2Fmaster%2FAADDS%2Fdeploy.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fsamvdjagt%2Fwvdquickstart%2Fmaster%2FNewSubAADDSSetup%2Fdeploy.json" target="_blank">
+    <img src="https://aka.ms/deploytoazurebutton"/>
 </a><br>
 
 The above button will take you to the Azure Portal, where your screen should look like the image below. To understand what input is expected for all the listed parameters, the 'i' balloons to the left of every parameter will give you guidance.
 
 ![ARM Template](images/ARMInputAADDS.PNG?raw=true)
+
+This deployment will deploy the resources outlined in the <a href="concepts">How it works</a> section. The credentials you enter in the Portal will be securely stored as secrets in both an Azure keyvault and an Azure DevOps secret.
 
 ### <b>WVD Deployment: DevOps Pipeline</b>
 Once the ARM deployment completes, your WVD environment will automatically be deployed by an Azure DevOps pipeline. While no further action from you is required, you can follow along with this deployment, in <a href="https://dev.azure.com" target="_blank">Azure DevOps</a>, where you will find the WVD QuickStart project. Navigate to the "pipelines" section - Here you'll find a running pipeline that deploys a WVD environment (VMs, host pool, desktop app group, FSLogix configuration) for you. Upon completion of this pipeline, which will take about 20 minutes, your WVD environment is ready for use! You can also follow along with the deployment in the Azure Portal. Once the pipeline finished, you will receive an email from Azure DevOps (if you have supplied a notification email in the ARM deployment) informing you of its completion. Once you receive this email, your WVD environment is ready for use!
