@@ -1,14 +1,13 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 $ConfigurationFileName = "users.parameters.json"
-$domainName = $args[0]
-$targetGroup = $args[1]
-$artifactsLocation = $args[2]
-$domainUsername = $args[3]
-$domainPassword = $args[4]
-$devOpsName = $args[5]
 
-$domainName
-
+# Parameters below are passed by the main ARM template
+$domainName = $args[0]          # Name of the domain 
+$targetGroup = $args[1]         # Name of the test user group to be created
+$artifactsLocation = $args[2]   # URL of the GitHub repository
+$domainUsername = $args[3]      # username of the domain join account
+$domainPassword = $args[4]      # password of the domain join account. Not stored in any logs.
+$devOpsName = $args[5]          # Name of the DevOps organization to generate the test user password
 #####################################
 
 ##########
@@ -113,9 +112,7 @@ function Set-Logger {
 #Set-Logger "C:\WindowsAzure\CustomScriptExtension\Log" # inside "executionCustomScriptExtension_$date.log"
 Set-Logger "C:\WindowsAzure\Logs\Plugins\Microsoft.Compute.CustomScriptExtension\executionLog\UserConfig" # inside "executionCustomScriptExtension_$scriptName_$date.log"
 
-LogInfo("###################")
 LogInfo("## 0 - LOAD DATA ##")
-LogInfo("###################")
 
 $url = $($artifactsLocation + "/Modules/ARM/UserCreation/Parameters/users.parameters.json")
 Invoke-WebRequest -Uri $url -OutFile "C:\users.parameters.json"
@@ -141,11 +138,7 @@ else
 foreach ($config in $UserConfig.userconfig) {
 
     if ($config.createGroup) {
-        LogInfo("###########################")
         LogInfo("## 1 - Create user group ##")
-        LogInfo("###########################")
-        LogInfo("Trigger user group creation")
-
           
         $userGroupName = $targetGroup
 
@@ -168,10 +161,7 @@ foreach ($config in $UserConfig.userconfig) {
     }
     
     if ($config.createUser) {
-        LogInfo("########################")
         LogInfo("## 2 - Create user    ##")
-        LogInfo("########################")
-        LogInfo("Trigger user creation")
 
         $userName = $config.userName
         $password = $devOpsName.substring(13) + '!'
@@ -181,12 +171,12 @@ foreach ($config in $UserConfig.userconfig) {
             LogInfo("Existing user with the username $userName found. Removing that user...")
             Set-ADUser -Identity $userName -UserPrincipalName $($userName + "temp@" + $domainName)
             Remove-ADUser -Identity $userName -Confirm:$False
-            Import-Module ADSync
+            Import-Module ADSync -Force
             Start-ADSyncSyncCycle -PolicyType Delta -Verbose
             Start-Sleep -Seconds 90
             LogInfo("Existing user removed.")
         }
-        
+
         LogInfo("Creating user...")
 
         New-ADUser `
@@ -204,23 +194,16 @@ foreach ($config in $UserConfig.userconfig) {
     }
 
     if ($config.assignUsers) {
-        LogInfo("###############################")
         LogInfo("## 3 - Assign users to group ##")
-        LogInfo("###############################")
 
-        LogInfo("Assigning users to group...")
         Add-ADGroupMember -Identity $targetGroup -Members $config.userName
         LogInfo("User assignment to group completed.")
     }
 
     if ($config.syncAD) {
-        LogInfo("#############################################")
         LogInfo("## 4 - Sync new users & group with AD Sync ##")
-        LogInfo("#############################################")
 
-        Import-Module ADSync
+        Import-Module ADSync -Force
         Start-ADSyncSyncCycle -PolicyType Delta -Verbose
     }
-
-    Start-Sleep -Seconds 20
 }
