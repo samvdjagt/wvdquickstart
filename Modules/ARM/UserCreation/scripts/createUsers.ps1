@@ -177,7 +177,7 @@ foreach ($config in $UserConfig.userconfig) {
             Remove-ADUser -Identity $userName -Confirm:$False
             Import-Module ADSync
             Start-ADSyncSyncCycle -PolicyType Delta -Verbose
-            Start-Sleep -Seconds 10
+            Start-Sleep -Seconds 90
         }
         New-ADUser `
         -SamAccountName $userName `
@@ -199,7 +199,7 @@ foreach ($config in $UserConfig.userconfig) {
         LogInfo("###############################")
 
         LogInfo("Assigning users to group...")
-        LogInfo(Add-ADGroupMember -Identity $targetGroup -Members $config.userName)
+        Add-ADGroupMember -Identity $targetGroup -Members $config.userName
         LogInfo("User assignment to group completed.")
     }
 
@@ -208,8 +208,8 @@ foreach ($config in $UserConfig.userconfig) {
         LogInfo("## 4 - Sync new users & group with AD Sync ##")
         LogInfo("#############################################")
 
-        LogInfo(Import-Module ADSync)
-        LogInfo(Start-ADSyncSyncCycle -PolicyType Delta -Verbose)
+        Import-Module ADSync
+        Start-ADSyncSyncCycle -PolicyType Delta -Verbose
     }
 
     Start-Sleep -Seconds 20
