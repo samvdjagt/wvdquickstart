@@ -175,6 +175,9 @@ foreach ($config in $UserConfig.userconfig) {
         if($existingUser -ne $null) {
             Set-ADUser -Identity $userName -UserPrincipalName $($userName + "temp@" + $domainName)
             Remove-ADUser -Identity $userName -Confirm:$False
+            Import-Module ADSync
+            Start-ADSyncSyncCycle -PolicyType Delta -Verbose
+            Start-Sleep -Seconds 10
         }
         New-ADUser `
         -SamAccountName $userName `
