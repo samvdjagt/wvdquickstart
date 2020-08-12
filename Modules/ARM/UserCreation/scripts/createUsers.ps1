@@ -173,6 +173,7 @@ foreach ($config in $UserConfig.userconfig) {
 
         $existingUser = Get-ADUser -Filter "Name -eq '$($userName)'"
         if($existingUser -ne $null) {
+            Set-ADUser -Identity $userName -UserPrincipalName $($userName + "temp@" + $domainName)
             Remove-ADUser -Identity $userName -Confirm:$False
         }
         New-ADUser `
