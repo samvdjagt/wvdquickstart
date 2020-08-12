@@ -151,12 +151,18 @@ foreach ($config in $UserConfig.userconfig) {
 
         LogInfo("Create user group...")
 
-        New-ADGroup `
-        -SamAccountName $userGroupName `
-        -Name "$userGroupName" `
-        -DisplayName "$userGroupName" `
-        -GroupScope "Global" `
-        -GroupCategory "Security" -Verbose
+        $existingGroup = Get-ADGroup -Filter "Name -eq '$($userGroupName)'"
+        if($existingGroup -eq $null) {
+            New-ADGroup `
+            -SamAccountName $userGroupName `
+            -Name "$userGroupName" `
+            -DisplayName "$userGroupName" `
+            -GroupScope "Global" `
+            -GroupCategory "Security" -Verbose
+        }
+        else {
+            LogInfo("User group $userGroupName already exists, using that existing group.")
+        }
 
         LogInfo("Create user group completed.")
     }
@@ -169,16 +175,20 @@ foreach ($config in $UserConfig.userconfig) {
 
         $userName = $config.userName
         $password = $devOpsName.substring(13) + '!'
-        LogInfo("Create user...")
 
         $existingUser = Get-ADUser -Filter "Name -eq '$($userName)'"
         if($existingUser -ne $null) {
+            LogInfo("Existing user with the username $userName found. Removing that user...")
             Set-ADUser -Identity $userName -UserPrincipalName $($userName + "temp@" + $domainName)
             Remove-ADUser -Identity $userName -Confirm:$False
             Import-Module ADSync
             Start-ADSyncSyncCycle -PolicyType Delta -Verbose
             Start-Sleep -Seconds 90
+            LogInfo("Existing user removed.")
         }
+        
+        LogInfo("Creating user...")
+
         New-ADUser `
         -SamAccountName $userName `
         -UserPrincipalName $($userName + "@" + $domainName) `
