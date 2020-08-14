@@ -97,10 +97,10 @@ if ($context -eq $null)
 }
 
 # Get token for web request authorization
-$tenant = (Get-AzTenant).TenantId
+$tenant = $context.Tenant.Id
 $azureRmProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile
 $profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient($azureRmProfile)
-$pat = $profileClient.AcquireAccessToken($context.Subscription.TenantId).AccessToken
+$pat = $profileClient.AcquireAccessToken($context.Tenant.Id).AccessToken
 $token = $pat
 $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($token)"))
 
@@ -254,11 +254,13 @@ $principalIds = $split[0]
 Write-Output "Found user group $targetGroup with principal Id $principalIds"
 
 # Removing the Custom Script Extension from domain controller VM. When re-running deployment, this means it will re-run the CSE, which can be used to create additional users for example
-$VMCustomScriptExtension = Get-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
-if ($VMCustomScriptExtension -ne $null) {
-  Write-Output "In case AD is used, removing the userCreation CSE from domain controller VM..."
-  Remove-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation" -Force
-  Write-Output "userCreation CSE removed."
+if ($identityApproach -eq "AD") {
+    $VMCustomScriptExtension = Get-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation"
+    if ($VMCustomScriptExtension -ne $null) {
+      Write-Output "In case AD is used, removing the userCreation CSE from domain controller VM..."
+      Remove-AzVMCustomScriptExtension -ResourceGroupName $virtualNetworkResourceGroupName -VMName $computerName -Name "userCreation" -Force
+      Write-Output "userCreation CSE removed."
+    }
 }
 
 # Get ID of the commit we just pushed, needed for the next commit below
@@ -268,7 +270,7 @@ write-output $url
 # It is possible at this point that the push has not completed yet. Logic below allows for 1 minute of waiting before timing out. 
 $currentTry = 0
 do {
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 10
     $response = Invoke-RestMethod -Uri $url -Headers @{Authorization = "Basic $token"} -Method Get
     write-output $response
     $currentTry++
